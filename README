@@ -4,3 +4,15 @@ Inspired by the puzzle from the game Machinarium.
 
     http://www.youtube.com/watch?v=UQQML2gKpKg&t=6m
 
+Notes
+=====
+Moves should be counted in single units and not individual steps (a snake pulled 3 blocks should count as 1 and not 3) - better user friendliness / cognitve.
+
+"Make a hint" feature.
+
+App as a touch interface for phones and tablets (bacause a lot of dragging is involved). 
+
+
+Shortcuts
+=========
+Cntrl+S : Solve and draw graph
