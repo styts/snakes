@@ -16,13 +16,13 @@ class Solver:
         self.debug_info = debug_info
         self.state = None
         self.gr = None
-        
+
     def do_populate(self,quit_on_first=False):
         MAX_RECURSION_DEPTH = 10000
         recursionlimit = sys.getrecursionlimit()
         sys.setrecursionlimit(MAX_RECURSION_DEPTH)
         self.gr.graph['finals'] = []
-        
+
         node = self.state.to_json()
         self.populate_graph(self.gr,node,quit_on_first=quit_on_first) #quit_on_first=False
         sys.setrecursionlimit(recursionlimit)
@@ -49,9 +49,9 @@ class Solver:
             pygame.event.pump()
         except pygame.error:
             pass
-        
+
         sxp_digest = hashlib.md5(sxp).hexdigest()
-        
+
         #if not gr.has_node(sxp_digest):
         #    gr.add_nodes_from(sxp_digest)
         found_new = 0
@@ -67,10 +67,10 @@ class Solver:
                 completed.append(j)
         del nss
         #print "%s\n"%s
-        
-        
+
+
         self.attach_debugs(depth)
-        
+
         for nsx in nssx:
             digest = hashlib.md5(nsx).hexdigest()
             if not gr.has_node(digest):
@@ -84,9 +84,9 @@ class Solver:
                 gr.add_edge(sxp_digest,digest)
             if has_one and quit_on_first:
                 return 42
-            
+
         for nsx in nssx:
-            if not found_new: # if no new neighbours were found during the previous iteration 
+            if not found_new: # if no new neighbours were found during the previous iteration
                 return 7
             if quit_on_first and len(gr.graph['finals']) and not max_depth:
                 return 8
@@ -104,34 +104,34 @@ class Solver:
             print "Solving...",
         sols = self.solve_graph()
         #print sols
-        
+
         l_shortest = (len(sols[0])-1) if len(sols) else None
         if print_debug:
             print "shortest: %s" % l_shortest
             print "Order: %s" % self.gr.order()
-            
+
         try:
             if draw_graph: Solver.draw_graph(self.gr,self.state.to_json(),all_solutions=sols)
         except:
             pass #IGNORE:W0702 dont use plt in exe
-        
+
         self.attach_debugs(shortest=l_shortest)
         del self.gr
         if heapy: print h.heap()
         return sols
-        
+
     def set_state(self,state):
         self.state = copy.copy(state)
         del self.gr
         self.gr = nx.Graph(finals=[])
-        
+
     @staticmethod
     def draw_graph(gr,s=None,all_solutions=[]): #IGNORE:W0102
         print "Drawing...",
-        plt.figure(1,figsize=(25,15))
-        
+        plt.figure(1,figsize=(20,15))
+
         sols = all_solutions[0] if len(all_solutions) else None
-        
+
         # not all labels should be displayed, only those that are part of the solution
         labels = {}
         #labels_anyway = True
@@ -142,7 +142,7 @@ class Solver:
                     labels[n] = ""
                 else:
                     labels[n] = str(n)
-                
+
         # labels for length of shortest path to each final node
         final_labels = {}
         for s in all_solutions:
@@ -150,7 +150,6 @@ class Solver:
                 n = s[i]
                 if i == len(s)-1:
                     final_labels[n] = len(s)-1
-                
         # assign edges to path (to draw highlighted)
         if sols:
             path = []
@@ -159,17 +158,16 @@ class Solver:
                 v = sols[i+1]
                 e = (u,v)
                 path.append(e)
-        
-        pos=nx.graphviz_layout(gr,prog='dot') #/*,overlap="compress"*/
-        #pos=nx.pygraphviz_layout(gr)
-            
+        #pos=nx.graphviz_layout(gr,prog='dot') #/*,overlap="compress"*/
+        pos=nx.pygraphviz_layout(gr)
+
         #pos=nx.spring_layout(gr) ############
-        
+
         #pos=nx.spectral_layout(gr)
-        
+
         #pos=nx.shell_layout(gr)
         #pos=nx.circular_layout(gr)
-        
+
         if sols:
             # begin
             nx.draw(gr,pos,edgelist=[],nodelist=[sols[0]],node_size=500,alpha=0.5,node_color='b',with_labels=False)
@@ -183,11 +181,12 @@ class Solver:
         # with_labels=(sols and len(sols)<1000),labels=labels if sols else None
         nx.draw(gr,pos,node_size=2,alpha=0.2,root=s,font_family="monospace",font_size=11,with_labels=False,labels=labels)
 
-        plt.savefig(os.path.join("data","graphs","graph.png"))
+        fn =os.path.join("data","graphs","graph.png")
+        plt.savefig(fn)
         plt.close()
         print "done"
 
-        
+
     def solve_graph(self):
         sols = []
         j = self.state.to_json()

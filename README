@@ -15,4 +15,7 @@ App as a touch interface for phones and tablets (bacause a lot of dragging is in
 
 Shortcuts
 =========
-Cntrl+S : Solve and draw graph
+S : Solve
+    Cntrl+S : and draw graph
+    Alt+S   : and compute all finals (full graph, takes longer and more memory)
+    Cntrl+Alt+S: draws pretty big graph ;)

@@ -39,7 +39,9 @@ class SolverThread(Thread):
         print "Took %d seconds" % int(time.time() - self.t)
 #        print h.heap()
 
-def solve(state,debug_info=False,quit_on_first=False,draw_graph=False):
+def solve(state,debug_info=False,quit_on_first=False,draw_graph=True):
+    #quit_on_first=False
+    #draw_graph=True
     st = SolverThread(state,draw_graph,quit_on_first,debug_info)
     st.start()
 #    t = time.time()
