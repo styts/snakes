@@ -38,8 +38,8 @@ class Solver:
         self._attach_debugs(shortest=l_shortest)
 
 
-    def draw_graph(self,filename=None):
-        return plotter.save_graph(self.gr,self.state.to_json(),all_solutions=self.sols,filename=filename)
+    def draw_graph(self,filename=None,**kwargs):
+        return plotter.save_graph(self.gr,self.state.__hash__(),all_solutions=self.sols,filename=filename,**kwargs)
         
     def _attach_debugs(self,depth=None,shortest=None):
         """Used by the GUI"""

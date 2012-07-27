@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 #draw_graph: Solver.draw_graph(self.gr,self.state.to_json(),all_solutions=self.sols)
-def save_graph(gr,start_node=None,all_solutions=[],filename=None):
+def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(20,15)):
     print "Drawing...",
-    plt.figure(1,figsize=(20,15))
+    plt.figure(1,figsize=size)
 
     sols = all_solutions[0] if len(all_solutions) else None
 
@@ -36,7 +36,10 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None):
             e = (u,v)
             path.append(e)
 
-    pos=nx.pygraphviz_layout(gr)
+    #pos=nx.pygraphviz_layout(gr)
+    #pos=nx.graphviz_layout(gr,prog="twopi",root=start_node)
+    #pos=nx.graphviz_layout(gr,prog='twopi',args='')
+    pos=nx.spring_layout(gr) # positions for all nodes
 
     if sols:
         # begin
@@ -52,11 +55,13 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None):
     # with_labels=(sols and len(sols)<1000),labels=labels if sols else None
     nx.draw(gr,pos,node_size=2,alpha=0.2,root=s,font_family="monospace",font_size=11,with_labels=False,labels=labels)
 
+
+    print "done drawing"
+
     if filename:
         plt.savefig(filename)
+        plt.close()
     else:
         # TODO return Image
-        pass
-
-    plt.close()
-    print "done drawing"
+        print "returning plot"
+        return plt
