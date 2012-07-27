@@ -20,12 +20,15 @@ class Solver:
     def do_populate(self,quit_on_first=False):
         MAX_RECURSION_DEPTH = 10000
         recursionlimit = sys.getrecursionlimit()
+        print "Rec. limit: ", recursionlimit
         sys.setrecursionlimit(MAX_RECURSION_DEPTH)
+        recursionlimit = sys.getrecursionlimit()
+        print "Rec. limit: ", recursionlimit
         self.gr.graph['finals'] = []
 
         node = self.state.to_json()
         self.populate_graph(self.gr,node,quit_on_first=quit_on_first) #quit_on_first=False
-        sys.setrecursionlimit(recursionlimit)
+        #sys.setrecursionlimit(recursionlimit)
 
     def attach_debugs(self,depth=None,shortest=None):
         if self.debug_info:
@@ -41,14 +44,23 @@ class Solver:
 
     #@staticmethod
     def populate_graph(self,gr,sxp,depth=0,max_depth=0,found_new=0,quit_on_first=False,has_one=False):
+        #print "order", gr.order()
+        #if gr.order() >= 2500:
+            #import objgraph
+            #objgraph.show_refs([gr], filename='sample-graph.png')
+            #objgraph.show_most_common_types(limit=50)
+            #objgraph.show_growth()
+            #sys.exit(0)
+
         from logic.state import State
         if max_depth and depth >= max_depth:
             return 3
         # process message queue
-        try:
-            pygame.event.pump()
-        except pygame.error:
-            pass
+        #try:
+        pygame.event.pump()
+        #except pygame.error:
+            #print e
+            #pass
 
         sxp_digest = hashlib.md5(sxp).hexdigest()
 
@@ -65,7 +77,9 @@ class Solver:
             nssx.append(j)
             if ns.is_complete():
                 completed.append(j)
+            del ns
         del nss
+        del s
         #print "%s\n"%s
 
 

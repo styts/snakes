@@ -33,11 +33,11 @@ class SolverThread(Thread):
         self.solver = Solver(debug_info)
         self.solver.set_state(state)
     def run(self):
-#        h = hpy()
-#        h.setrelheap()
+        #h = hpy()
+        #h.setrelheap()
         self.solver.solve(heapy=False,print_debug=True,draw_graph=self.draw_graph,quit_on_first=self.quit_on_first)
         print "Took %d seconds" % int(time.time() - self.t)
-#        print h.heap()
+        #print h.heap()
 
 def solve(state,debug_info=False,quit_on_first=False,draw_graph=True):
     #quit_on_first=False
