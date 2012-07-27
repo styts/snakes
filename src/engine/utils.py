@@ -1,4 +1,4 @@
-from solver import Solver
+#from src.solve.solver import Solver
 from threading import Thread
 import time
 #from guppy import hpy #@UnresolvedImport
