@@ -19,16 +19,10 @@ class Solver:
 
     def do_populate(self,quit_on_first=False):
         MAX_RECURSION_DEPTH = 10000
-        recursionlimit = sys.getrecursionlimit()
-        print "Rec. limit: ", recursionlimit
         sys.setrecursionlimit(MAX_RECURSION_DEPTH)
-        recursionlimit = sys.getrecursionlimit()
-        print "Rec. limit: ", recursionlimit
         self.gr.graph['finals'] = []
-
         node = self.state.to_json()
         self.populate_graph(self.gr,node,quit_on_first=quit_on_first) #quit_on_first=False
-        #sys.setrecursionlimit(recursionlimit)
 
     def attach_debugs(self,depth=None,shortest=None):
         if self.debug_info:
@@ -52,15 +46,15 @@ class Solver:
             #objgraph.show_growth()
             #sys.exit(0)
 
-        from logic.state import State
+        from src.logic.state import State
         if max_depth and depth >= max_depth:
             return 3
         # process message queue
-        #try:
-        pygame.event.pump()
-        #except pygame.error:
-            #print e
-            #pass
+        # its a try-catch so that no 'video system not initalized' error comes when running in console mode
+        try:
+            pygame.event.pump()
+        except pygame.error:
+            pass
 
         sxp_digest = hashlib.md5(sxp).hexdigest()
 
@@ -124,15 +118,16 @@ class Solver:
             print "shortest: %s" % l_shortest
             print "Order: %s" % self.gr.order()
 
+        self.sols = sols
         try:
-            if draw_graph: Solver.draw_graph(self.gr,self.state.to_json(),all_solutions=sols)
+            if draw_graph: Solver.draw_graph(self.gr,self.state.to_json(),all_solutions=self.sols)
         except:
             pass #IGNORE:W0702 dont use plt in exe
 
         self.attach_debugs(shortest=l_shortest)
-        del self.gr
+        # del self.gr
         if heapy: print h.heap()
-        return sols
+        # return sols
 
     def set_state(self,state):
         self.state = copy.copy(state)
