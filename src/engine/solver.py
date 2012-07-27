@@ -159,14 +159,15 @@ class Solver:
                 e = (u,v)
                 path.append(e)
         #pos=nx.graphviz_layout(gr,prog='dot') #/*,overlap="compress"*/
+        #pos=nx.graphviz_layout(gr,prog='dot',overlap="compress")
         pos=nx.pygraphviz_layout(gr)
 
-        #pos=nx.spring_layout(gr) ############
+        #pos=nx.spring_layout(gr) # too unstructured
 
-        #pos=nx.spectral_layout(gr)
+        #pos=nx.spectral_layout(gr) # too compressed
 
-        #pos=nx.shell_layout(gr)
-        #pos=nx.circular_layout(gr)
+        #pos=nx.shell_layout(gr)# all nodes are on a cirlce , wtf
+        #pos=nx.circular_layout(gr)# all nodes are on a cirlce , wtf
 
         if sols:
             # begin
