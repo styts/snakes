@@ -1,7 +1,7 @@
 from src.engine.utils import letter_to_color #IGNORE:E0611
 from src.engine.utils import TARGETS
 import pygame #@UnresolvedImport
-import weakref
+#import weakref
 
 BLOCK_SIZE = 60
 # terrain. walkable/unwalkable, ziele, etc.
@@ -52,8 +52,9 @@ class Tile():
     def __repr__(self):
         return str(self.v)
 
-    def __init__(self, map, v, x, y, surface=None):
-        self.map = weakref.proxy(map)
+    def __init__(self, mymap, v, x, y, surface=None):
+        #self.map = weakref.proxy(map)
+        self.map = mymap
         self.surface = surface
         self.v = v
         self.x = x

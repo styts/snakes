@@ -13,7 +13,8 @@ class ToolbarButton:
         self.value = value
         self.label = label
         self.action = action
-        self.toolbar = weakref.proxy(toolbar)
+        # self.toolbar = weakref.proxy(toolbar)
+        self.toolbar = toolbar
         self.surface = None if not surface else surface
         self.color = None
         if not surface:

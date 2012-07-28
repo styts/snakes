@@ -29,7 +29,8 @@ class SnakeElement() :
             return "" # sometimes snake is weak-referenced
 
     def set_snake(self,snake):
-        self.snake = weakref.proxy(snake)
+        # self.snake = weakref.proxy(snake)
+        self.snake = snake
     def __init__(self,x,y):
         self.x = x
         self.y = y
@@ -203,8 +204,9 @@ class SnakeElement() :
 # it is either completed or not (on it's ziel block)
 # it can be moved by it's two heads
 class Snake:
-    def __init__(self,map,v,elements,surface=None):#IGNORE:W0622
-        self.map = weakref.proxy(map)
+    def __init__(self,mymap,v,elements,surface=None):#IGNORE:W0622
+        # self.map = weakref.proxy(map)
+        self.map = mymap
         self.surface = surface
         self.elements = elements
         self.v = v
