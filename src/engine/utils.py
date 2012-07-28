@@ -1,4 +1,3 @@
-#from src.solve.solver import Solver
 from threading import Thread
 import time
 #from guppy import hpy #@UnresolvedImport
@@ -23,30 +22,24 @@ def letter_to_color(letter):
     else:
         return colors[letter]
 
-class SolverThread(Thread):
+class _SolverThread(Thread):
     def __init__(self,state,draw_graph,quit_on_first,debug_info):
         Thread.__init__(self)
-        #self.debug_info = debug_info
-        self.draw_graph = draw_graph
-        self.quit_on_first = quit_on_first
         self.t = time.time()
-        self.solver = Solver(debug_info)
+        self.draw_graph = draw_graph
+
+        from src.solve.solver import Solver
+        self.solver = Solver(debug_info=debug_info,quit_on_first=quit_on_first)
         self.solver.set_state(state)
+
     def run(self):
-        #h = hpy()
-        #h.setrelheap()
-        self.solver.solve(heapy=False,print_debug=True,draw_graph=self.draw_graph,quit_on_first=self.quit_on_first)
+        self.solver.solve()
+        if self.draw_graph:
+            self.solver.draw_graph("tmp/graph-%s.png" % self.solver.state.__hash__())
         print "Took %d seconds" % int(time.time() - self.t)
-        #print h.heap()
+
+
 
 def solve(state,debug_info=False,quit_on_first=False,draw_graph=True):
-    #quit_on_first=False
-    #draw_graph=True
-    st = SolverThread(state,draw_graph,quit_on_first,debug_info)
+    st = _SolverThread(state,draw_graph,quit_on_first,debug_info)
     st.start()
-#    t = time.time()
-#    solver = Solver()
-#    solver.set_state(state)
-#    solver.solve(heapy=False,print_debug=True,draw_graph=draw_graph,quit_on_first=quit_on_first)
-#    del solver
-#    print "Took %d seconds" % int(time.time() - t)

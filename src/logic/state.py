@@ -3,6 +3,7 @@ from map import Map
 from snake import Snake
 import pygame #@UnresolvedImport
 import json
+import hashlib
 
 
 class State:
@@ -60,7 +61,14 @@ class State:
     def __hash__(self):
         # http://kodeclutz.blogspot.com/2008/08/custom-hash-objects-in-python.html
         # the hash of our string is our unique hash
-        return hash(str(self.map))
+        #return hash(str(self.map))
+
+        # the above gives just numbers...
+        # use this:
+        m = hashlib.md5()
+        m.update(str(self.map))
+        str_md5 = m.hexdigest()
+        return str_md5
 
     def get_neighbour_states(self,exclude=[]):#IGNORE:W0102
         ns = []

@@ -1,10 +1,10 @@
 from utils import letter_to_color
-from src.engine.misc import clean_map, reset_state
+from src.engine.misc import clean_map, reset_state, remove_map_file
 from logic.state import State
 import os
 import glob
 import weakref
-import pygame #@UnresolvedImport
+import pygame
 
 WIDTH_OF_BUTTON = 29
 
@@ -115,7 +115,14 @@ class Toolbar:
         if event.type == pygame.MOUSEBUTTONDOWN:
             b = self._get_button_at(event.pos)
             if b:
-                if b.action in ['mapsize','mapload']:
+                # mods = pygame.key.get_mods()
+                # print "button " , b.value
+                # print mods, pygame.K_RALT, mods % pygame.K_RALT
+
+                # if mods & pygame.K_RALT:
+                #     remove_map_file(b.value)
+                    
+                if b.action in ['mapsize','mapload']:    
                     b.click()
                 else:
                     self.current_button = b

@@ -9,13 +9,18 @@ import time
 def save_state(state):
     n_s = len(state.snakes)
     n_n = state.map.n
-    m = hashlib.md5()
-    m.update(str(state.map))
-    str_md5 = m.hexdigest()[:10]
+    str_md5 = state.__hash__()
     name = "n%s-s%s-%s" % (n_n,n_s,str_md5)
     #state.save_to_image("data/maps/%s.png" % name)
     state.save_to_json("data/maps/%s.json" % name)
 
+def remove_map_file(levelname):
+    """Not used"""
+    # """used by RALT+mouseclick on ToolbarButton"""
+    # pathname = os.path.abspath(os.path.join("data", "maps", levelname))
+    # os.remove(pathname)
+    # print "removed map", pathname
+    pass
 
 def edit_map(state,event,button):
     t = state.map.get_tile_at(event.pos[0],event.pos[1])
