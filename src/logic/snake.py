@@ -4,8 +4,15 @@ import os
 import pygame
 import weakref
 
+# prevent picloud not finding file error
+circle_glyph_fn = os.path.join('data', 'sprites', 'stone.png')
+if os.path.exists(circle_glyph_fn):
+    circle_glyph = pygame.image.load(circle_glyph_fn)
+else:
+    circle_glyph = None
+
 SNAKE_SURFACES = {
-                  "stone" : pygame.image.load(os.path.join('data', 'sprites', 'stone.png')),
+                  "stone" : None,
                   }
 
 

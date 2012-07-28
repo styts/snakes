@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 
-def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9)):
+def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use_cloud=False):
     print "Drawing...",
     plt.figure(1,figsize=size)
 
@@ -35,10 +35,10 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9)):
             e = (u,v)
             path.append(e)
 
-    #pos=nx.pygraphviz_layout(gr)
+    pos=nx.pygraphviz_layout(gr)
     #pos=nx.graphviz_layout(gr,prog="twopi",root=start_node)
     #pos=nx.graphviz_layout(gr,prog='twopi',args='')
-    pos=nx.spring_layout(gr) # positions for all nodes
+    #pos=nx.spring_layout(gr) # positions for all nodes
 
     if sols:
         # begin
@@ -58,7 +58,13 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9)):
 
     # either save file or return plot
     if filename:
+
         plt.savefig(filename)
         plt.close()
+
+        if use_cloud:
+            import cloud
+            cloud.files.put(filename)
+            
     else:
         return plt
