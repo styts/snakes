@@ -9,6 +9,7 @@ import plotter
 from src.logic.state import State
 import pickle
 
+
 class Solver:
     def __init__(self,debug_info=None,quit_on_first=False,save_tmp=True,use_temp=True,use_cloud=False):
         self.debug_info = debug_info
@@ -19,7 +20,7 @@ class Solver:
         self.use_temp=use_temp # bypass the solving, just draw?
         self.use_cloud=use_cloud
         self.quit_on_first = quit_on_first
-        self.MAX_RECURSION_DEPTH = 10000
+        self.MAX_RECURSION_DEPTH = 1000000
 
     def set_state(self,state):
         self.state = copy.copy(state)
@@ -27,8 +28,8 @@ class Solver:
         self.gr = nx.Graph(finals=[])
 
     def solve(self):
-        
         # load plckled object if possible, otherwise compute(populate and solve) graph
+        
         tmp_pickle = os.path.join("tmp","%s.pickle" % self.state.__hash__())
         if os.path.exists(tmp_pickle) and self.use_temp:
             tmp_slv = pickle.load(open(tmp_pickle,'rb'))
