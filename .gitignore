@@ -1,5 +1,4 @@
 env
 dist
 build
-tmp
 *.png

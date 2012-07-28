@@ -12,6 +12,9 @@ Moves should be counted in single units and not individual steps (a snake pulled
 
 App as a touch interface for phones and tablets (bacause a lot of dragging is involved). 
 
+Run
+===
+python Snakes.py
 
 Shortcuts
 =========
