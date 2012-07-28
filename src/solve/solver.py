@@ -7,13 +7,17 @@ import hashlib
 import networkx as nx
 import plotter
 from src.logic.state import State
+import pickle
 
 class Solver:
-    def __init__(self,debug_info=None,quit_on_first=False):
+    def __init__(self,debug_info=None,quit_on_first=False,save_tmp=True,use_temp=True,use_cloud=False):
         self.debug_info = debug_info
         self.state = None
         self.gr = None
         self.sols = []
+        self.save_tmp=save_tmp
+        self.use_temp=use_temp # bypass the solving, just draw?
+        self.use_cloud=use_cloud
         self.quit_on_first = quit_on_first
         self.MAX_RECURSION_DEPTH = 10000
 
@@ -23,23 +27,39 @@ class Solver:
         self.gr = nx.Graph(finals=[])
 
     def solve(self):
-        print "Populating...",
-        sys.setrecursionlimit(self.MAX_RECURSION_DEPTH)
-        self.gr.graph['finals'] = []
-        root_node = self.state.to_json()
-        self._populate_graph(self.gr,root_node)
+        
+        # load plckled object if possible, otherwise compute(populate and solve) graph
+        tmp_pickle = os.path.join("tmp","%s.pickle" % self.state.__hash__())
+        if os.path.exists(tmp_pickle) and self.use_temp:
+            tmp_slv = pickle.load(open(tmp_pickle,'rb'))
+            self.gr = tmp_slv.gr
+            self.sols = tmp_slv.sols
+            del tmp_slv
+            print "Unpickled ", tmp_pickle
+        else:
+            print "Populating...",
+            sys.setrecursionlimit(self.MAX_RECURSION_DEPTH)
+            self.gr.graph['finals'] = []
+            root_node = self.state.to_json()
+            self._populate_graph(self.gr,root_node)
 
-        print "Solving...",
-        self.sols = self._solve_graph()
+            print "Solving...",
+            self.sols = self._solve_graph()
 
-        l_shortest = (len(self.sols[0])-1) if len(self.sols) else None
-        print "shortest: %s" % l_shortest,
-        print "order: %s" % self.gr.order(),
-        self._attach_debugs(shortest=l_shortest)
+        self.l_shortest = (len(self.sols[0])-1) if len(self.sols) else None
+        print "shortest: %s" % self.l_shortest,
+        print "order: %s" % self.gr.order()
+        self._attach_debugs(shortest=self.l_shortest)
+
+        if self.save_tmp:
+            print "Pickling...",
+            #pickle our object and save it to temp dir
+            pickle.dump( self, open( tmp_pickle, "wb" ))
+            print "done"
 
 
     def draw_graph(self,filename=None,**kwargs):
-        return plotter.save_graph(self.gr,self.state.__hash__(),all_solutions=self.sols,filename=filename,**kwargs)
+        return plotter.save_graph(self.gr, self.state.__hash__(), all_solutions=self.sols, filename=filename, use_cloud=self.use_cloud, **kwargs)
         
     def _attach_debugs(self,depth=None,shortest=None):
         """Used by the GUI"""

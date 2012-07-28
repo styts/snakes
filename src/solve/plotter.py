@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import networkx as nx
+import os
 
 def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use_cloud=False):
     print "Drawing...",
@@ -52,19 +53,21 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
 
     # all the nodes with labels along path only
     # with_labels=(sols and len(sols)<1000),labels=labels if sols else None
-    nx.draw(gr,pos,node_size=2,alpha=0.2,root=s,font_family="monospace",font_size=11,with_labels=False,labels=labels)
+    nx.draw(gr,pos,node_size=2,alpha=0.2,root=start_node,font_family="monospace",font_size=11,with_labels=False,labels=labels)
 
     print "done drawing"
 
     # either save file or return plot
     if filename:
-
+        d = os.path.dirname(filename)
+        if not os.path.exists(d):
+            os.mkdirs(d)
         plt.savefig(filename)
         plt.close()
 
         if use_cloud:
             import cloud
             cloud.files.put(filename)
-            
+
     else:
         return plt
