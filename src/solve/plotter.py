@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 
-#draw_graph: Solver.draw_graph(self.gr,self.state.to_json(),all_solutions=self.sols)
 def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(20,15)):
     print "Drawing...",
     plt.figure(1,figsize=size)
@@ -55,13 +54,11 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(20,15)):
     # with_labels=(sols and len(sols)<1000),labels=labels if sols else None
     nx.draw(gr,pos,node_size=2,alpha=0.2,root=s,font_family="monospace",font_size=11,with_labels=False,labels=labels)
 
-
     print "done drawing"
 
+    # either save file or return plot
     if filename:
         plt.savefig(filename)
         plt.close()
     else:
-        # TODO return Image
-        print "returning plot"
         return plt

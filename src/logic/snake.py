@@ -1,13 +1,10 @@
-from src.engine.utils import letter_to_color #IGNORE:E0611
+from src.engine.utils import letter_to_color
 from src.engine.utils import SNAKE_VALUES
 import os
-import pygame #@UnresolvedImport
+import pygame
 import weakref
 
 SNAKE_SURFACES = {
-                  #"head" : pygame.image.load(os.path.join('data', 'sprites', 'head.png')),
-                  #"body" : pygame.image.load(os.path.join('data', 'sprites', 'body1.png')),
-                  #"bend" : pygame.image.load(os.path.join('data', 'sprites', 'bend2.png')),
                   "stone" : pygame.image.load(os.path.join('data', 'sprites', 'stone.png')),
                   }
 
@@ -197,51 +194,31 @@ class SnakeElement() :
 
     def draw(self):
         if self.snake.surface:
-
-
-
-            #sprite = self.get_sprite(is_head,next,prev)
-
             sprite = SNAKE_SURFACES['stone'].copy()
             sprite.fill(self.snake.color,None,pygame.BLEND_RGBA_MULT)
             if sprite:
                 self.snake.surface.blit(sprite,self._get_corner())
 
-            #pygame.draw.circle(self.snake.surface, self.snake.color, self._get_center(),BLOCK_SIZE/3,)
-            # mark head with cyan circle
-            #if self.is_head():
-            #    pygame.draw.circle(self.snake.surface, (0,200,200), self._get_center(),BLOCK_SIZE/4,)
-            # draw moves
-            #for m in self.get_moves():
-            #    t = self.snake.map.get_tile(m.x2,m.y2)
-            #    p1 = self._get_center()
-            #    p2 = t.get_center()
-            #    pygame.draw.line(self.snake.surface, (200,200,200), p1,p2)
-
 # a snake consists of elements and a color
 # it is either completed or not (on it's ziel block)
 # it can be moved by it's two heads
 class Snake:
+    def __init__(self,map,v,elements,surface=None):#IGNORE:W0622
+        self.map = weakref.proxy(map)
+        self.surface = surface
+        self.elements = elements
+        self.v = v
+        self.color = letter_to_color(v)
+        if elements:
+            self.assign_to_tiles()
+    
+    def set_surface(self,surface):
+        self.surface = surface
+
     def __repr__(self):
         s = "%s:%s" % (self.v, len(self.elements)) #IGNORE:W0622
         s = s + str(self.elements)
         return s
-
-    def draw(self):
-        clr = tuple(max(x-100,0) for x in self.color)
-        clr = tuple(list(clr)+ [50])
-        #print clr
-
-        for i in xrange(len(self.elements)):
-            se = self.elements[i]
-            #is_head = i in [0, len(self.elements)-1]
-            #prev = self.elements[i-1] if i > 0 else None
-            next = self.elements[i+1] if i < len(self.elements)-1 else None
-
-
-            if next:
-                pygame.draw.line(self.surface,clr, se.get_center(), next.get_center(),15)
-            se.draw()
 
     def remove_el(self,el):
         self.elements.remove(el)
@@ -269,7 +246,7 @@ class Snake:
         return ms
 
     @staticmethod
-    def make_snakes(map,coords,surface=None):#IGNORE:W0622
+    def make_snakes(map,coords,surface=None):
         """ gets a coords array, which is parsed and a list of 'snake' instances is returned """
         elements = {}
         snakes = []
@@ -313,14 +290,14 @@ class Snake:
             foo['elements'].append(e.export())
         return foo
 
-    def set_surface(self,surface):
-        self.surface = surface
+    def draw(self):
+        clr = tuple(max(x-100,0) for x in self.color)
+        clr = tuple(list(clr)+ [50])
 
-    def __init__(self,map,v,elements,surface=None):#IGNORE:W0622
-        self.map = weakref.proxy(map)
-        self.surface = surface
-        self.elements = elements
-        self.v = v
-        self.color = letter_to_color(v)
-        if elements:
-            self.assign_to_tiles()
+        for i in xrange(len(self.elements)):
+            se = self.elements[i]
+            next = self.elements[i+1] if i < len(self.elements)-1 else None
+            if next:
+                pygame.draw.line(self.surface,clr, se.get_center(), next.get_center(),15)
+            se.draw()
+

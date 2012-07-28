@@ -8,12 +8,16 @@ BLOCK_SIZE = 60
 class Tile():
     def get_debug_infos(self):
         return ["x:%s"%self.x, "y:%s"%self.y, "se:%s" % str(self.se) if self.se else "", "v:%s"%self.v]
+        
     def get_snake_el(self):
         return self.se
+
     def set_snake_el(self,se):
         self.se = se
+
     def is_walkable(self):
         return not self.se and self.v != 1 and self.v != "1"
+
     def get_center(self):
         x = self.map.x_offset + BLOCK_SIZE * self.x + BLOCK_SIZE/2
         y = self.map.y_offset + BLOCK_SIZE * self.y + BLOCK_SIZE/2
@@ -27,9 +31,7 @@ class Tile():
         return self.v in TARGETS
 
     def is_complete(self):
-        "when it holds it's color SE or isn't a ziel tile"
-        #if self.v not in ['g'] or not self.is_walkable():
-        #    return True
+        "when it holds a SnakeElement of it's color or isn't a ziel tile"
 
         if not self._is_target():
             return True
@@ -49,9 +51,8 @@ class Tile():
 
     def __repr__(self):
         return str(self.v)
-        #se_str = " [se: %s]" % self.se if self.se else ""
-        #return "(%s,%s) [v:%s]%s" % (self.x , self.y, self.v, se_str)
-    def __init__(self, map, v, x, y, surface=None): #IGNORE:W0622
+
+    def __init__(self, map, v, x, y, surface=None):
         self.map = weakref.proxy(map)
         self.surface = surface
         self.v = v
@@ -62,7 +63,6 @@ class Tile():
 
     def draw(self):
         if self.surface:
-            #center = self.get_center()
             pygame.draw.rect(self.surface, self.color,
                              (self.map.x_offset + BLOCK_SIZE * self.x,
                               self.map.y_offset + BLOCK_SIZE * self.y,

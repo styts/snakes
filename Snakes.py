@@ -2,9 +2,8 @@
 import sys
 sys.path.append("src")
 
-
-import gc
-gc.disable()
+#import gc
+#gc.disable()
 #gc.set_debug(gc.DEBUG_STATS)
 
 from engine.app import App
