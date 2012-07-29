@@ -32,7 +32,7 @@ class Toolbar:
         self.dest_surface = surface
         self.x_offset = x_offset
         self.y_offset = y_offset
-        self.surface = pygame.Surface((200,250))
+        self.surface = pygame.Surface((232,350))
         self.app = app
 
         self.buttons = []
@@ -53,16 +53,20 @@ class Toolbar:
         for v in ['g','0','1']:
             b = ToolbarButton(self,v,action='settile')
             self.buttons[1].append(b)
-        self.buttons.append([])
-        for v in xrange(3,10):
+        self.buttons.append([]) # first row of map buttons
+        for v in xrange(3,11):
             b = ToolbarButton(self,v,action='mapsize',label=str(v))
             self.buttons[2].append(b)
+        self.buttons.append([])
+        for v in xrange(11,19): # second row of map buttons
+            b = ToolbarButton(self,v,action='mapsize',label=str(v))
+            self.buttons[3].append(b)
 
         # add buttons for loading map with screenshots
         self.buttons.append([])
         maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.png")
         maps += glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")
-        row = 3
+        row = 4
         for fn in maps:
             fn = os.path.basename(fn)
             state = State(None,None)

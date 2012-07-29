@@ -12,7 +12,7 @@ else:
     circle_glyph = None
 
 SNAKE_SURFACES = {
-                  "stone" : None,
+                  "stone" : circle_glyph,
                   }
 
 

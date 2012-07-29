@@ -7,8 +7,10 @@ from debug_info import DebugInfo
 from engine.misc import reset_state
 
 class App():
-    screen_w = 800
-    screen_h = 600
+    screen_w = 1024
+    screen_h = 768
+    #screen_w = 800
+    #screen_h = 600
     #screen_w = 640
     #screen_h = 480
     def __init__(self):
@@ -30,7 +32,7 @@ class App():
         self.input = Input(self)
         self.state = None
         self.debug_info = DebugInfo(self)
-        self.toolbar = Toolbar(self, self.screen, self.screen_h, 200)
+        self.toolbar = Toolbar(self, self.screen, self.screen_w-300, 200)
         
         self.n_moves = 0 
         self.time_began = time()
@@ -69,8 +71,9 @@ class App():
         str_time = "%02d:%02d" % (min,sec)
         ren_time = self.font.render(str_time,1,(255,255,0))
         ren_time_shadow = self.font.render(str_time,1,(155,155,0))
-        self.screen.blit(ren_time_shadow, (482,12))
-        self.screen.blit(ren_time, (480,10))
+        # don't show time
+        ###self.screen.blit(ren_time_shadow, (482,12))
+        ###self.screen.blit(ren_time, (480,10))
         
         #completion
         if self.state_complete:

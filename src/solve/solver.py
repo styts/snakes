@@ -28,16 +28,23 @@ class Solver:
         self.gr = nx.Graph(finals=[])
 
     def solve(self):
+        # create tmp pickle dir if not exist
+        td = os.path.join("data","graphs")
+        if not os.path.exists(td):
+            os.makedirs(td)
+
         # load plckled object if possible, otherwise compute(populate and solve) graph
-        
-        tmp_pickle = os.path.join("tmp","%s.pickle" % self.state.__hash__())
+        tmp_pickle = os.path.join(td,"%s.pickle" % self.state.__hash__())
+
         if os.path.exists(tmp_pickle) and self.use_temp:
+            # unpickle existing solution graph
             tmp_slv = pickle.load(open(tmp_pickle,'rb'))
             self.gr = tmp_slv.gr
             self.sols = tmp_slv.sols
             del tmp_slv
             print "Unpickled ", tmp_pickle
         else:
+            # solve graph form inital state
             print "Populating...",
             sys.setrecursionlimit(self.MAX_RECURSION_DEPTH)
             self.gr.graph['finals'] = []
@@ -50,11 +57,11 @@ class Solver:
         self.l_shortest = (len(self.sols[0])-1) if len(self.sols) else None
         print "shortest: %s" % self.l_shortest,
         print "order: %s" % self.gr.order()
-        self._attach_debugs(shortest=self.l_shortest)
+        self._attach_debugs(shortest=self.l_shortest) # continuous visual display of solving progress
 
         if self.save_tmp:
-            print "Pickling...",
             #pickle our object and save it to temp dir
+            print "Pickling...",
             pickle.dump( self, open( tmp_pickle, "wb" ))
             print "done"
 
