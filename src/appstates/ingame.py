@@ -119,6 +119,8 @@ class InGame(AppState):
                 self.toolbar.reload_buttons()
 
     def draw(self):
+        self._reset_background()
+        
         if self.state:
             self.state.map.draw()
             for s in self.state.snakes:

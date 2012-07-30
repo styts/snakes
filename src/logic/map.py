@@ -20,6 +20,8 @@ class Map():
         if map_name:
             coordinates = Map.load_coords(map_name)
         self.init(coordinates)
+
+        self.debug_info = debug_info
         
 #        # this bit loads and displays mapnames for debugging
 #        self.debug_info = None
@@ -179,5 +181,5 @@ class Map():
 #                self.debug_info.attach_var("%s %s" % (i+1,os.path.basename(m)) )
         for x in xrange(self.n):
             for y in xrange(self.n):
-                b = self.tiles[x][y]
-                b.draw()
+                t = self.tiles[x][y]
+                t.draw(self.debug_info)

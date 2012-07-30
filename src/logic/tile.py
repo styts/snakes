@@ -16,7 +16,7 @@ class Tile():
         self.se = se
 
     def is_walkable(self):
-        return not self.se and self.v != 1 and self.v != "1"
+        return not self.se and (self.v != 1 and self.v != "1")
 
     def get_center(self):
         x = self.map.x_offset + BLOCK_SIZE * self.x + BLOCK_SIZE/2
@@ -62,9 +62,20 @@ class Tile():
         self.se = None
         self.color = letter_to_color(str(v))
 
-    def draw(self):
+        # we can't just fill screen, we need a helper surface if we want transparency
+        self.helper_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+        self.helper_surface.fill(self.color) 
+        self.helper_surface.set_alpha(200)
+        self.helper_surface.convert_alpha()
+
+
+    def draw(self,debug_info=None):
         if self.surface:
-            pygame.draw.rect(self.surface, self.color,
-                             (self.map.x_offset + BLOCK_SIZE * self.x,
+            r = (self.map.x_offset + BLOCK_SIZE * self.x,
                               self.map.y_offset + BLOCK_SIZE * self.y,
-                              BLOCK_SIZE, BLOCK_SIZE))
+                              BLOCK_SIZE, BLOCK_SIZE)
+
+            pygame.draw.rect(self.surface, self.color, r, 1) # debug border
+            if self.v == 1 or self.v == '1': # don't draw unwalkable blocks - they're ugly
+                return
+            self.surface.blit( self.helper_surface, r )
