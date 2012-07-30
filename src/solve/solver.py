@@ -63,10 +63,13 @@ class Solver:
         print "order: %s" % self.gr.order()
         self._attach_debugs(shortest=self.l_shortest) # continuous visual display of solving progress
 
-        if self.save_tmp:
+        if self.save_tmp and not self.quit_on_first: # only pickle if we're doing a complete computation
             #pickle our object and save it to temp dir
             print "Pickling...",
-            pickle.dump( self, open( tmp_pickle, "wb" ))
+            #from src.engine.utils import get_pickling_errors
+            #print get_pickling_errors(self)
+            #del self.state
+            pickle.dump( [self.gr, self.sols], open( tmp_pickle, "wb" ))
             print "done"
 
 

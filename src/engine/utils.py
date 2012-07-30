@@ -35,7 +35,7 @@ class _SolverThread(Thread):
     def run(self):
         self.solver.solve()
         if self.draw_graph:
-            self.solver.draw_graph("tmp/graph-%s.png" % self.solver.state.__hash__())
+            self.solver.draw_graph("data/graphs/graph-%s.png" % self.solver.state.__hash__())
         print "Took %d seconds" % int(time.time() - self.t)
 
 
@@ -43,3 +43,29 @@ class _SolverThread(Thread):
 def solve(state,debug_info=False,quit_on_first=False,draw_graph=True):
     st = _SolverThread(state,draw_graph,quit_on_first,debug_info)
     st.start()
+
+
+# import pickle
+# def get_pickling_errors(obj,seen=None):
+#     if seen == None:
+#         seen = []
+#     try:
+#         state = obj.__getstate__()
+#     except AttributeError:
+#         return
+#     if state == None:
+#         return
+#     if isinstance(state,tuple):
+#         if not isinstance(state[0],dict):
+#             state=state[1]
+#         else:
+#             state=state[0].update(state[1])
+#     result = {}    
+#     for i in state:
+#         try:
+#             pickle.dumps(state[i],protocol=2)
+#         except pickle.PicklingError:
+#             if not state[i] in seen:
+#                 seen.append(state[i])
+#                 result[i]=get_pickling_errors(state[i],seen)
+#     return result

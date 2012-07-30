@@ -61,7 +61,7 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
     if filename:
         d = os.path.dirname(filename)
         if not os.path.exists(d):
-            os.mkdirs(d)
+            os.makedirs(d)
         plt.savefig(filename)
         plt.close()
 
