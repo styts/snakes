@@ -22,6 +22,10 @@ class Solver:
         self.quit_on_first = quit_on_first
         self.MAX_RECURSION_DEPTH = 1000000
 
+        # make pickling work when called from GUI (on Surface object)
+        #import copy_reg
+        #copy_reg.pickle(pygame.Surface,lambda x: [])
+
     def set_state(self,state):
         self.state = copy.copy(state)
         del self.gr

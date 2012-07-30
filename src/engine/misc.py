@@ -45,8 +45,8 @@ def clean_map(app,n):
     for i in xrange(n):
         coords['tiles'].append([])
         coords['snakes'].append([])
-        for j in xrange(n): #@UnusedVariable IGNORE:W0612
-            v = 0
+        for j in xrange(n):
+            v = 1
             coords['tiles'][i].append(v)
             coords['snakes'][i].append(v)
     reset_state(app,coords=coords)
