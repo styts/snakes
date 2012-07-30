@@ -16,9 +16,10 @@ class DebugInfo:
         #if self.on and key not in self.strings:
         self.strings[key] = val
         
-    def __init__(self,app):
+    def __init__(self,ingameState):
         self.font = SysFont("Courier",12)
-        self.app = app
+        self.ingameState = ingameState
+        self.app = self.ingameState.app
         self.color     = 200,200,200
         self.color_map = 100,100,100
         self.on = True
@@ -29,7 +30,7 @@ class DebugInfo:
     def draw(self):
         if self.on:
             # scrolling over the map prints debug info for the current block
-            cb = self.app.input.current_block
+            cb = self.ingameState.inputProcessor.current_block
             if cb:
                 di = cb.get_debug_infos()
                 for i in range(len(di)):

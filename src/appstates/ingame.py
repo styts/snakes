@@ -1,0 +1,149 @@
+from engine.debug_info import DebugInfo
+from engine.toolbar import Toolbar
+from engine.misc import reset_state
+from time import time
+import pygame
+
+from logic.snake import Move
+from engine.utils import solve
+#from misc import edit_map, reset_state
+#from misc import save_state
+#import pygame
+
+
+class AppState:
+    pass
+
+class InGame(AppState):
+    def __init__(self,app):
+        self.app = app
+        self.state = None # current level
+        self.debug_info = DebugInfo(self) # debug display
+        self.toolbar = Toolbar(self, app.screen, app.screen_w-300, 200) # 300 px off the right edge
+        
+        self.n_moves = 0 
+        self.time_began = time()
+        self.level_name = ""
+        
+        reset_state(self,"tempstate.json")
+        
+        # TODO: toggle edit mode from command line
+        self.edit_mode = True
+        self.state_complete = False
+
+        #ingame
+        self.inputProcessor = InGameInputProcessor(self)
+
+    def process_input_event(self,event):
+        self.inputProcessor.process(event)
+
+    def draw(self):
+        self.app.screen.blit(self.app.background, (0, 0))
+        
+        self.state.map.draw()
+        for s in self.state.snakes:
+            s.draw()
+        self.debug_info.draw()
+                
+        # number of moves
+        moves_str = "Moves: %s" % self.n_moves
+        ren_n_moves = self.app.font.render(moves_str,1,(255,255,0))
+        ren_n_moves_shadow = self.app.font.render(moves_str,1,(155,155,0))
+        self.app.screen.blit(ren_n_moves_shadow, (12,12))
+        self.app.screen.blit(ren_n_moves, (10,10))
+        
+        #time
+        delta = time()-self.time_began
+        min = int(delta / 60)#IGNORE:W0622
+        sec = int(delta % 60)
+        str_time = "%02d:%02d" % (min,sec)
+        ren_time = self.app.font.render(str_time,1,(255,255,0))
+        ren_time_shadow = self.app.font.render(str_time,1,(155,155,0))
+        # don't show time
+        ###self.screen.blit(ren_time_shadow, (482,12))
+        ###self.screen.blit(ren_time, (480,10))
+        
+        #completion
+        if self.state_complete:
+            ren_complete = self.app.font.render("COMPLETE",1,(155,255,0))
+            self.app.screen.blit(ren_complete, (250,10))
+        
+        if self.edit_mode:
+            self.toolbar.draw()
+
+class InGameInputProcessor():
+    def __init__(self,ingameState):
+        self.ingameState = ingameState
+        self.app = self.ingameState.app
+        self.holding = False
+        self.current_block = None
+
+    def process(self,event):
+        mods = pygame.key.get_mods()
+        map = self.ingameState.state.map #IGNORE:W0622
+
+        if event.type == pygame.MOUSEMOTION:
+            # event within map
+            if event.pos[0] > map.x_offset and event.pos[0] < map.x_offset+map.size_px and event.pos[1] > map.y_offset and event.pos[1] < map.size_px+map.y_offset:
+                # update block over which mouse is
+                b = map.get_tile_at(event.pos[0], event.pos[1])
+                if self.holding and b != self.current_block:
+                    se = self.current_block.get_snake_el()
+                    if se:
+                        if se.move(Move(se.x,se.y,b.x,b.y)):
+                            self.ingameState.n_moves = self.ingameState.n_moves + 1
+                            self.ingameState.state_complete = self.ingameState.state.is_complete()
+                self.current_block = b
+            else:
+                self.current_block = None
+                self.holding = False
+
+        # process motion over toolbar
+        #if event.pos[0] > self.app.toolbar.x_offset and event.pos[1] > self.app.toolbar.y_offset:
+        if self.ingameState.edit_mode:
+            self.ingameState.toolbar.process(event)
+
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.current_block != None:
+                self.holding = True
+            # ALT-clicking on a block prints debug into to stdout
+            if mods & pygame.K_LCTRL and self.current_block != None:
+                print self.current_block
+                if self.current_block.se:
+                    print self.current_block.se.get_moves()
+            if self.ingameState.edit_mode and self.ingameState.toolbar.current_button:
+                if edit_map(self.app.state,event,self.app.toolbar.current_button):
+                    reset_state(self.app,"tempstate.json")
+
+
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if self.current_block != None:
+                self.holding = False
+
+        ### INTERNAL (EDITOR, DEBUG)
+
+        # toggle debug info
+        if event.type == pygame.KEYUP and event.key == pygame.K_d:
+            self.app.debug_info.on = not self.app.debug_info.on
+        # reset map
+        if event.type == pygame.KEYUP and event.key == pygame.K_r:
+            reset_state(self.ingameState)
+        # solver solve
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            quit_on_first = not (mods & pygame.KMOD_LALT)
+            draw_graph = (mods & pygame.KMOD_CTRL) > 0
+            print "Control draw: " , draw_graph
+            solve(self.ingameState.state,debug_info=self.ingameState.debug_info,quit_on_first=quit_on_first,draw_graph=draw_graph)
+        # print map
+        if event.type == pygame.KEYUP and event.key == pygame.K_m:
+            self.app.map.pprint()
+
+        # toggle edit mode
+        if event.type == pygame.KEYUP and event.key == pygame.K_e:
+            self.app.edit_mode = not self.app.edit_mode
+
+        # save state/map
+        if event.type == pygame.KEYUP and event.key == pygame.K_n:
+            save_state(self.app.state)
+            self.app.toolbar.reload_buttons()
+    

@@ -51,34 +51,37 @@ def clean_map(app,n):
             coords['snakes'][i].append(v)
     reset_state(app,coords=coords)
 
-def reset_state(app,level_name=None,coords=None):
+def reset_state(ingameState,level_name=None,coords=None):
+    if ingameState.app.screen != None:
+        screen = ingameState.app.screen
+    else:
+        screen = None
     if not coords:
         if not level_name:
-            level_name = app.level_name
-        app.level_name = level_name
+            level_name = ingameState.level_name
+        ingameState.level_name = level_name
 
     if level_name:
-        app.state = State()
-        app.state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',level_name))
-        app.state.set_surface(app.screen)
-        map = app.state.map #IGNORE:W0622
-        #print app.state
+        ingameState.state = State()
+        ingameState.state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',level_name))
+        ingameState.state.set_surface(screen)
+        map = ingameState.state.map
     else:
         if not coords:
             coords = Map.load_coords(level_name,just_one=False) #just_one=True
-        map = Map(coordinates=coords['tiles'],debug_info=app.debug_info,surface=app.screen)#IGNORE:W0622
-        snakes = Snake.make_snakes(map,coords['snakes'],surface=app.screen)
-        app.state = State(map,snakes)
+        map = Map(coordinates=coords['tiles'],debug_info=ingameState.debug_info,surface=screen)#IGNORE:W0622
+        snakes = Snake.make_snakes(map,coords['snakes'],surface=screen)
+        ingameState.state = State(map,snakes)
 
 
-    if "debug_info" in dir(app):
-        app.debug_info.x_offset = app.screen_h
+    if "debug_info" in dir(ingameState):
+        ingameState.debug_info.x_offset = ingameState.app.screen_h
 
     # set the map centered
-    map.y_offset = (app.screen_h - map.size_px) / 2
-    map.x_offset = (app.screen_h - map.size_px) / 2
+    map.y_offset = (ingameState.app.screen_h - map.size_px) / 2
+    map.x_offset = (ingameState.app.screen_h - map.size_px) / 2
 
     # game-related stuff
-    app.n_moves = 0
-    app.time_began = time.time()
-    app.state_complete = False
+    ingameState.n_moves = 0
+    ingameState.time_began = time.time()
+    ingameState.state_complete = False

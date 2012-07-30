@@ -1,13 +1,21 @@
 #!/usr/bin/env python
+"""
+Usage: ./Snakes.py [ --menu | --level <level_name> ]
+
+Options:
+    -v --version        show version
+    -h --help           show this
+"""
+
 import sys
 sys.path.append("src")
 
-#import gc
-#gc.disable()
-#gc.set_debug(gc.DEBUG_STATS)
-
 from engine.app import App
+from docopt import docopt
 
-app = App()
-while app.is_running:
-    app.process()
+if __name__ == '__main__':
+    arguments = docopt(__doc__, version='Snakes 0.2.0')
+
+    app = App(arguments)
+    while app.is_running:
+        app.process()
