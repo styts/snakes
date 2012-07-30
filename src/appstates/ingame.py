@@ -1,4 +1,4 @@
-from engine.debug_info import DebugInfo
+from src.engine.debug_info import DebugInfo
 from engine.toolbar import Toolbar
 from engine.misc import reset_state
 from time import time

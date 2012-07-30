@@ -49,7 +49,7 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
         # end
         nx.draw(gr,pos,edgelist=[],nodelist=[sols[len(sols)-1]],node_size=500,alpha=0.5,node_color='g',with_labels=False)
         # path
-        nx.draw(gr,pos,edgelist=path,nodelist=sols,width=3,node_size=10,alpha=0.5,edge_color='r',font_family="monospace",font_size=12,with_labels=False)
+        nx.draw(gr,pos,edgelist=path,nodelist=sols,width=3,node_size=10,alpha=0.5,edge_color='r',font_family="monospace",font_size=10,with_labels=False)
 
     # all the nodes with labels along path only
     # with_labels=(sols and len(sols)<1000),labels=labels if sols else None
