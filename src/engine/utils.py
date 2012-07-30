@@ -1,9 +1,42 @@
 from threading import Thread
 import time
+import pygame
 #from guppy import hpy #@UnresolvedImport
 
 TARGETS = ['g']
 SNAKE_VALUES = ['G','B','Y','R','O','P']
+
+def patternize_tile(finalSurface, fn):
+    """Fills the surface with tiles from filename"""
+    # adopted from http://www.devshed.com/c/a/Python/PyGame-for-Game-Development-Font-and-Sprites/1/
+    
+    tileSurface = pygame.image.load(fn)
+    tileSurface.convert()
+
+    tileRect = tileSurface.get_rect()
+
+    sx, sy = finalSurface.get_size()
+    rows = int(sy/tileRect.height) + 1
+    columns = int(sx/tileRect.width) + 1
+
+    print rows, columns
+
+    for y in xrange(rows):
+        for x in xrange (columns):
+            # Start a new row
+            if x == 0 and y > 0:
+                # Move the rectangle
+                tileRect = tileRect.move([-(columns-1) * tileRect.width, tileRect.height])
+            # Continue a row
+            if x > 0:
+                # Move the rectangle
+                tileRect = tileRect.move([tileRect.width, 0])
+
+            finalSurface.blit(tileSurface, tileRect)
+                
+                
+
+    finalSurface.convert()
 
 def letter_to_color(letter):
     colors = {

@@ -34,8 +34,8 @@ class InGame(AppState):
 
     def _reset_background(self):
         """ draw the background"""
-        #self.app.screen.blit(self.app.background, (0, 0))
-        self.app.screen.fill((0, 0, 0))
+        self.app.screen.blit(self.app.background, (0, 0))
+        #self.app.screen.fill((0, 0, 0))
         self.app.dirty(self.app.background.get_rect())
 
     def process_input(self,event):
@@ -127,8 +127,8 @@ class InGame(AppState):
                 
         # number of moves
         moves_str = "Moves: %s" % self.n_moves
-        ren_n_moves = self.app.font.render(moves_str,1,(255,255,0))
-        ren_n_moves_shadow = self.app.font.render(moves_str,1,(155,155,0))
+        ren_n_moves = self.app.font.render(moves_str,1,(255,255,0,100))
+        ren_n_moves_shadow = self.app.font.render(moves_str,1,(155,155,0,100))
         self.app.screen.blit(ren_n_moves_shadow, (12,12))
         self.app.screen.blit(ren_n_moves, (10,10))
         

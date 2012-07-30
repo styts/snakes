@@ -1,6 +1,5 @@
 env
 dist
 build
-*.png
 data/graphs
 data/maps/tempstate.json

@@ -7,6 +7,7 @@ from debug_info import DebugInfo
 from engine.misc import reset_state
 import logic.ingame
 from appstates.ingame import InGame
+from engine.utils import patternize_tile
 
 class App():
     screen_w = 1024
@@ -33,8 +34,10 @@ class App():
         #self.input = Input(self)
 
         background = pygame.Surface(self.screen.get_size())
-        background = background.convert()
-        background.fill((0, 0, 0))
+        patternize_tile(background, "data/assets/tile.png")
+        #patternize_tile(background, "data/assets/128-64.png")
+        #background.fill((0, 0, 0))
+        #background.convert()
         self.background = background
 
         #TODO: allow setting resolution form command line
