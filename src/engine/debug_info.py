@@ -1,4 +1,4 @@
-from pygame.font import SysFont #@UnresolvedImport
+from pygame.font import SysFont
 from logic.tile import BLOCK_SIZE
 
 DBG_STRINGS = {'d1' : "DEBUG INFO:",
@@ -48,8 +48,11 @@ class DebugInfo:
             items = self.strings.items()
             items.sort()
             for k,v in items: #@UnusedVariable #IGNORE:W0612
-                ren = self.font.render(v,1,self.color)
-                self.app.screen.blit(ren, (self.x_offset,self.y_offset+i*(self.font.get_height()-5)))
+                ren = self.font.render(v, False,self.color,(0, 0, 0))
+                r = (self.x_offset,self.y_offset+i*(self.font.get_height()-5))
+                self.app.screen.blit(ren, r)
+
                 i = i + 1
+            #self.app.dirty(Rect())
 
         self.strings = DBG_STRINGS

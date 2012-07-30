@@ -17,5 +17,5 @@ if __name__ == '__main__':
     arguments = docopt(__doc__, version='Snakes 0.2.0')
 
     app = App(arguments)
-    while app.is_running:
-        app.process()
+    #while app.is_running:
+        #app.process()

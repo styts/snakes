@@ -23,6 +23,8 @@ def remove_map_file(levelname):
     pass
 
 def edit_map(state,event,button):
+    if not state:
+        return False
     t = state.map.get_tile_at(event.pos[0],event.pos[1])
     if not t:
         return False
@@ -84,4 +86,6 @@ def reset_state(ingameState,level_name=None,coords=None):
     # game-related stuff
     ingameState.n_moves = 0
     ingameState.time_began = time.time()
-    ingameState.state_complete = False
+    #ingameState.state_complete = False
+
+    ingameState._reset_background()

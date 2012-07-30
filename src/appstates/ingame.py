@@ -8,11 +8,8 @@ from logic.snake import Move
 from engine.utils import solve
 from engine.misc import edit_map, reset_state
 from engine.misc import save_state
+from appstates.appstate import AppState
 #import pygame
-
-
-class AppState:
-    pass
 
 class InGame(AppState):
     def __init__(self,app):
@@ -25,18 +22,44 @@ class InGame(AppState):
         self.time_began = time()
         self.level_name = ""
         
-        reset_state(self,"tempstate.json")
+        #reset_state(self,"tempstate.json")
 
         ## input variables
         self.holding = False
         self.current_block = None
         
-        # TODO: toggle edit mode from command line
-        self.edit_mode = True
-        self.state_complete = False
+        self.edit_mode = True # TODO: toggle edit mode from command line
+
+        self._reset_background() # once draw the background
+
+    def _reset_background(self):
+        """ draw the background"""
+        #self.app.screen.blit(self.app.background, (0, 0))
+        self.app.screen.fill((0, 0, 0))
+        self.app.dirty(self.app.background.get_rect())
 
     def process_input(self,event):
             mods = pygame.key.get_mods()
+
+            if self.edit_mode:
+                self.toolbar.process(event)
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if self.current_block != None:
+                    self.holding = True
+                if self.edit_mode and self.toolbar.current_button:
+                    if edit_map(self.state,event,self.toolbar.current_button):
+                        reset_state(self,"tempstate.json")
+
+
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                if self.current_block != None:
+                    self.holding = False
+
+
+            if not self.state: # what if we have no state/map loaded?
+                return
+
             map = self.state.map
 
             if event.type == pygame.MOUSEMOTION:
@@ -49,7 +72,8 @@ class InGame(AppState):
                         if se:
                             if se.move(Move(se.x,se.y,b.x,b.y)):
                                 self.n_moves = self.n_moves + 1
-                                self.state_complete = self.state.is_complete()
+                                self._reset_background()
+                                
                     self.current_block = b
                 else:
                     self.current_block = None
@@ -57,27 +81,15 @@ class InGame(AppState):
 
             # process motion over toolbar
             #if event.pos[0] > self.app.toolbar.x_offset and event.pos[1] > self.app.toolbar.y_offset:
-            if self.edit_mode:
-                self.toolbar.process(event)
+            
+            ### INTERNAL (EDITOR, DEBUG)
 
+            # ALT-clicking on a block prints debug into to stdout
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if self.current_block != None:
-                    self.holding = True
-                # ALT-clicking on a block prints debug into to stdout
                 if mods & pygame.K_LCTRL and self.current_block != None:
                     print self.current_block
                     if self.current_block.se:
                         print self.current_block.se.get_moves()
-                if self.edit_mode and self.toolbar.current_button:
-                    if edit_map(self.state,event,self.toolbar.current_button):
-                        reset_state(self,"tempstate.json")
-
-
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                if self.current_block != None:
-                    self.holding = False
-
-            ### INTERNAL (EDITOR, DEBUG)
 
             # toggle debug info
             if event.type == pygame.KEYUP and event.key == pygame.K_d:
@@ -103,15 +115,14 @@ class InGame(AppState):
 
             # save state/map
             if event.type == pygame.KEYUP and event.key == pygame.K_n:
-                save_state(self.app.state)
-                self.app.toolbar.reload_buttons()
+                save_state(self.state)
+                self.toolbar.reload_buttons()
 
     def draw(self):
-        self.app.screen.blit(self.app.background, (0, 0))
-        
-        self.state.map.draw()
-        for s in self.state.snakes:
-            s.draw()
+        if self.state:
+            self.state.map.draw()
+            for s in self.state.snakes:
+                s.draw()
         self.debug_info.draw()
                 
         # number of moves
@@ -133,7 +144,7 @@ class InGame(AppState):
         ###self.screen.blit(ren_time, (480,10))
         
         #completion
-        if self.state_complete:
+        if self.state and self.state.is_complete():
             ren_complete = self.app.font.render("COMPLETE",1,(155,255,0))
             self.app.screen.blit(ren_complete, (250,10))
         
