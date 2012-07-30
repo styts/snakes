@@ -30,7 +30,7 @@ class DebugInfo:
     def draw(self):
         if self.on:
             # scrolling over the map prints debug info for the current block
-            cb = self.ingameState.inputProcessor.current_block
+            cb = self.ingameState.current_block
             if cb:
                 di = cb.get_debug_infos()
                 for i in range(len(di)):

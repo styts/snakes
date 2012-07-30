@@ -4,6 +4,11 @@ import os
 import pygame
 import weakref
 
+
+
+import operator # make SE offsetting work
+OFFSET_PIXELS = 2
+
 # prevent picloud not finding file error
 circle_glyph_fn = os.path.join('data', 'sprites', 'stone.png')
 if os.path.exists(circle_glyph_fn):
@@ -201,11 +206,15 @@ class SnakeElement() :
 
 
     def draw(self):
+        # TODO: such a waste of time to recolor every frame??!
         if self.snake.surface:
             sprite = SNAKE_SURFACES['stone'].copy()
             sprite.fill(self.snake.color,None,pygame.BLEND_RGBA_MULT)
             if sprite:
-                self.snake.surface.blit(sprite,self._get_corner())
+                offset = (OFFSET_PIXELS, OFFSET_PIXELS)
+                xy = self._get_corner()
+                xy = tuple(map(operator.add, xy, offset))
+                self.snake.surface.blit(sprite,xy)
 
 # a snake consists of elements and a color
 # it is either completed or not (on it's ziel block)

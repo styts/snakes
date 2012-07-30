@@ -12,7 +12,7 @@ class App():
     screen_w = 1024
     screen_h = 768
 
-    appstate = None
+    appstate = None # holds an AppState subclass instance (Menu, InGame, etc.)
     #screen_w = 800
     #screen_h = 600
     #screen_w = 640
@@ -48,7 +48,7 @@ class App():
         ## PRO
         events = pygame.event.get()
         for event in events:
-            self.appstate.process_input_event(event)
+            self.appstate.process_input(event)
 
             # ESC quits app
             if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame. K_ESCAPE):

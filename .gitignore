@@ -3,4 +3,4 @@ dist
 build
 *.png
 data/graphs
-data/maps/tempstate.jso
+data/maps/tempstate.json

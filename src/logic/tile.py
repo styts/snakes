@@ -3,7 +3,7 @@ from src.engine.utils import TARGETS
 import pygame #@UnresolvedImport
 #import weakref
 
-BLOCK_SIZE = 60
+BLOCK_SIZE = 64
 # terrain. walkable/unwalkable, ziele, etc.
 class Tile():
     def get_debug_infos(self):

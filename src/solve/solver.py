@@ -42,10 +42,10 @@ class Solver:
 
         if os.path.exists(tmp_pickle) and self.use_temp:
             # unpickle existing solution graph
-            tmp_slv = pickle.load(open(tmp_pickle,'rb'))
-            self.gr = tmp_slv.gr
-            self.sols = tmp_slv.sols
-            del tmp_slv
+            (tmp_gr, tmp_sols) = pickle.load(open(tmp_pickle,'rb'))
+            self.gr = tmp_gr
+            self.sols = tmp_sols
+            del tmp_gr, tmp_sols
             print "Unpickled ", tmp_pickle
         else:
             # solve graph form inital state
@@ -69,7 +69,7 @@ class Solver:
             #from src.engine.utils import get_pickling_errors
             #print get_pickling_errors(self)
             #del self.state
-            pickle.dump( [self.gr, self.sols], open( tmp_pickle, "wb" ))
+            pickle.dump( (self.gr, self.sols), open( tmp_pickle, "wb" ))
             print "done"
 
 
