@@ -3,8 +3,8 @@ from src.logic.state import State
 import cloud, os
 
 
-def _process(json_data, use_cloud):
-    slv = Solver(quit_on_first=False, use_cloud=use_cloud)
+def _process(json_data):
+    slv = Solver(quit_on_first=False, use_cloud=True)
     st = State()
 
     st.load_from_json(json_data)
@@ -32,17 +32,17 @@ def _process(json_data, use_cloud):
         print "Graph Image %s already exists" % pngfull
     
 
-def process_json(json_data, use_cloud=True):
-    """In the cloud or locally:
-    Invoke Solver
-    Populate and solve graph (or load it from tmp/ if it''s there)
-    Save graph image into graphs/"""
-    if not use_cloud:
-        ret = _process(json_data, use_cloud)
-    else:
-        ret = cloud.call(_process, json_data, use_cloud=True, _type="f2", _env='pygame_env' )#_vol=['graphs'])
+# def process_json(json_data, use_cloud=True):
+#     """In the cloud or locally:
+#     Invoke Solver
+#     Populate and solve graph (or load it from tmp/ if it''s there)
+#     Save graph image into graphs/"""
+#     if not use_cloud:
+#         ret = _process(json_data, use_cloud)
+#     else:
+#         ret = cloud.call(_process, json_data, use_cloud=True, _type="f2", _env='pygame_env' )#_vol=['graphs'])
 
-    return ret
+#     return ret
 
 def process_all_maps():
     # take the .json file in maps/ and process them in the cloud, saving the graphs(.pickle & .png) in bucket "graphs"
