@@ -1,6 +1,6 @@
 from src.solve.solver import Solver
 from src.logic.state import State
-import cloud
+import cloud, os
 
 
 def _process(json_data, use_cloud):
@@ -9,26 +9,38 @@ def _process(json_data, use_cloud):
 
     st.load_from_json(json_data)
     slv.set_state(st)
-    
-    cloud.volume.sync('graphs:', 'tmp/') # sync .pickles from bucket, to prevent unnecessary computation
 
+    # fetch remote pickle if exists
+    filelist = cloud.files.list()
+    pf = '%s.pickle' % st.__hash__()
+    pffull = os.path.join('data','graphs', pf)
+    if pf in filelist:
+        cloud.files.get(pf, pffull)
+    
     sols = slv.solve()
 
-    cloud.volume.sync('tmp/', 'graphs:') # sync .pickle to bucket (the drawing may crash, so sync before it)
-
-    slv.draw_graph(filename='%s%s.png' % ("tmp/", st.__hash__()))
+    # upload solution
+    cloud.files.put(pffull, pf)
     
-    cloud.volume.sync('tmp/', 'graphs:') # sync .png to bucket
+    # the image
+    png = '%s.png' % st.__hash__()
+    pngfull = os.path.join('data', 'graphs', png)
+    if png not in filelist: # FIXME , pngfull does not exist, since we never synced it.
+        slv.draw_graph(filename=pngfull)
+        cloud.files.put(pngfull, png)
+    else:
+        print "Graph Image %s already exists" % pngfull
+    
 
-def process_json(json_data, use_cloud=True, use_temp=True):
+def process_json(json_data, use_cloud=True):
     """In the cloud or locally:
     Invoke Solver
     Populate and solve graph (or load it from tmp/ if it''s there)
     Save graph image into graphs/"""
     if not use_cloud:
-        ret = _process(json_data,use_cloud)
+        ret = _process(json_data, use_cloud)
     else:
-        ret = cloud.call(_process, json_data, use_cloud=use_cloud, _env='pygame_env', _vol=['graphs'])
+        ret = cloud.call(_process, json_data, use_cloud=True, _type="f2", _env='pygame_env' )#_vol=['graphs'])
 
     return ret
 

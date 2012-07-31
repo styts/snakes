@@ -27,3 +27,8 @@ Bugs
 ====
 Currently the Solver crashes on more complicated graphs (larger ones), giving the error:
     illegal hardware instruction
+
+TODO:
+====
+* add "eyes" or something to distinguish the pullable components (maybe also add arrows?)
+* "hardcore mode" : when life decreses consistenly through the leveles with extra moves

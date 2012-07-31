@@ -3,11 +3,12 @@ import time
 import pygame
 #from guppy import hpy #@UnresolvedImport
 
-TARGETS = ['g','b','y','r']
+TARGETS = ['g','b','y','r'] # Tile.v
 SNAKE_VALUES = ['G','B','Y','R','O','P']
 
 def patternize_tile(finalSurface, fn):
     """Fills the surface with tiles from filename"""
+    """Called once when creating a level backgorund"""
     # adopted from http://www.devshed.com/c/a/Python/PyGame-for-Game-Development-Font-and-Sprites/1/
     
     tileSurface = pygame.image.load(fn)
@@ -19,8 +20,6 @@ def patternize_tile(finalSurface, fn):
     rows = int(sy/tileRect.height) + 1
     columns = int(sx/tileRect.width) + 1
 
-    print rows, columns
-
     for y in xrange(rows):
         for x in xrange (columns):
             # Start a new row
@@ -31,11 +30,7 @@ def patternize_tile(finalSurface, fn):
             if x > 0:
                 # Move the rectangle
                 tileRect = tileRect.move([tileRect.width, 0])
-
             finalSurface.blit(tileSurface, tileRect)
-                
-                
-
     finalSurface.convert()
 
 def letter_to_color(letter):
@@ -73,7 +68,6 @@ class _SolverThread(Thread):
         if self.draw_graph:
             self.solver.draw_graph("data/graphs/graph-%s.png" % self.solver.state.__hash__())
         print "Took %d seconds" % int(time.time() - self.t)
-
 
 
 def solve(state,debug_info=False,quit_on_first=False,draw_graph=True):

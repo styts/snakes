@@ -49,6 +49,12 @@ class Tile():
             return "-"
         return self.se.snake.v
 
+    def _init_helper_surface(self):
+        self.helper_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+        self.helper_surface.fill(self.color) 
+        self.helper_surface.set_alpha(200)
+        self.helper_surface.convert_alpha()
+
     def __repr__(self):
         return str(self.v)
 
@@ -62,11 +68,12 @@ class Tile():
         self.se = None
         self.color = letter_to_color(str(v))
 
-        # we can't just fill screen, we need a helper surface if we want transparency
-        self.helper_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
-        self.helper_surface.fill(self.color) 
-        self.helper_surface.set_alpha(200)
-        self.helper_surface.convert_alpha()
+        if self.surface: # only in graphics mode
+            # we can't just fill screen, we need a helper surface if we want transparency
+            self._init_helper_surface()
+        else:
+            self.helper_surface = None
+            
 
 
     def draw(self,debug_info=None):
@@ -78,4 +85,6 @@ class Tile():
             pygame.draw.rect(self.surface, self.color, r, 1) # debug border
             if self.v == 1 or self.v == '1': # don't draw unwalkable blocks - they're ugly
                 return
+            if not self.helper_surface:
+                self._init_helper_surface()
             self.surface.blit( self.helper_surface, r )

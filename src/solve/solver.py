@@ -22,6 +22,12 @@ class Solver:
         self.quit_on_first = quit_on_first
         self.MAX_RECURSION_DEPTH = 1000000
 
+        # create tmp pickle dir if not exist
+        td = os.path.join("data","graphs")
+        if not os.path.exists(td):
+            os.makedirs(td)
+        self.tempdir = td
+
         # make pickling work when called from GUI (on Surface object)
         #import copy_reg
         #copy_reg.pickle(pygame.Surface,lambda x: [])
@@ -32,13 +38,8 @@ class Solver:
         self.gr = nx.Graph(finals=[])
 
     def solve(self):
-        # create tmp pickle dir if not exist
-        td = os.path.join("data","graphs")
-        if not os.path.exists(td):
-            os.makedirs(td)
-
         # load plckled object if possible, otherwise compute(populate and solve) graph
-        tmp_pickle = os.path.join(td,"%s.pickle" % self.state.__hash__())
+        tmp_pickle = os.path.join(self.tempdir,"%s.pickle" % self.state.__hash__())
 
         if os.path.exists(tmp_pickle) and self.use_temp:
             # unpickle existing solution graph
