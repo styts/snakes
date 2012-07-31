@@ -75,7 +75,7 @@ class App():
         self.appstate.draw()
 
         # write fps
-        fps_surf = self.sysfont.render("FPS: %s" % self.clock.get_fps(), False, (255,255,255), (0, 0, 0))
+        fps_surf = self.sysfont.render("FPS: %2.2f" % self.clock.get_fps(), False, (255,255,255), (0, 0, 0))
         self.dirty(self.screen.blit(fps_surf, (0, 0)))
 
 

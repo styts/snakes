@@ -16,7 +16,7 @@ class InGame(AppState):
         self.app = app
         self.state = None # current level
         self.debug_info = DebugInfo(self) # debug display
-        self.toolbar = Toolbar(self, app.screen, app.screen_w-300, 200) # 300 px off the right edge
+        self.toolbar = Toolbar(self, app.screen, app.screen_w-250, 200) # 250 px off the right edge, 200 from top
         
         self.n_moves = 0 
         self.time_began = time()

@@ -17,11 +17,11 @@ class DebugInfo:
         self.strings[key] = val
         
     def __init__(self,ingameState):
-        self.font = SysFont("Courier",12)
+        self.font = SysFont("Courier",16)
         self.ingameState = ingameState
         self.app = self.ingameState.app
         self.color     = 200,200,200
-        self.color_map = 100,100,100
+        self.color_map = 0,255,255#255,200,200
         self.on = True
         self.strings = DBG_STRINGS
         self.x_offset = 0 # will be set with map init
@@ -35,10 +35,11 @@ class DebugInfo:
                 di = cb.get_debug_infos()
                 for i in range(len(di)):
                     d = di[i]
-                    ren = self.font.render(d,1,self.color_map)
+                    ren = self.font.render(d,0,self.color_map)
                     try:
-                        self.app.screen.blit(ren, (cb.map.x_offset + cb.x*BLOCK_SIZE,
-                                                   cb.map.y_offset + cb.y*BLOCK_SIZE+i*(self.font.get_height()-5)))
+                        r = (cb.map.x_offset + cb.x*BLOCK_SIZE,
+                            cb.map.y_offset + cb.y*BLOCK_SIZE+i*(self.font.get_height()-5))
+                        self.app.screen.blit(ren, r)
                     except ReferenceError:
                         pass
                     

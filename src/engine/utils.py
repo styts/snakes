@@ -3,7 +3,7 @@ import time
 import pygame
 #from guppy import hpy #@UnresolvedImport
 
-TARGETS = ['g']
+TARGETS = ['g','b','y','r']
 SNAKE_VALUES = ['G','B','Y','R','O','P']
 
 def patternize_tile(finalSurface, fn):
@@ -47,6 +47,9 @@ def letter_to_color(letter):
               "O" : (255,102,51),
               "P" : (153,51,153),
               'g' : (0,102,0),
+              'b' : (0,0,102),
+              'y' : (102,102,0),
+              'r' : (102,0,0),
               '0' : (20,20,20),
               '1' : (50,50,50)
               }
