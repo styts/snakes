@@ -11,13 +11,20 @@ import operator # make SE offsetting work
 
 # prevent picloud not finding file error
 circle_glyph_fn = os.path.join('data', 'sprites', 'stone.png')
+arrow_glyph_fn = os.path.join('data', 'sprites', 'arrow.png')
 if os.path.exists(circle_glyph_fn):
     circle_glyph = pygame.image.load(circle_glyph_fn)
+    arrow_glyph = pygame.image.load(arrow_glyph_fn)
+    
+    #arrow_glyph.set_alpha(1)
+    aa = arrow_glyph.get_width()/2
 else:
     circle_glyph = None
+    arrow_glyph = None
 
 SNAKE_SURFACES = {
                   "stone" : circle_glyph,
+                  "arrow" : arrow_glyph,
                   }
 
 OFFSET_PIXELS = (BLOCK_SIZE - circle_glyph.get_width()) / 2
@@ -164,6 +171,15 @@ class SnakeElement() :
             foo.append("right")
         return foo
 
+    def _can_move_to(self):
+        foo = []
+        for m in self.get_moves():
+            if m.x1 == m.x2 and m.y1+1 == m.y2: foo.append("S")
+            if m.x1 == m.x2 and m.y1-1 == m.y2: foo.append("N")
+            if m.x1 == m.x2+1 and m.y1 == m.y2: foo.append("W")
+            if m.x1 == m.x2-1 and m.y1 == m.y2: foo.append("E")
+        return foo
+
     def get_sprite(self,df,next,prev):
         ns = self._get_neigh_rels(next, prev)
 
@@ -207,15 +223,31 @@ class SnakeElement() :
 
 
     def draw(self):
-        # TODO: such a waste of time to recolor every frame??!
+        def draw_arrow(arrow,surface,offset,angle):
+            ac = tuple(map(operator.add, self.get_center(), offset))
+            surface.blit(pygame.transform.rotate(arrow,angle),ac)
+
+        # FIXME: such a waste of time to recolor every frame??!
         if self.snake.surface:
             sprite = SNAKE_SURFACES['stone'].copy()
             sprite.fill(self.snake.color,None,pygame.BLEND_RGBA_MULT)
+
+            arrow = SNAKE_SURFACES['arrow'].copy()
+            col = self.snake.color + (120,)
+            arrow.fill(col,None,pygame.BLEND_RGBA_MULT)
+            
             if sprite:
                 offset = (OFFSET_PIXELS, OFFSET_PIXELS)
                 xy = self._get_corner()
                 xy = tuple(map(operator.add, xy, offset))
                 self.snake.surface.blit(sprite,xy)
+
+                ms = self._can_move_to()
+                if "N" in ms: offset = (-aa,-3*aa); angle = 90; draw_arrow(arrow, self.snake.surface, offset, angle)
+                if "S" in ms: offset = (-aa,aa); angle = -90; draw_arrow(arrow, self.snake.surface, offset, angle)
+                if "W" in ms: offset = (-3*aa,-aa); angle = 180; draw_arrow(arrow, self.snake.surface, offset, angle)
+                if "E" in ms: offset = (aa,-aa); angle = 0; draw_arrow(arrow, self.snake.surface, offset, angle)
+                
 
 # a snake consists of elements and a color
 # it is either completed or not (on it's ziel block)
