@@ -1,7 +1,6 @@
 from threading import Thread
 import time
 import pygame
-#from guppy import hpy #@UnresolvedImport
 
 TARGETS = ['g','b','y','r'] # Tile.v
 SNAKE_VALUES = ['G','B','Y','R','O','P']
@@ -82,29 +81,3 @@ def get_life_values(used_moves, min_moves, max_life, bonus_max):
 def solve(state,debug_info=False,quit_on_first=False,draw_graph=True):
     st = _SolverThread(state,draw_graph,quit_on_first,debug_info)
     st.start()
-
-
-# import pickle
-# def get_pickling_errors(obj,seen=None):
-#     if seen == None:
-#         seen = []
-#     try:
-#         state = obj.__getstate__()
-#     except AttributeError:
-#         return
-#     if state == None:
-#         return
-#     if isinstance(state,tuple):
-#         if not isinstance(state[0],dict):
-#             state=state[1]
-#         else:
-#             state=state[0].update(state[1])
-#     result = {}    
-#     for i in state:
-#         try:
-#             pickle.dumps(state[i],protocol=2)
-#         except pickle.PicklingError:
-#             if not state[i] in seen:
-#                 seen.append(state[i])
-#                 result[i]=get_pickling_errors(state[i],seen)
-#     return result

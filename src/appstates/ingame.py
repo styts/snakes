@@ -12,6 +12,8 @@ from appstates.appstate import AppState
 from appstates.lifemeter import LifeMeter
 #import pygame
 
+MAX_LIFE = 20
+
 class InGame(AppState):
     def __init__(self,app):
         self.app = app
@@ -23,7 +25,7 @@ class InGame(AppState):
         self.time_began = time()
         self.level_name = ""
         
-        #reset_state(self,"tempstate.json")
+        reset_state(self,"tempstate.json")
 
         ## input variables
         self.holding = False
@@ -34,8 +36,8 @@ class InGame(AppState):
         self._reset_background() # once draw the background
 
         self.level_minmoves = 3 # TODO: read from state or whatever
-        self.bonus_max = 5 # watever
-        self.max_life = 10 # used consistently in all levels!
+        self.bonus_max = self.level_minmoves # set it to same as minmoves for now
+        self.max_life = MAX_LIFE # used consistently in all levels!
         self.lifemeter = LifeMeter(self.level_minmoves, self.bonus_max, self.max_life) # the bar on the side
 
     def _reset_background(self):
