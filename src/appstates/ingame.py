@@ -9,6 +9,7 @@ from engine.utils import solve
 from engine.misc import edit_map, reset_state
 from engine.misc import save_state
 from appstates.appstate import AppState
+from appstates.lifemeter import LifeMeter
 #import pygame
 
 class InGame(AppState):
@@ -31,6 +32,10 @@ class InGame(AppState):
         self.edit_mode = True # TODO: toggle edit mode from command line
 
         self._reset_background() # once draw the background
+
+        self.level_minmoves = 10 # TODO: read from state or whatever
+        self.extra_moves = 5 # watever 
+        self.lifemeter = LifeMeter(self.level_minmoves, self.extra_moves) # the bar on the side
 
     def _reset_background(self):
         """ draw the background"""
@@ -144,6 +149,9 @@ class InGame(AppState):
         # don't show time
         ###self.screen.blit(ren_time_shadow, (482,12))
         ###self.screen.blit(ren_time, (480,10))
+
+        # Life Meter Bar
+        self.lifemeter.draw(self.app.screen, self.n_moves)
         
         #completion
         if self.state and self.state.is_complete():

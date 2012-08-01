@@ -66,7 +66,7 @@ class _SolverThread(Thread):
     def run(self):
         self.solver.solve()
         if self.draw_graph:
-            self.solver.draw_graph("data/graphs/graph-%s.png" % self.solver.state.__hash__())
+            self.solver.draw_graph("data/graphs/graph-%s.png" % self.solver.state.__hash__()) #FIXME remove graph- prefix for consistency
         print "Took %d seconds" % int(time.time() - self.t)
 
 

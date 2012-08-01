@@ -7,6 +7,7 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
     plt.figure(1,figsize=size)
 
     sols = all_solutions[0] if len(all_solutions) else None
+    shortest_n = (len(all_solutions[0])-1) if len(all_solutions) else None # number (-1) for shortest path
 
     # not all labels should be displayed, only those that are part of the solution
     labels = {}
@@ -26,6 +27,8 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
             n = s[i]
             if i == len(s)-1:
                 final_labels[n] = len(s)-1
+                if len(s)-1 != shortest_n: # display number on only the finals which are shortest
+                    final_labels[n] = ''
 
     # assign edges to path (to draw highlighted)
     if sols:
@@ -36,7 +39,8 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
             e = (u,v)
             path.append(e)
 
-    pos=nx.pygraphviz_layout(gr)
+    #pos=nx.pygraphviz_layout(gr)
+    pos=nx.pygraphviz_layout(gr,prog='sfdp') # sfdp for large graphs
     #pos=nx.graphviz_layout(gr,prog="twopi",root=start_node)
     #pos=nx.graphviz_layout(gr,prog='twopi',args='')
     #pos=nx.spring_layout(gr) # positions for all nodes
@@ -45,7 +49,7 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
         # begin
         nx.draw(gr,pos,edgelist=[],nodelist=[sols[0]],node_size=500,alpha=0.5,node_color='b',with_labels=False)
         # finals
-        nx.draw(gr,pos,edgelist=[],nodelist=gr.graph['finals'],node_size=100,alpha=0.5,node_color='y',labels=final_labels)
+        nx.draw(gr,pos,edgelist=[],nodelist=gr.graph['finals'],node_size=100,alpha=0.5,node_color='y',font_size=16,labels=final_labels)
         # end
         nx.draw(gr,pos,edgelist=[],nodelist=[sols[len(sols)-1]],node_size=500,alpha=0.5,node_color='g',with_labels=False)
         # path

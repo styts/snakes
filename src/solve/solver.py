@@ -75,7 +75,9 @@ class Solver:
 
 
     def draw_graph(self,filename=None,**kwargs):
-        return plotter.save_graph(self.gr, self.state.__hash__(), all_solutions=self.sols, filename=filename, use_cloud=self.use_cloud, **kwargs)
+        g = plotter.save_graph(self.gr, self.state.__hash__(), all_solutions=self.sols, filename=filename, use_cloud=self.use_cloud, **kwargs)
+        if filename and not self.use_cloud:
+            os.system("open %s" % filename)
         
     def _attach_debugs(self,depth=None,shortest=None):
         """Used by the GUI"""
