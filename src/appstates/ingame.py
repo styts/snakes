@@ -40,7 +40,7 @@ class InGame(AppState):
         self.max_life = MAX_LIFE # used consistently in all levels!
         self.lifemeter = None
 
-        self.reset_state("tempstate.json")
+        #self.reset_state("tempstate.json")
 
     def _reset_background(self):
         """ draw the background"""
