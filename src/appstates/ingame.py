@@ -5,7 +5,7 @@ from time import time
 import pygame
 
 from logic.snake import Move
-from engine.utils import solve
+from engine.utils import solve, get_life_values
 from engine.misc import edit_map, reset_state
 from engine.misc import save_state
 from appstates.appstate import AppState
@@ -33,9 +33,10 @@ class InGame(AppState):
 
         self._reset_background() # once draw the background
 
-        self.level_minmoves = 10 # TODO: read from state or whatever
-        self.extra_moves = 5 # watever 
-        self.lifemeter = LifeMeter(self.level_minmoves, self.extra_moves) # the bar on the side
+        self.level_minmoves = 3 # TODO: read from state or whatever
+        self.bonus_max = 5 # watever
+        self.max_life = 10 # used consistently in all levels!
+        self.lifemeter = LifeMeter(self.level_minmoves, self.bonus_max, self.max_life) # the bar on the side
 
     def _reset_background(self):
         """ draw the background"""
@@ -151,7 +152,8 @@ class InGame(AppState):
         ###self.screen.blit(ren_time, (480,10))
 
         # Life Meter Bar
-        self.lifemeter.draw(self.app.screen, self.n_moves)
+        life_values = get_life_values(self.n_moves, self.level_minmoves, self.max_life, self.bonus_max)
+        self.lifemeter.draw(self.app.screen, life_values)
         
         #completion
         if self.state and self.state.is_complete():

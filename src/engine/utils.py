@@ -70,6 +70,15 @@ class _SolverThread(Thread):
         print "Took %d seconds" % int(time.time() - self.t)
 
 
+
+
+def get_life_values(used_moves, min_moves, max_life, bonus_max):
+    safety = max(0, min_moves - used_moves)
+    bonus = max(0, min(bonus_max, min_moves + bonus_max - used_moves))
+    life = max(0, min(max_life, min_moves + bonus_max + max_life - used_moves))
+    r = (life, bonus, safety)
+    return r
+
 def solve(state,debug_info=False,quit_on_first=False,draw_graph=True):
     st = _SolverThread(state,draw_graph,quit_on_first,debug_info)
     st.start()
