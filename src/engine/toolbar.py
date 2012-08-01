@@ -5,6 +5,7 @@ import os
 import glob
 import weakref
 import pygame
+from src.utils.sort import sort_nicely
 
 WIDTH_OF_BUTTON = 39
 
@@ -73,6 +74,7 @@ class Toolbar:
         self.buttons.append([])
         maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.png")
         maps += glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")
+        sort_nicely(maps) # sort (natural order) by first integer - state graph size
         row = 3 
         for fn in maps:
             fn = os.path.basename(fn)
