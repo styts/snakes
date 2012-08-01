@@ -92,5 +92,6 @@ class Tile():
                 return
             if not self.helper_surface:
                 self._init_helper_surface()
-            #self.surface.blit( shadow_surface, (r[0]+5,r[1]+5) )
+            # blit a shadow
+            ##### self.surface.blit( shadow_surface, (r[0]+5,r[1]+5) )
             self.surface.blit( self.helper_surface, r )
