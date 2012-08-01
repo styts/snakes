@@ -4,7 +4,6 @@ import pygame, sys, os
 from pygame.locals import FULLSCREEN
 from pygame.font import SysFont
 from debug_info import DebugInfo
-from engine.misc import reset_state
 import logic.ingame
 from appstates.ingame import InGame
 from engine.utils import patternize_tile

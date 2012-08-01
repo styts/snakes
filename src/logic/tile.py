@@ -3,7 +3,13 @@ from src.engine.utils import TARGETS
 import pygame #@UnresolvedImport
 #import weakref
 
-BLOCK_SIZE = 64
+BLOCK_SIZE = 68
+
+#pygame.display.get_init()
+# FIXME does this work on server?
+shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+shadow_surface.set_alpha(170)
+
 # terrain. walkable/unwalkable, ziele, etc.
 class Tile():
     def get_debug_infos(self):
@@ -52,7 +58,7 @@ class Tile():
     def _init_helper_surface(self):
         self.helper_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
         self.helper_surface.fill(self.color) 
-        self.helper_surface.set_alpha(200)
+        self.helper_surface.set_alpha(170)
         self.helper_surface.convert_alpha()
 
     def __repr__(self):
@@ -74,17 +80,17 @@ class Tile():
         else:
             self.helper_surface = None
             
-
-
     def draw(self,debug_info=None):
         if self.surface:
             r = (self.map.x_offset + BLOCK_SIZE * self.x,
                               self.map.y_offset + BLOCK_SIZE * self.y,
                               BLOCK_SIZE, BLOCK_SIZE)
 
-            pygame.draw.rect(self.surface, self.color, r, 1) # debug border
+            if debug_info and debug_info.on:
+                pygame.draw.rect(self.surface, self.color, r, 1) # debug border
             if self.v == 1 or self.v == '1': # don't draw unwalkable blocks - they're ugly
                 return
             if not self.helper_surface:
                 self._init_helper_surface()
+            #self.surface.blit( shadow_surface, (r[0]+5,r[1]+5) )
             self.surface.blit( self.helper_surface, r )

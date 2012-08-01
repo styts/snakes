@@ -1,16 +1,18 @@
+import time
+import pygame
+import os
+import pickle
+
 from src.engine.debug_info import DebugInfo
 from engine.toolbar import Toolbar
-from engine.misc import reset_state
-from time import time
-import pygame
-
-from logic.snake import Move
+from logic.snake import Snake, Move
+from src.logic.state import State
+from src.logic.map import Map
 from engine.utils import solve, get_life_values
-from engine.misc import edit_map, reset_state
+from engine.misc import edit_map
 from engine.misc import save_state
 from appstates.appstate import AppState
 from appstates.lifemeter import LifeMeter
-#import pygame
 
 MAX_LIFE = 20
 
@@ -22,11 +24,9 @@ class InGame(AppState):
         self.toolbar = Toolbar(self, app.screen, app.screen_w-250, 200) # 250 px off the right edge, 200 from top
         
         self.n_moves = 0 
-        self.time_began = time()
+        self.time_began = time.time()
         self.level_name = ""
         
-        reset_state(self,"tempstate.json")
-
         ## input variables
         self.holding = False
         self.current_block = None
@@ -35,10 +35,12 @@ class InGame(AppState):
 
         self._reset_background() # once draw the background
 
-        self.level_minmoves = 3 # TODO: read from state or whatever
+        self.level_minmoves = -1 # TODO: read from state or whatever
         self.bonus_max = self.level_minmoves # set it to same as minmoves for now
         self.max_life = MAX_LIFE # used consistently in all levels!
-        self.lifemeter = LifeMeter(self.level_minmoves, self.bonus_max, self.max_life) # the bar on the side
+        self.lifemeter = None
+
+        self.reset_state("tempstate.json")
 
     def _reset_background(self):
         """ draw the background"""
@@ -57,7 +59,7 @@ class InGame(AppState):
                     self.holding = True
                 if self.edit_mode and self.toolbar.current_button:
                     if edit_map(self.state,event,self.toolbar.current_button):
-                        reset_state(self,"tempstate.json")
+                        self.reset_state("tempstate.json")
 
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
@@ -105,7 +107,7 @@ class InGame(AppState):
 
             # reset map
             if event.type == pygame.KEYUP and event.key == pygame.K_r:
-                reset_state(self)
+                self.reset_state()
 
             # solver solve
             if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
@@ -143,7 +145,7 @@ class InGame(AppState):
         self.app.screen.blit(ren_n_moves, (10,10))
         
         #time
-        delta = time()-self.time_began
+        delta = time.time()-self.time_began
         min = int(delta / 60)#IGNORE:W0622
         sec = int(delta % 60)
         str_time = "%02d:%02d" % (min,sec)
@@ -155,7 +157,8 @@ class InGame(AppState):
 
         # Life Meter Bar
         life_values = get_life_values(self.n_moves, self.level_minmoves, self.max_life, self.bonus_max)
-        self.lifemeter.draw(self.app.screen, life_values)
+        if self.lifemeter:
+            self.lifemeter.draw(self.app.screen, life_values)
         
         #completion
         if self.state and self.state.is_complete():
@@ -164,3 +167,64 @@ class InGame(AppState):
         
         if self.edit_mode:
             self.toolbar.draw()
+
+    def clean_map(self,n):
+        """used by editor in the toolbar, it sets map to a clean square of size n x n"""
+        coords = {"tiles" : [], "snakes": []}
+        for i in xrange(n):
+            coords['tiles'].append([])
+            coords['snakes'].append([])
+            for j in xrange(n):
+                v = 1
+                coords['tiles'][i].append(v)
+                coords['snakes'][i].append(v)
+        self.reset_state(coords=coords)
+
+    def reset_state(self,level_name=None,coords=None):
+        if self.app.screen != None:
+            screen = self.app.screen
+        else:
+            screen = None
+        if not coords:
+            if not level_name:
+                level_name = self.level_name
+            self.level_name = level_name
+
+        if level_name:
+            self.state = State()
+            self.state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',level_name))
+            self.state.set_surface(screen)
+            map = self.state.map
+        else:
+            if not coords:
+                coords = Map.load_coords(level_name,just_one=False) #just_one=True
+            #print "oof", self.debug_info
+            map = Map(coordinates=coords['tiles'],debug_info=self.debug_info,surface=screen)#IGNORE:W0622
+            snakes = Snake.make_snakes(map,coords['snakes'],surface=screen)
+            self.state = State(map,snakes)
+
+
+        if "debug_info" in dir(self):
+            self.debug_info.x_offset = self.app.screen_h
+
+        # set the map centered
+        map.y_offset = (self.app.screen_h - map.size_px) / 2
+        map.x_offset = (self.app.screen_h - map.size_px) / 2
+
+        # game-related stuff
+        self.n_moves = 0
+        self.time_began = time.time()
+        #self.state_complete = False
+
+        self._reset_background()
+
+        #### load the level data?
+        
+        fn = 'data/graphs/%s.pickle'%self.state.__hash__()
+        if os.path.exists(fn):
+            (tmp_gr, tmp_sols) = pickle.load(open(fn,'rb'))
+            self.level_minmoves = tmp_sols[0].__len__()-1
+        else:
+            self.level_minmoves = -1 # yeah, default bitch
+        self.bonus_max = self.level_minmoves # same for now
+        self.lifemeter = LifeMeter(self.level_minmoves, self.level_minmoves, self.max_life) # the bar on the side

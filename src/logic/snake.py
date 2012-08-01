@@ -1,5 +1,6 @@
 from src.engine.utils import letter_to_color
 from src.engine.utils import SNAKE_VALUES
+from logic.tile import BLOCK_SIZE
 import os
 import pygame
 import weakref
@@ -7,7 +8,6 @@ import weakref
 
 
 import operator # make SE offsetting work
-OFFSET_PIXELS = 2
 
 # prevent picloud not finding file error
 circle_glyph_fn = os.path.join('data', 'sprites', 'stone.png')
@@ -20,6 +20,7 @@ SNAKE_SURFACES = {
                   "stone" : circle_glyph,
                   }
 
+OFFSET_PIXELS = (BLOCK_SIZE - circle_glyph.get_width()) / 2
 
 class Move():
     def __repr__(self):

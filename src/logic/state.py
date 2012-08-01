@@ -18,6 +18,7 @@ class State:
         self.parent_state = parent_state
 
     def load_from_json(self,string,is_struct=False):
+        """FIXME: this happens for all maps on startup"""
         if not is_struct:
             struct = json.loads(string)
         else:

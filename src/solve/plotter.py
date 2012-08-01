@@ -49,7 +49,7 @@ def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use
         # begin
         nx.draw(gr,pos,edgelist=[],nodelist=[sols[0]],node_size=500,alpha=0.5,node_color='b',with_labels=False)
         # finals
-        nx.draw(gr,pos,edgelist=[],nodelist=gr.graph['finals'],node_size=100,alpha=0.5,node_color='y',font_size=16,labels=final_labels)
+        nx.draw(gr,pos,edgelist=[],nodelist=gr.graph['finals'],node_size=30,alpha=0.5,node_color='y',font_size=16,labels=final_labels)
         # end
         nx.draw(gr,pos,edgelist=[],nodelist=[sols[len(sols)-1]],node_size=500,alpha=0.5,node_color='g',with_labels=False)
         # path

@@ -9,7 +9,9 @@ class LifeMeter(object):
 	border_offset = 5; # pixels
 	w_bar = 10 # pixels
 	def __init__(self, min_moves, bonus_moves, max_life):
-		self._surface = pygame.Surface((self.w_bar+2*self.border_offset,300))
+		self._surface = pygame.Surface((self.w_bar*3+4*self.border_offset,300))
+		self._shadow_surface = pygame.Surface(self._surface.get_size())
+		self._shadow_surface.set_alpha(170)
 		self.min_moves = min_moves
 		self.bonus_moves = bonus_moves
 		self.max_life = max_life
@@ -36,5 +38,7 @@ class LifeMeter(object):
 
 		x_offset = target_surface.get_width() - 350
 		y_offset = target_surface.get_height() / 2 - self._surface.get_height() / 2
+
+		target_surface.blit(self._shadow_surface, pygame.Rect(x_offset+5,y_offset+5,0,0))
 		target_surface.blit(self._surface, pygame.Rect(x_offset,y_offset,0,0))
 		pass

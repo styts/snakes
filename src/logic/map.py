@@ -22,6 +22,7 @@ class Map():
         self.init(coordinates)
 
         self.debug_info = debug_info
+        #print self.debug_info
         
 #        # this bit loads and displays mapnames for debugging
 #        self.debug_info = None
@@ -179,6 +180,7 @@ class Map():
 #            for i in xrange(self.mapdict.__len__()):
 #                m = self.mapdict[str(i+1)]
 #                self.debug_info.attach_var("%s %s" % (i+1,os.path.basename(m)) )
+
         for x in xrange(self.n):
             for y in xrange(self.n):
                 t = self.tiles[x][y]

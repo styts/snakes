@@ -1,5 +1,5 @@
 from utils import letter_to_color
-from src.engine.misc import clean_map, reset_state, remove_map_file
+from src.engine.misc import remove_map_file
 from logic.state import State
 import os
 import glob
@@ -23,17 +23,17 @@ class ToolbarButton:
 
     def click(self):
         if self.action == 'mapsize':
-            clean_map(self.toolbar.app, self.value)
+            self.toolbar.ingameState.clean_map(self.value)
         if self.action == 'mapload':
-            reset_state(self.toolbar.app, level_name=self.value)
+            self.toolbar.ingameState.reset_state(level_name=self.value)
 
 class Toolbar:
-    def __init__(self,app,surface,x_offset,y_offset):
+    def __init__(self,ingameState,surface,x_offset,y_offset):
         self.dest_surface = surface
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.surface = pygame.Surface((233,350)) # w x h
-        self.app = app
+        self.ingameState = ingameState
 
         self.buttons = []
         self.reload_buttons()
@@ -143,9 +143,9 @@ class Toolbar:
 
         # add debug info
         if self.hover_button:
-            self.app.debug_info.attach_var("toolbar_action","%s %s" % (self.hover_button.action, self.hover_button.value))
+            self.ingameState.debug_info.attach_var("toolbar_action","%s %s" % (self.hover_button.action, self.hover_button.value))
         else:
-            self.app.debug_info.del_var("toolbar_action")
+            self.ingameState.debug_info.del_var("toolbar_action")
 
     def draw(self):
         # clear
