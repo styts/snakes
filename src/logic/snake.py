@@ -5,8 +5,6 @@ import os
 import pygame
 import weakref
 
-
-
 import operator # make SE offsetting work
 
 # prevent picloud not finding file error
@@ -322,6 +320,7 @@ class Snake:
             for e in s.elements:
                 e.reorder() # assign them an 'order'
             s.elements = sorted(s.elements, key=lambda se: se.order) # sort by order
+        del elements # is this our leak
         return snakes
 
     @staticmethod

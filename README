@@ -32,3 +32,12 @@ TODO:
 ====
 * add "eyes" or something to distinguish the pullable components (maybe also add arrows?)
 * "hardcore mode" : when life decreses consistenly through the leveles with extra moves
+
+Profiling
+=========
+gprof2dot.py is an awesom cpu use visualization tool.
+I need memory profiler though for debugging the exponential growth in my solver.
+
+objgraph.show_chain( objgraph.find_backref_chain(random.choice(objgraph.by_type(
+'dict')), inspect.ismodule) , filename='chain.png')
+

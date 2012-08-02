@@ -5,6 +5,15 @@ from tile import BLOCK_SIZE
 import os
 import pygame #@UnresolvedImport
 
+colors = {(255,255,0,255) : 'Y',
+          (255,0,0,255)   : 'R',
+          (0,255,0,255) : 'G',
+          (0,0,255,255) : 'B',
+          (0, 0, 0, 255) : 1,
+          (50, 50, 50, 255) : 1,
+          (20, 20, 20, 255) : 0,
+          (0, 102, 0, 255): 'g'
+ }
 
 class Map():
     def __init__(self, map_name=None,coordinates=None, surface=None,debug_info=None):
@@ -149,15 +158,15 @@ class Map():
         f = os.path.join(os.getcwd(),'data','maps', '%s'%map_name)
         img = pygame.image.load(f)
         coords = {"tiles" : [], "snakes": []}
-        colors = {(255,255,0,255) : 'Y',
-                  (255,0,0,255)   : 'R',
-                  (0,255,0,255) : 'G',
-                  (0,0,255,255) : 'B',
-                  (0, 0, 0, 255) : 1,
-                  (50, 50, 50, 255) : 1,
-                  (20, 20, 20, 255) : 0,
-                  (0, 102, 0, 255): 'g'
-         }
+        # colors = {(255,255,0,255) : 'Y',
+        #           (255,0,0,255)   : 'R',
+        #           (0,255,0,255) : 'G',
+        #           (0,0,255,255) : 'B',
+        #           (0, 0, 0, 255) : 1,
+        #           (50, 50, 50, 255) : 1,
+        #           (20, 20, 20, 255) : 0,
+        #           (0, 102, 0, 255): 'g'
+        #  }
         w = img.get_width()
         h = img.get_height()
         for i in xrange(w):

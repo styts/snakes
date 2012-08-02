@@ -9,9 +9,23 @@ import plotter
 from src.logic.state import State
 import pickle
 
+#### MEM Profiling
+# from IPython import embed
+#from pympler import tracker
+#tr = tracker.SummaryTracker()
+# import objgraph
+# from guppy import hpy
+# h = hpy()
+
+points = [] # used by solver, every 'N' new nodes added to graph, do something
+N = 5000
+for o in range(1,200):
+    o = N*o
+    points.append(o)
+
 
 class Solver:
-    def __init__(self,debug_info=None,quit_on_first=False,save_tmp=True,use_temp=True,use_cloud=False):
+    def __init__(self,debug_info=None,quit_on_first=False,save_tmp=True,use_temp=True,use_cloud=False,ignore_pickle=True):
         self.debug_info = debug_info
         self.state = None
         self.gr = None
@@ -19,6 +33,7 @@ class Solver:
         self.save_tmp=save_tmp
         self.use_temp=use_temp # bypass the solving, just draw?
         self.use_cloud=use_cloud
+        self.ignore_pickle = ignore_pickle # don't load a pickle - work for real
         self.quit_on_first = quit_on_first
         self.MAX_RECURSION_DEPTH = 1000000
 
@@ -28,20 +43,18 @@ class Solver:
             os.makedirs(td)
         self.tempdir = td
 
-        # make pickling work when called from GUI (on Surface object)
-        #import copy_reg
-        #copy_reg.pickle(pygame.Surface,lambda x: [])
-
     def set_state(self,state):
         self.state = copy.copy(state)
         del self.gr
         self.gr = nx.Graph(finals=[])
 
+    #@profile
     def solve(self):
         # load plckled object if possible, otherwise compute(populate and solve) graph
         tmp_pickle = os.path.join(self.tempdir,"%s.pickle" % self.state.__hash__())
 
-        if os.path.exists(tmp_pickle) and self.use_temp:
+
+        if os.path.exists(tmp_pickle) and self.use_temp and not self.ignore_pickle:
             # unpickle existing solution graph
             (tmp_gr, tmp_sols) = pickle.load(open(tmp_pickle,'rb'))
             self.gr = tmp_gr
@@ -53,8 +66,7 @@ class Solver:
             print "Populating...",
             sys.setrecursionlimit(self.MAX_RECURSION_DEPTH)
             self.gr.graph['finals'] = []
-            root_node = self.state.to_json()
-            self._populate_graph(self.gr,root_node)
+            Solver._populate_graph(gr=self.gr,root=self.state.to_json(),debug_info=self.debug_info,quit_on_first=self.quit_on_first)
 
             print "Solving...",
             self.sols = self._solve_graph()
@@ -62,7 +74,7 @@ class Solver:
         self.l_shortest = (len(self.sols[0])-1) if len(self.sols) else None
         print "shortest: %s" % self.l_shortest,
         print "order: %s" % self.gr.order()
-        self._attach_debugs(shortest=self.l_shortest) # continuous visual display of solving progress
+        Solver._attach_debugs(self.debug_info,self.gr,shortest=self.l_shortest) # continuous visual display of solving progress
 
         if self.save_tmp and not self.quit_on_first: # only pickle if we're doing a complete computation
             #pickle our object and save it to temp dir
@@ -79,22 +91,38 @@ class Solver:
         if filename and not self.use_cloud:
             os.system("open %s" % filename)
         
-    def _attach_debugs(self,depth=None,shortest=None):
+    @staticmethod
+    def _attach_debugs(debug_info=None,gr=None,depth=None,shortest=None):
         """Used by the GUI"""
-        if self.debug_info:
-            self.debug_info.attach_var("solver_1","Solver")
-            self.debug_info.attach_var("solver_2","======")
+        if debug_info:
+            debug_info.attach_var("solver_1","Solver")
+            debug_info.attach_var("solver_2","======")
             if depth:
-                self.debug_info.attach_var("solver_depth","depth: %s" % depth)
-            self.debug_info.attach_var("solver_order","order: %s" % self.gr.order())
-            self.debug_info.attach_var("solver_finals","finals: %s" % self.gr.graph['finals'].__len__())
+                debug_info.attach_var("solver_depth","depth: %s" % depth)
+            debug_info.attach_var("solver_order","order: %s" % gr.order())
+            debug_info.attach_var("solver_finals","finals: %s" % gr.graph['finals'].__len__())
             if shortest:
-                self.debug_info.attach_var("solver_shortest","shortest: %s" % shortest)
-            self.debug_info.attach_var("solver_","")
+                debug_info.attach_var("solver_shortest","shortest: %s" % shortest)
+            debug_info.attach_var("solver_","")
 
-    #@staticmethod
-    def _populate_graph(self,gr,sxp,depth=0,max_depth=0,found_new=0,has_one=False):
+    @staticmethod
+    #@profile
+    def _populate_graph(gr,root,depth=0,max_depth=0,found_new=0,has_one=False,debug_info=None,quit_on_first=None):
         """Recursively called"""
+        global points
+
+        #print "%s\t%s" % (gr.order(), depth)
+        #print points
+        #tr.print_diff()
+        if gr.order() >= points[0]:
+            points.remove(points[0])
+            print gr.order()
+            #tr.print_diff()
+            print h.heap()
+            # break here and see what's in use
+            #pass
+            objgraph.show_growth(limit=10)
+            #embed()
 
         if max_depth and depth >= max_depth:
             return 3
@@ -106,11 +134,11 @@ class Solver:
         except pygame.error:
             pass
 
-        sxp_digest = hashlib.md5(sxp).hexdigest()
+        sxp_digest = hashlib.md5(root).hexdigest()
 
         found_new = 0
         s = State()
-        s.load_from_json(sxp)
+        s.load_from_json(root)
         nss = s.get_neighbour_states()
         nssx = []
         completed = []
@@ -123,7 +151,7 @@ class Solver:
         del nss
         del s
 
-        self._attach_debugs(depth)
+        Solver._attach_debugs(debug_info,gr,depth=depth)
 
         for nsx in nssx:
             digest = hashlib.md5(nsx).hexdigest()
@@ -134,17 +162,20 @@ class Solver:
                     gr.node[digest]['complete'] = True
                     has_one = True
                     gr.graph['finals'].append(digest)
+                # else: # once again, drawing will fail if we set this.
+                #     gr.node[digest] = None # help with memory? otehrwsise a {} is stored there
+
             if not gr.has_edge(sxp_digest,digest):
-                gr.add_edge(sxp_digest,digest)
-            if has_one and self.quit_on_first:
+                gr.add_edge(sxp_digest,digest) # attr_dict={} by default. memory. and otherwise drawing does not work
+            if has_one and quit_on_first:
                 return 42
 
         for nsx in nssx:
             if not found_new: # if no new neighbours were found during the previous iteration
                 return 7
-            if self.quit_on_first and len(gr.graph['finals']) and not max_depth:
+            if quit_on_first and len(gr.graph['finals']) and not max_depth:
                 return 8
-            self._populate_graph(gr,nsx,depth=depth+1,max_depth=max_depth,found_new=found_new) # recurse
+            Solver._populate_graph(gr,nsx,depth=depth+1,max_depth=max_depth,found_new=found_new,debug_info=debug_info,quit_on_first=quit_on_first) # recurse
 
 
     def _solve_graph(self):

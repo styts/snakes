@@ -44,21 +44,21 @@ def _process(json_data):
 
 #     return ret
 
-def process_all_maps():
-    # take the .json file in maps/ and process them in the cloud, saving the graphs(.pickle & .png) in bucket "graphs"
-    import glob, os, cloud
-    from src.solve.utils import process_json
+# def process_all_maps():
+#     # take the .json file in maps/ and process them in the cloud, saving the graphs(.pickle & .png) in bucket "graphs"
+#     import glob, os, cloud
+#     from src.solve.utils import process_json
 
-    def read_json(fn):
-        json_data = open(fn,'r').readlines()
-        json_data = "\n".join(json_data)
-        return json_data
+#     def read_json(fn):
+#         json_data = open(fn,'r').readlines()
+#         json_data = "\n".join(json_data)
+#         return json_data
         
-    maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")
-    jsons = map(read_json, maps)
-    jobs = cloud.map(process_json, jsons, use_cloud=True, _env='pygame_env', _type="c2", _vol=['graphs'])
-    print "PiCloud Jobs:", jobs
+#     maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")
+#     jsons = map(read_json, maps)
+#     jobs = cloud.map(process_json, jsons, use_cloud=True, _env='pygame_env', _type="c2", _vol=['graphs'])
+#     print "PiCloud Jobs:", jobs
 
-    # sync home the results
-    import cloud
-    cloud.volume.sync("graphs:","graphs/")
+#     # sync home the results
+#     import cloud
+#     cloud.volume.sync("graphs:","graphs/")
