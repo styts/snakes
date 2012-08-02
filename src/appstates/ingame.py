@@ -9,6 +9,7 @@ from logic.snake import Snake, Move
 from src.logic.state import State
 from src.logic.map import Map
 from engine.utils import solve, get_life_values
+from src.solve.utils import process_json
 from engine.misc import edit_map
 from engine.misc import save_state
 from appstates.appstate import AppState
@@ -112,9 +113,12 @@ class InGame(AppState):
             # solver solve
             if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
                 quit_on_first = not (mods & pygame.KMOD_LALT)
-                draw_graph = (mods & pygame.KMOD_CTRL) > 0
-                print "Control draw: " , draw_graph
-                solve(self.state,debug_info=self.debug_info,quit_on_first=quit_on_first,draw_graph=draw_graph)
+                draw_graph = True # TRUE, cuz its quite fast with sdpf? program.... (mods & pygame.KMOD_CTRL) > 0
+                ignore_pickle = (mods & pygame.KMOD_CTRL) > 0
+                print "quit1: %s. ignore_pickle: %s" % (quit_on_first, ignore_pickle)
+                process_json(self.state.to_json(), use_cloud=False, quit_on_first=quit_on_first, ignore_pickle=ignore_pickle, debug_info=self.debug_info)
+
+                #solve(self.state,debug_info=self.debug_info,quit_on_first=quit_on_first,draw_graph=draw_graph)
             # print map
             #if event.type == pygame.KEYUP and event.key == pygame.K_m:
             #    self.app.map.pprint()

@@ -82,7 +82,7 @@ class Map():
     
     def __repr__(self):
         outstr = []
-        for x in sorted(range(self.n),reverse=True):
+        for x in sorted(xrange(self.n),reverse=True):
             s = ""
             for y in xrange(self.n):
                 v = self.tiles[y][x].v
@@ -153,33 +153,34 @@ class Map():
         else:
             return None
     
-    @staticmethod
-    def load_coords(map_name,just_one=False):
-        f = os.path.join(os.getcwd(),'data','maps', '%s'%map_name)
-        img = pygame.image.load(f)
-        coords = {"tiles" : [], "snakes": []}
-        # colors = {(255,255,0,255) : 'Y',
-        #           (255,0,0,255)   : 'R',
-        #           (0,255,0,255) : 'G',
-        #           (0,0,255,255) : 'B',
-        #           (0, 0, 0, 255) : 1,
-        #           (50, 50, 50, 255) : 1,
-        #           (20, 20, 20, 255) : 0,
-        #           (0, 102, 0, 255): 'g'
-        #  }
-        w = img.get_width()
-        h = img.get_height()
-        for i in xrange(w):
-            dest = 'tiles' if i<w/2 else 'snakes'
-            shift = 0 if i<w/2 else w/2
-            coords[dest].append([])
-            for j in xrange(h):
-                col = tuple(img.get_at((i,j)))
-                v = colors[col] if col in colors else 0
-                coords[dest][i-shift].append(v)
-        if just_one:
-            coords = Map._remove_all_but_one(coords)
-        return coords
+    # @staticmethod 
+    # we dont use images any more
+    # def load_coords(map_name,just_one=False):
+    #     f = os.path.join(os.getcwd(),'data','maps', '%s'%map_name)
+    #     img = pygame.image.load(f)
+    #     coords = {"tiles" : [], "snakes": []}
+    #     # colors = {(255,255,0,255) : 'Y',
+    #     #           (255,0,0,255)   : 'R',
+    #     #           (0,255,0,255) : 'G',
+    #     #           (0,0,255,255) : 'B',
+    #     #           (0, 0, 0, 255) : 1,
+    #     #           (50, 50, 50, 255) : 1,
+    #     #           (20, 20, 20, 255) : 0,
+    #     #           (0, 102, 0, 255): 'g'
+    #     #  }
+    #     w = img.get_width()
+    #     h = img.get_height()
+    #     for i in xrange(w):
+    #         dest = 'tiles' if i<w/2 else 'snakes'
+    #         shift = 0 if i<w/2 else w/2
+    #         coords[dest].append([])
+    #         for j in xrange(h):
+    #             col = tuple(img.get_at((i,j)))
+    #             v = colors[col] if col in colors else 0
+    #             coords[dest][i-shift].append(v)
+    #     if just_one:
+    #         coords = Map._remove_all_but_one(coords)
+    #     return coords
 
     def export(self):
         return self.get_coords()

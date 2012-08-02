@@ -2,7 +2,11 @@ from pygame.font import SysFont
 from logic.tile import BLOCK_SIZE
 
 DBG_STRINGS = {'d1' : "DEBUG INFO:",
-               'd2' : "===========",}
+               'd2' : "===========",
+               'd2.5' : 's: test solvability',
+               'd3' : "alt+s: all solutions",
+               'd4' : "ctrl+s: work anyway",
+               }
 class DebugInfo:
     
     def del_var(self,key):
@@ -33,7 +37,7 @@ class DebugInfo:
             cb = self.ingameState.current_block
             if cb:
                 di = cb.get_debug_infos()
-                for i in range(len(di)):
+                for i in xrange(len(di)):
                     d = di[i]
                     ren = self.font.render(d,0,self.color_map)
                     try:

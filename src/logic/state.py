@@ -11,18 +11,15 @@ class State:
         return "%s" % str(self.map) #.replace("\n", "\\n")
         #return "map.tiles[1][0]: %s, complete: %s" % (self.map.tiles[1][0],self.is_complete())
 
-    def __init__(self,map=None,snakes=None,parent_state=None): # IGNORE:W0622
+    def __init__(self,map=None,snakes=None):
         self.move = None
         self.map = map
         self.snakes = snakes
-        self.parent_state = parent_state
 
-    def load_from_json(self,string,is_struct=False):
+    def load_from_json(self,string):
         """FIXME: this happens for all maps on startup"""
-        if not is_struct:
-            struct = json.loads(string)
-        else:
-            struct = string
+        struct = json.loads(string)
+
         self.map = Map(coordinates=struct['map'])
         self.snakes = []
         for sj in struct['snakes']:
@@ -47,13 +44,8 @@ class State:
         self.snakes = Snake.make_snakes(self.map,coords['snakes'])
 
     def __copy__(self):
-        """
-        m = Map(coordinates=self.map.get_coords())
-        ss = Snake.make_snakes(m,self.map.get_coords(snakes=True))
-        """
         s = State()
         s.load_from_json(self.to_json())
-        s.parent_state = self
         return s
 
     def __eq__(self,other):
@@ -83,7 +75,10 @@ class State:
 
     @staticmethod
     def apply_move(state,m):
+        #n = State()
+        
         n = copy.copy(state)
+
         t = n.map.get_tile(m.x1,m.y1)
         if t.se:
             t.se.move(m)

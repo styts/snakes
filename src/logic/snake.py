@@ -281,9 +281,11 @@ class Snake:
 
     def assign_to_tiles(self):
         n = len(self.map.tiles[0])
-        for x in range(n):
-            for y in range(n):
+        for x in xrange(n):
+            for y in xrange(n):
                 t = self.map.tiles[y][x]
+                if t.v == 1 or t.v == '1': # no se here, move along
+                    continue
                 se = self._get_el_at(x,y)
                 if se != None:
                     t.set_snake_el(se)
@@ -300,8 +302,8 @@ class Snake:
         elements = {}
         snakes = []
         n = len(coords[0])
-        for x in range(n):
-            for y in range(n):
+        for x in xrange(n):
+            for y in xrange(n):
                 v = coords[x][y]
                 set_elements = SNAKE_VALUES
                 if v in set_elements:

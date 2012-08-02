@@ -17,9 +17,9 @@ import pickle
 # from guppy import hpy
 # h = hpy()
 
-points = [] # used by solver, every 'N' new nodes added to graph, do something
-N = 5000
-for o in range(1,200):
+points = [1] # used by solver, every 'N' new nodes added to graph, do something
+N = 200
+for o in range(1,500):
     o = N*o
     points.append(o)
 
@@ -63,12 +63,14 @@ class Solver:
             print "Unpickled ", tmp_pickle
         else:
             # solve graph form inital state
-            print "Populating...",
+            print "Populating..."
+            if self.quit_on_first:
+                print "(will quit on first)"
             sys.setrecursionlimit(self.MAX_RECURSION_DEPTH)
             self.gr.graph['finals'] = []
             Solver._populate_graph(gr=self.gr,root=self.state.to_json(),debug_info=self.debug_info,quit_on_first=self.quit_on_first)
 
-            print "Solving...",
+            print "Solving..."
             self.sols = self._solve_graph()
 
         self.l_shortest = (len(self.sols[0])-1) if len(self.sols) else None
@@ -114,14 +116,15 @@ class Solver:
         #print "%s\t%s" % (gr.order(), depth)
         #print points
         #tr.print_diff()
-        if gr.order() >= points[0]:
-            points.remove(points[0])
-            print gr.order()
+        o = gr.order(); p0 = points[0]
+        if o >= p0:
+            points.remove(p0) # so it's only called once
+            print "Order >= %s" % p0
             #tr.print_diff()
-            print h.heap()
+            #print h.heap()
             # break here and see what's in use
             #pass
-            objgraph.show_growth(limit=10)
+            #objgraph.show_growth(limit=10)
             #embed()
 
         if max_depth and depth >= max_depth:
@@ -131,7 +134,7 @@ class Solver:
         try:
             # process message queue
             pygame.event.pump()
-        except pygame.error:
+        except:
             pass
 
         sxp_digest = hashlib.md5(root).hexdigest()
