@@ -16,7 +16,7 @@ colors = {(255,255,0,255) : 'Y',
  }
 
 class Map():
-    def __init__(self, map_name=None,coordinates=None, surface=None,debug_info=None):
+    def __init__(self, coordinates=None, surface=None,debug_info=None):
         self.tiles = []
         self.n = -1
         self.size_px = -1
@@ -26,25 +26,9 @@ class Map():
         if surface:
             self.surface = surface
         
-        if map_name:
-            coordinates = Map.load_coords(map_name)
         self.init(coordinates)
 
         self.debug_info = debug_info
-        #print self.debug_info
-        
-#        # this bit loads and displays mapnames for debugging
-#        self.debug_info = None
-#        if debug_info:
-#            # list maps 
-#            self.mapdict = {}
-#            i = 1
-#            maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.png")
-#            for m in maps:
-#                self.mapdict[str(i)] = os.path.basename(m)
-#                i = i + 1
-#            self.mapdict.keys().sort()
-#            self.debug_info = debug_info
             
     @staticmethod
     def _remove_all_but_one(coords):

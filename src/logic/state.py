@@ -38,10 +38,10 @@ class State:
         string = "\n".join(fp.readlines())
         self.load_from_json(string)
 
-    def load_from_file(self,map_name):
-        coords = Map.load_coords(map_name)
-        self.map = Map(coordinates=coords['tiles'])#IGNORE:W0622
-        self.snakes = Snake.make_snakes(self.map,coords['snakes'])
+    # def load_from_file(self,map_name):
+    #     coords = Map.load_coords(map_name)
+    #     self.map = Map(coordinates=coords['tiles'])#IGNORE:W0622
+    #     self.snakes = Snake.make_snakes(self.map,coords['snakes'])
 
     def __copy__(self):
         s = State()
