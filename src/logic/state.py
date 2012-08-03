@@ -134,12 +134,9 @@ class State:
         surf.unlock()
         pygame.image.save(surf,filename)
 
-    def __del__(self):
-        #print "state deleted"
-        del self.map
+    def release(self):
+        self.map.release()
         for s in self.snakes:
-            del s
-
-        pass
+            s.release()
 
 

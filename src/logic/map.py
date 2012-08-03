@@ -29,6 +29,14 @@ class Map():
         self.init(coordinates)
 
         self.debug_info = debug_info
+
+    def release(self):
+        for x in xrange(self.n):
+            for y in xrange(self.n):
+                t = self.tiles[x][y]
+                t.se = None
+                t.release()
+
             
     @staticmethod
     def _remove_all_but_one(coords):

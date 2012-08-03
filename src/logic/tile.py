@@ -79,6 +79,10 @@ class Tile():
             self._init_helper_surface()
         else:
             self.helper_surface = None
+
+    def release(self):
+        self.map = None
+        self.se = None
             
     def draw(self,debug_info=None):
         if self.surface:

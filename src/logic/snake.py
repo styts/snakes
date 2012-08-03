@@ -54,6 +54,10 @@ class SnakeElement() :
         self.y = y
         self.snake = None # must be set later!
         self.order = None # used for initial ordering of snake.elements list
+        
+    def release(self):
+        self.snake = None
+
     def is_neighbour_tile(self,next_tile):
         """ disallow diagonal moves. used from Input. """
         if (next_tile.x == self.x and next_tile.y == self.y + 1 or \
@@ -260,6 +264,12 @@ class Snake:
         self.color = letter_to_color(v)
         if elements:
             self.assign_to_tiles()
+
+    def release(self):
+        self.map = None
+        for se in self.elements:
+            se.release()
+        self.elements = None
     
     def set_surface(self,surface):
         self.surface = surface

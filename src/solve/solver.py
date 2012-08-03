@@ -68,6 +68,7 @@ class Solver:
                 print "(will quit on first)"
             sys.setrecursionlimit(self.MAX_RECURSION_DEPTH)
             self.gr.graph['finals'] = []
+            self.gr.graph['visited'] = []
             Solver._populate_graph(gr=self.gr,root=self.state.to_json(),debug_info=self.debug_info,quit_on_first=self.quit_on_first)
 
             print "Solving..."
@@ -116,10 +117,18 @@ class Solver:
         #print "%s\t%s" % (gr.order(), depth)
         #print points
         #tr.print_diff()
+        
+        
+        sxp_digest = hashlib.md5(root).hexdigest()
+        if sxp_digest in gr.graph['visited']:
+            return -3
+        gr.graph['visited'].append(sxp_digest)
+
+
         o = gr.order(); p0 = points[0]
         if o >= p0:
             points.remove(p0) # so it's only called once
-            print "Order >= %s" % p0
+            print "Order >= %s, Visited: %s, Finals: %s" % (p0, len(gr.graph['visited']), len(gr.graph['finals']))
             #tr.print_diff()
             #print h.heap()
             # break here and see what's in use
@@ -137,8 +146,6 @@ class Solver:
         except:
             pass
 
-        sxp_digest = hashlib.md5(root).hexdigest()
-
         found_new = 0
         s = State()
         s.load_from_json(root)
@@ -150,8 +157,9 @@ class Solver:
             nssx.append(j)
             if ns.is_complete():
                 completed.append(j)
-            del ns
+            ns.release()
         del nss
+        s.release()
         del s
 
         Solver._attach_debugs(debug_info,gr,depth=depth)
