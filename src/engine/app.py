@@ -6,6 +6,7 @@ from pygame.font import SysFont
 from debug_info import DebugInfo
 import logic.ingame
 from appstates.ingame import InGame
+from appstates.mainmenu import MainMenu
 from engine.utils import patternize_tile
 
 class App():
@@ -42,10 +43,13 @@ class App():
         #TODO: allow setting resolution form command line
 
         self.font = pygame.font.Font(os.path.join('data','fonts','WOBBLES_.ttf'),32)
+        self.font_px = pygame.font.Font(os.path.join('data','fonts','visitor1.ttf'),30)
         self.sysfont = SysFont("Courier",12)
 
+
+        self.appstate = MainMenu(self)
         # start with ingame state
-        self.appstate = InGame(self)
+        #self.appstate = InGame(self)
 
         ## Main Loop
         while self.is_running:
@@ -64,7 +68,7 @@ class App():
         
         events = pygame.event.get()
         for event in events:
-            self.appstate.process_input(event)
+            self.appstate.process(event)
 
             # ESC quits app
             if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame. K_ESCAPE):
