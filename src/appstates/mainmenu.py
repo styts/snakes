@@ -67,10 +67,11 @@ class MainMenu(AppState):
     _buttons = []
     hover_button = None
     y_offset = 0
+    app = None
 
     def __init__(self, app):
         # app
-        self.app = app
+        MainMenu.app = app
 
         MenuButton.init() # make shadow, set w/h, etc.
 
@@ -89,7 +90,7 @@ class MainMenu(AppState):
         y = (self.app.screen_h / 2) - MenuButton.h /2
 
         y_offset = MenuButton.h / 2 + MenuButton.h # distance between buttons
-        y = y + n*y_offset 
+        y = y + n*y_offset
         y = y + MainMenu.y_offset # buttons begin not at center, but somewhat higher
 
         mb = MenuButton(x, y, title)
@@ -106,6 +107,15 @@ class MainMenu(AppState):
             return None
 
         self.hover_button = self._get_button_at(event.pos)
+
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.hover_button:
+                t = self.hover_button.title
+                if t == "PLAY":
+                    return "InGame"
+                if t == "EXIT":
+                    return "GoodBye"
+
         
     def draw(self):
         self._reset_background()

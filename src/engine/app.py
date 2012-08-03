@@ -7,7 +7,9 @@ from debug_info import DebugInfo
 import logic.ingame
 from appstates.ingame import InGame
 from appstates.mainmenu import MainMenu
+#from appstates.appstate import GoodBye
 from engine.utils import patternize_tile
+
 
 class App():
     screen_w = 1024
@@ -46,8 +48,11 @@ class App():
         self.font_px = pygame.font.Font(os.path.join('data','fonts','visitor1.ttf'),30)
         self.sysfont = SysFont("Courier",12)
 
+        self._appstates = []
+        self._appstates.append(MainMenu(self))
+        self._appstates.append(InGame(self))
 
-        self.appstate = MainMenu(self)
+        self.appstate = self._get_appstate("MainMenu")
         # start with ingame state
         #self.appstate = InGame(self)
 
@@ -55,6 +60,11 @@ class App():
         while self.is_running:
             self.process()
         pygame.quit() # cleanup finally
+
+    def _get_appstate(self, s):
+        for astate in self._appstates:
+            if astate.__class__.__name__ == s:
+                return astate
 
     def dirty(self,r):
         """AppStates call this when having drawed on app.screen somewhere"""
@@ -68,10 +78,16 @@ class App():
         
         events = pygame.event.get()
         for event in events:
-            self.appstate.process(event)
+            p = self.appstate.process(event)
+            if p:
+                if p == "GoodBye":
+                    self.is_running = False
+                else:
+                    # appstate wants to change!
+                    self.appstate = self._get_appstate(p)
 
             # ESC quits app
-            if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame. K_ESCAPE):
+            if event.type == pygame.QUIT: #or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                 self.is_running = False
 
         ## DRAW

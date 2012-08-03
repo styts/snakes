@@ -17,3 +17,15 @@ class AppState:
         self.app.screen.blit(self.app.background, (0, 0))
         #self.app.screen.fill((0, 0, 0))
         self.app.dirty(self.app.background.get_rect())
+
+
+class GoodBye(AppState):
+    """A "welcome" screen that blits out saying GoodBye or waits for keypress"""
+    pass
+#     i = 1000 # frames
+#     def process():
+#         GoodBye.i = GoodBye.i - 1
+
+#     def draw():
+
+

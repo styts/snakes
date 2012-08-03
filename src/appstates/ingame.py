@@ -46,6 +46,10 @@ class InGame(AppState):
     def process(self,event):
             mods = pygame.key.get_mods()
 
+            # quit to menu - ESC
+            if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
+                return "MainMenu"
+
             if self.edit_mode:
                 self.toolbar.process(event)
 
@@ -60,6 +64,7 @@ class InGame(AppState):
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.current_block != None:
                     self.holding = False
+
 
 
             if not self.state: # what if we have no state/map loaded?
