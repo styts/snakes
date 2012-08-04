@@ -7,6 +7,7 @@ from debug_info import DebugInfo
 import logic.ingame
 from appstates.ingame import InGame
 from appstates.mainmenu import MainMenu
+from appstates.levelselect import LevelSelect
 #from appstates.appstate import GoodBye
 from engine.utils import patternize_tile
 
@@ -36,7 +37,7 @@ class App():
         #self.input = Input(self)
 
         background = pygame.Surface(self.screen.get_size())
-        patternize_tile(background, "data/assets/tile.png")
+        patternize_tile(background, "data/sprites/tile.png")
         #patternize_tile(background, "data/assets/128-64.png")
         #background.fill((0, 0, 0))
         #background.convert()
@@ -45,12 +46,14 @@ class App():
         #TODO: allow setting resolution form command line
 
         self.font = pygame.font.Font(os.path.join('data','fonts','WOBBLES_.ttf'),32)
-        self.font_px = pygame.font.Font(os.path.join('data','fonts','visitor1.ttf'),30)
+        self.font_px = pygame.font.Font(os.path.join('data','fonts','visitor1.ttf'),40)
+        self.font_px_s = pygame.font.Font(os.path.join('data','fonts','visitor2.ttf'),25)
         self.sysfont = SysFont("Courier",12)
 
         self._appstates = []
         self._appstates.append(MainMenu(self))
         self._appstates.append(InGame(self))
+        self._appstates.append(LevelSelect(self))
 
         self.appstate = self._get_appstate("MainMenu")
         # start with ingame state
@@ -85,6 +88,7 @@ class App():
                 else:
                     # appstate wants to change!
                     self.appstate = self._get_appstate(p)
+                    self.appstate.resume()
 
             # ESC quits app
             if event.type == pygame.QUIT: #or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):

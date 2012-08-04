@@ -4,13 +4,17 @@ class AppState:
     Those could be: Menu, InGame, LevelComplete, GameOver, HighScores, etc.
     They should all implement the following methods.
     """
-    def process():
+    def process(self):
         """Handles the mouse and keyboard"""
         raise NotImplementedError("Should be implemented in AppState subclass")
 
-    def draw():
+    def draw(self):
         """Draws stuff on app.screen ( don't forget to call app.dirty(rect) )"""
         raise NotImplementedError("Should be implemented in AppState subclass")
+
+    def resume(self):
+        """Called form App when being switched to"""
+        raise NotImplementedError("Should be implemented in AppState subclass")        
         
     def _reset_background(self):
         """ draw the background"""
@@ -18,6 +22,16 @@ class AppState:
         #self.app.screen.fill((0, 0, 0))
         self.app.dirty(self.app.background.get_rect())
 
+
+# class LevelSelect(AppState):
+#     def __init__(self, app):
+#         self.app = app
+
+#     def process():
+#         pass
+
+#     def draw(self, screen):
+#         pass
 
 class GoodBye(AppState):
     """A "welcome" screen that blits out saying GoodBye or waits for keypress"""

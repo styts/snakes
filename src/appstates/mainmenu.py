@@ -3,8 +3,8 @@ from appstate import AppState
 #from pygame.image import load
 import pygame
 
-B_GLYPH = 'data/sprites/button.png'
-B_HOVER_GLYPH = 'data/sprites/button_hover.png'
+B_GLYPH = 'data/sprites/b_wide.png'
+B_HOVER_GLYPH = 'data/sprites/b_wide_hi.png'
 
 class MenuButton:
     shadow = None
@@ -12,7 +12,7 @@ class MenuButton:
     hover = None
     w = 0
     h = 0
-    r = None
+    #r = None
     
     def __init__(self,x,y,title):
         self.r = pygame.Rect(x, y, MenuButton.w, MenuButton.h)
@@ -80,6 +80,9 @@ class MainMenu(AppState):
         self._add_button("OPTIONS",1)
         self._add_button("CREDITS",2)
         self._add_button("EXIT",3)
+
+    def resume(self):
+        self.hover_button = None
         
 
     def _add_button(self, title, position=None):
@@ -112,7 +115,7 @@ class MainMenu(AppState):
             if self.hover_button:
                 t = self.hover_button.title
                 if t == "PLAY":
-                    return "InGame"
+                    return "LevelSelect"
                 if t == "EXIT":
                     return "GoodBye"
 
