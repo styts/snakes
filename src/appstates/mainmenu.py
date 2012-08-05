@@ -107,8 +107,8 @@ class MainMenu(AppState):
                 return b
         return None
 
-    def resume(self):
-        super(MainMenu, self).resume()
+    def resume(self, arg):
+        super(MainMenu, self).resume(arg)
         for b in self._buttons:
             b.selected = False
 
@@ -124,14 +124,13 @@ class MainMenu(AppState):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:
                 ## CLICK
-                #self.hover_button.click()
                 self.hover_button.selected = True
                 self.wait(self.CLICK_DELAY)
                 t = self.hover_button.title
                 if t == "PLAY":
-                    self.next_state = "LevelSelect"
+                    self.next_state = ("LevelSelect", None)
                 if t == "EXIT":
-                    self.next_state = "GoodBye"
+                    self.next_state = ("GoodBye", None)
 
         
     def draw(self):

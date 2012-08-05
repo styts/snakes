@@ -24,7 +24,7 @@ class AppState(object):
         """Draws stuff on app.screen ( don't forget to call app.dirty(rect) )"""
         raise NotImplementedError("Should be implemented in AppState subclass")
 
-    def resume(self):
+    def resume(self, arg):
         """Called form App when being switched to"""
         #raise NotImplementedError("Should be implemented in AppState subclass")        
         self.hover_button = None

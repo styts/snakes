@@ -118,17 +118,23 @@ class LevelSelect(AppState):
 
         self.levelstats = LevelStats(self.app.font_px, x_offset=self.app.screen_w-430,width=380)
         #self.levelstats.pick(self.levelbuttons[0]) # init with 1st level
-        self.resume()
+        self.resume(None)
 
     def _buttons(self):
         # all my buttons are belong to you
         return [self.back_button, self.select_button] + self.levelbuttons
 
-    def resume(self):
-        super(LevelSelect, self).resume()
+    def resume(self, arg):
+        super(LevelSelect, self).resume(arg)
         for b in self._buttons():
             b.selected = False
-        self.levelstats.pick(self.levelbuttons[0]) # init with 1st level
+        self.pick(self.levelbuttons[0]) # init with 1st level
+
+    def pick(self, button):
+        for b in self._buttons():
+            b.selected = False
+        self.selected_button = button
+        self.levelstats.pick(button)
 
     def process(self):
         return super(LevelSelect, self).process()
@@ -143,26 +149,26 @@ class LevelSelect(AppState):
 
         self.hover_button = LevelButton.get_button_at(self._buttons(), event.pos)
 
-        # if self.selected_button:
-        #     print self.selected_button.selected
-
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:
+                ### select a level button
+                if self.hover_button.__class__.__name__ == "LevelButton":
+                    self.selected_button = self.hover_button
+                    for b in self.levelbuttons:
+                        b.selected = False
+                    self.pick(self.selected_button)
+
                 ### back to main menu
                 t = self.hover_button.title
                 self.hover_button.selected = True
                 self.wait(self.CLICK_DELAY)
 
                 if t == "Back":
-                    self.next_state = "MainMenu"
+                    self.next_state = ("MainMenu", None)
+                if t == "Select":
+                    #print self.selected_button, self.hover_button
+                    self.next_state = ("InGame", self.selected_button.title)
 
-                ### select a level button
-                if self.hover_button.__class__.__name__ == "LevelButton":
-                    self.selected_button = self.hover_button
-                    for b in self.levelbuttons:
-                        b.selected = False
-                    self.selected_button.selected = True # this happens extra in pick()
-                    self.levelstats.pick(self.selected_button)
 
     def _refresh_levels(self):
         maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")

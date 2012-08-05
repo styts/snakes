@@ -81,12 +81,14 @@ class App():
         
         p = self.appstate.process()
         if p:
-            if p == "GoodBye":
-                self.is_running = False
-            else:
-                # appstate wants to change!
-                self.appstate = self._get_appstate(p)
-                self.appstate.resume()
+            next_state, state_arg = p
+            if next_state:
+                if next_state == "GoodBye":
+                    self.is_running = False
+                else:
+                    # appstate wants to change!
+                    self.appstate = self._get_appstate(next_state)
+                    self.appstate.resume(state_arg)
 
         events = pygame.event.get()
         for event in events:

@@ -43,12 +43,17 @@ class InGame(AppState):
 
         #self.reset_state("tempstate.json")
 
-    def process(self,event):
+    def resume(self, arg):
+        super(InGame, self).resume(arg)
+        self.reset_state(arg)
+
+    def process_input(self,event):
             mods = pygame.key.get_mods()
 
             # quit to menu - ESC
             if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
-                return "MainMenu"
+                self.next_state = ("MainMenu", None)
+                #return "MainMenu"
 
             if self.edit_mode:
                 self.toolbar.process(event)
