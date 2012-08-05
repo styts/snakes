@@ -4,6 +4,7 @@ from snake import Snake
 import pygame #@UnresolvedImport
 import json
 import hashlib
+from src.logic.tile import BLOCK_SIZE
 
 
 class State:
@@ -73,6 +74,11 @@ class State:
                     #exclude.append(newstate) # hmmm try
         return ns
 
+    def draw(self, arrows=True):
+        self.map.draw()
+        for s in self.snakes:
+            s.draw(arrows)
+
     @staticmethod
     def apply_move(state,m):
         #n = State()
@@ -89,15 +95,25 @@ class State:
         "a state is complete, when all end tiles are complete"
         return self.map.is_complete()
 
-    def get_thumbnail(self):
-        surf = pygame.Surface((self.map.n,self.map.n))
-        surf.lock()
-        for x in xrange(self.map.n):
-            for y in xrange(self.map.n):
-                t = self.map.tiles[x][y]
-                c = t.se.snake.color if t.se else t.color
-                surf.set_at((x,y),c)
-        surf.unlock()
+    # def get_thumbnail(self):
+    #     surf = pygame.Surface((self.map.n,self.map.n))
+    #     surf.lock()
+    #     for x in xrange(self.map.n):
+    #         for y in xrange(self.map.n):
+    #             t = self.map.tiles[x][y]
+    #             c = t.se.snake.color if t.se else t.color
+    #             surf.set_at((x,y),c)
+    #     surf.unlock()
+    #     return surf
+
+    def get_thumbnail(self, a=80):
+        w = 16*BLOCK_SIZE
+        surf = pygame.Surface((w,w))
+        surf.set_colorkey((0,0,0))
+        #surf.lock()
+        self.set_surface(surf)
+        self.draw(arrows=False)
+        surf = pygame.transform.smoothscale(surf,(a,a))
         return surf
 
     def export(self):

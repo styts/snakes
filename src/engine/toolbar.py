@@ -33,7 +33,7 @@ class Toolbar:
         self.dest_surface = surface
         self.x_offset = x_offset
         self.y_offset = y_offset
-        self.surface = pygame.Surface((233,350)) # w x h
+        self.surface = pygame.Surface((233,350),pygame.SRCALPHA) # w x h
         self.ingameState = ingameState
 
         self.buttons = []
@@ -83,9 +83,9 @@ class Toolbar:
                 state.load_from_file(fn)
             else:
                 state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',fn))
-            thumb = state.get_thumbnail()
-            t_w, t_h = thumb.get_size()
-            thumb = pygame.transform.scale(thumb,(t_w*3,t_h*3))
+            thumb = state.get_thumbnail(a=60)
+            #t_w, t_h = thumb.get_size()
+            #thumb = pygame.transform.scale(thumb,(t_w/2,t_h/2))
             b = ToolbarButton(self,fn,action='mapload',surface=thumb)
             if len(self.buttons[row]) > self.surface.get_width() / WIDTH_OF_BUTTON:
                 self.buttons.append([])
@@ -151,7 +151,7 @@ class Toolbar:
 
     def draw(self):
         # clear
-        self.surface.fill((10,10,10))
+        self.surface.fill((10,10,10,150))
 
         # draw buttons
         for j in xrange(len(self.buttons)):

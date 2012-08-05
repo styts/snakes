@@ -22,6 +22,7 @@ class LevelButton():
         self.thumb = thumb
         self.selected = False
         self.levelnr = levelnr
+        self.enabled = True
     
     def draw(self, surface, font=None, hover=False):
         if not self.selected:
@@ -38,7 +39,7 @@ class LevelButton():
     # todo: put me in Button class
     def get_button_at(buttons,(x,y)):
         for b in buttons:
-            if b.r.contains(pygame.Rect(x,y,1,1)):
+            if b.r.contains(pygame.Rect(x,y,1,1)) and b.enabled:
                 return b
         return None
 
@@ -128,13 +129,15 @@ class LevelSelect(AppState):
         super(LevelSelect, self).resume(arg)
         for b in self._buttons():
             b.selected = False
-        self.pick(self.levelbuttons[0]) # init with 1st level
+        #self.pick(self.levelbuttons[0]) # init with 1st level
+        self.select_button.enabled = False
 
     def pick(self, button):
         for b in self._buttons():
             b.selected = False
         self.selected_button = button
         self.levelstats.pick(button)
+        self.select_button.enabled = True
 
     def process(self):
         return super(LevelSelect, self).process()
@@ -182,8 +185,8 @@ class LevelSelect(AppState):
             state = State()
             state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',fn))
             thumb = state.get_thumbnail()
-            t_w, t_h = thumb.get_size()
-            thumb = pygame.transform.scale(thumb,(t_w*4,t_h*4))
+            #t_w, t_h = thumb.get_size()
+            #thumb = pygame.transform.scale(thumb,(t_w*4,t_h*4))
             per = BUTTONS_PER_ROW
             col = i % per
             row = floor(i / per)

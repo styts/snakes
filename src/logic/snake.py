@@ -224,7 +224,7 @@ class SnakeElement() :
         return surf
 
 
-    def draw(self):
+    def draw(self, arrows):
         def draw_arrow(arrow,surface,offset,angle):
             ac = tuple(map(operator.add, self.get_center(), offset))
             surface.blit(pygame.transform.rotate(arrow,angle),ac)
@@ -234,9 +234,10 @@ class SnakeElement() :
             sprite = SNAKE_SURFACES['stone'].copy()
             sprite.fill(self.snake.color,None,pygame.BLEND_RGBA_MULT)
 
-            arrow = SNAKE_SURFACES['arrow'].copy()
-            col = self.snake.color + (120,)
-            arrow.fill(col,None,pygame.BLEND_RGBA_MULT)
+            if arrows:
+                arrow = SNAKE_SURFACES['arrow'].copy()
+                col = self.snake.color + (120,)
+                arrow.fill(col,None,pygame.BLEND_RGBA_MULT)
             
             if sprite:
                 offset = (OFFSET_PIXELS, OFFSET_PIXELS)
@@ -244,11 +245,12 @@ class SnakeElement() :
                 xy = tuple(map(operator.add, xy, offset))
                 self.snake.surface.blit(sprite,xy)
 
-                ms = self._can_move_to()
-                if "N" in ms: offset = (-aa,-3*aa); angle = 90; draw_arrow(arrow, self.snake.surface, offset, angle)
-                if "S" in ms: offset = (-aa,aa); angle = -90; draw_arrow(arrow, self.snake.surface, offset, angle)
-                if "W" in ms: offset = (-3*aa,-aa); angle = 180; draw_arrow(arrow, self.snake.surface, offset, angle)
-                if "E" in ms: offset = (aa,-aa); angle = 0; draw_arrow(arrow, self.snake.surface, offset, angle)
+                if arrows:
+                    ms = self._can_move_to()
+                    if "N" in ms: offset = (-aa,-3*aa); angle = 90; draw_arrow(arrow, self.snake.surface, offset, angle)
+                    if "S" in ms: offset = (-aa,aa); angle = -90; draw_arrow(arrow, self.snake.surface, offset, angle)
+                    if "W" in ms: offset = (-3*aa,-aa); angle = 180; draw_arrow(arrow, self.snake.surface, offset, angle)
+                    if "E" in ms: offset = (aa,-aa); angle = 0; draw_arrow(arrow, self.snake.surface, offset, angle)
                 
 
 # a snake consists of elements and a color
@@ -352,7 +354,7 @@ class Snake:
             foo['elements'].append(e.export())
         return foo
 
-    def draw(self):
+    def draw(self, arrows=True):
         clr = tuple(max(x-100,0) for x in self.color)
         clr = tuple(list(clr)+ [50])
 
@@ -361,5 +363,5 @@ class Snake:
             next = self.elements[i+1] if i < len(self.elements)-1 else None
             if next:
                 pygame.draw.line(self.surface,clr, se.get_center(), next.get_center(),15)
-            se.draw()
+            se.draw(arrows=arrows)
 

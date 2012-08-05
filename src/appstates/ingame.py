@@ -140,9 +140,8 @@ class InGame(AppState):
         self._reset_background()
         
         if self.state:
-            self.state.map.draw()
-            for s in self.state.snakes:
-                s.draw()
+            self.state.draw()
+            
         self.debug_info.draw()
                 
         # number of moves

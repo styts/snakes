@@ -20,6 +20,7 @@ class MenuButton:
         self.text_color = (255,255,50)
         self.shadow_color = (135,135,0,50)
         self.selected = False
+        self.enabled = True
 
     def draw(self, surface, font, hover=False):
         if not self.selected:
@@ -39,6 +40,9 @@ class MenuButton:
         o = 2
         surface.blit(s_sh_font, self._get_center(o_x+o,o_y+o))
         surface.blit(s_font, self._get_center(o_x,o_y))
+
+        if not self.enabled:
+            surface.blit(self.shadow, self.r.move(0,0))
 
     def _get_center(self,ox=0,oy=0):
         x = self.r.left + self.r.width / 2
