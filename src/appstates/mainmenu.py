@@ -19,23 +19,26 @@ class MenuButton:
         self.title = title
         self.text_color = (255,255,50)
         self.shadow_color = (135,135,0,50)
+        self.selected = False
 
     def draw(self, surface, font, hover=False):
-        surface.blit(self.shadow, self.r.move(5,5))
+        if not self.selected:
+            surface.blit(self.shadow, self.r.move(5,5))
 
         if not hover:
             surface.blit(self.button, self.r)
         else:
-            surface.blit(self.hover, self.r)
+            surface.blit(self.hover, self.r if not self.selected else self.r.move(5,5))
 
         s_font = font.render(self.title,False,self.text_color)
         s_sh_font = font.render(self.title,False,self.shadow_color)
         o_x = -s_font.get_width()/2
         o_y = -s_font.get_height()/2
+        if self.selected: o_x = o_x + 5
+        if self.selected: o_y = o_y + 5
         o = 2
         surface.blit(s_sh_font, self._get_center(o_x+o,o_y+o))
         surface.blit(s_font, self._get_center(o_x,o_y))
-
 
     def _get_center(self,ox=0,oy=0):
         x = self.r.left + self.r.width / 2
@@ -81,9 +84,8 @@ class MainMenu(AppState):
         self._add_button("CREDITS",2)
         self._add_button("EXIT",3)
 
-    def resume(self):
-        self.hover_button = None
-        
+    # def resume(self):
+    #     self.hover_button = None
 
     def _add_button(self, title, position=None):
         n = position if position>=0 else len(self._buttons)
@@ -105,7 +107,15 @@ class MainMenu(AppState):
                 return b
         return None
 
-    def process(self, event):
+    def resume(self):
+        super(MainMenu, self).resume()
+        for b in self._buttons:
+            b.selected = False
+
+    def process(self):
+        return super(MainMenu, self).process()
+
+    def process_input(self, event):
         if event.type not in [pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN]:
             return None
 
@@ -113,11 +123,15 @@ class MainMenu(AppState):
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:
+                ## CLICK
+                #self.hover_button.click()
+                self.hover_button.selected = True
+                self.wait(self.CLICK_DELAY)
                 t = self.hover_button.title
                 if t == "PLAY":
-                    return "LevelSelect"
+                    self.next_state = "LevelSelect"
                 if t == "EXIT":
-                    return "GoodBye"
+                    self.next_state = "GoodBye"
 
         
     def draw(self):

@@ -79,17 +79,19 @@ class App():
 
         self._dirty_rects = []
         
+        p = self.appstate.process()
+        if p:
+            if p == "GoodBye":
+                self.is_running = False
+            else:
+                # appstate wants to change!
+                self.appstate = self._get_appstate(p)
+                self.appstate.resume()
+
         events = pygame.event.get()
         for event in events:
-            p = self.appstate.process(event)
-            if p:
-                if p == "GoodBye":
-                    self.is_running = False
-                else:
-                    # appstate wants to change!
-                    self.appstate = self._get_appstate(p)
-                    self.appstate.resume()
-
+            p = self.appstate.process_input(event)
+            
             # ESC quits app
             if event.type == pygame.QUIT: #or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                 self.is_running = False

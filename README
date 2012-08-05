@@ -41,3 +41,4 @@ I need memory profiler though for debugging the exponential growth in my solver.
 objgraph.show_chain( objgraph.find_backref_chain(random.choice(objgraph.by_type(
 'dict')), inspect.ismodule) , filename='chain.png')
 
+Sliding puzzle

@@ -104,7 +104,6 @@ class LevelSelect(AppState):
     def __init__(self, app):
         self.app = app
         self.levelbuttons = []
-        self.hover_button = None
         self.selected_button = None
 
         LevelButton.init() # make shadow, set w/h, etc.
@@ -118,16 +117,23 @@ class LevelSelect(AppState):
         self.select_button = MenuButton(self.app.screen_w - MenuButton.w - 50,self.app.screen_h - 50 - MenuButton.h,"Select")
 
         self.levelstats = LevelStats(self.app.font_px, x_offset=self.app.screen_w-430,width=380)
-        self.levelstats.pick(self.levelbuttons[0]) # init with 1st level
+        #self.levelstats.pick(self.levelbuttons[0]) # init with 1st level
+        self.resume()
 
     def _buttons(self):
         # all my buttons are belong to you
         return [self.back_button, self.select_button] + self.levelbuttons
 
     def resume(self):
-        self.hover_button = None
+        super(LevelSelect, self).resume()
+        for b in self._buttons():
+            b.selected = False
+        self.levelstats.pick(self.levelbuttons[0]) # init with 1st level
 
-    def process(self, event):
+    def process(self):
+        return super(LevelSelect, self).process()
+
+    def process_input(self, event):
         # quit to menu - ESC
         if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
             return "MainMenu"
@@ -144,8 +150,11 @@ class LevelSelect(AppState):
             if self.hover_button:
                 ### back to main menu
                 t = self.hover_button.title
+                self.hover_button.selected = True
+                self.wait(self.CLICK_DELAY)
+
                 if t == "Back":
-                    return "MainMenu"
+                    self.next_state = "MainMenu"
 
                 ### select a level button
                 if self.hover_button.__class__.__name__ == "LevelButton":
