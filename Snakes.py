@@ -36,7 +36,7 @@ def main():
         solve(fn,ig)
     # Run the pygame window
     else:
-        from engine.app import App
+        from src.engine.app import App
         app = App(arguments)
 
 if __name__ == '__main__':

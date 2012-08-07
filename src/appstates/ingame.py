@@ -88,6 +88,9 @@ class InGame(AppState):
                             if se.move(Move(se.x,se.y,b.x,b.y)):
                                 self.n_moves = self.n_moves + 1
                                 self._reset_background()
+                                if self.state and self.state.is_complete():
+                                    self.draw()
+                                    self.next_state = ("LevelComplete", (self.level_name, self.app.screen.copy()))
                                 
                     self.current_block = b
                 else:
@@ -168,9 +171,9 @@ class InGame(AppState):
             self.lifemeter.draw(self.app.screen, life_values)
         
         #completion
-        if self.state and self.state.is_complete():
-            ren_complete = self.app.font.render("COMPLETE",1,(155,255,0))
-            self.app.screen.blit(ren_complete, (250,10))
+        # if self.state and self.state.is_complete():
+        #     ren_complete = self.app.font.render("COMPLETE",1,(155,255,0))
+        #     self.app.screen.blit(ren_complete, (250,10))
         
         if self.edit_mode:
             self.toolbar.draw()

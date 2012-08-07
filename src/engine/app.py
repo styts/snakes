@@ -8,6 +8,7 @@ import logic.ingame
 from appstates.ingame import InGame
 from appstates.mainmenu import MainMenu
 from appstates.levelselect import LevelSelect
+from appstates.levelcomplete import LevelComplete
 #from appstates.appstate import GoodBye
 from engine.utils import patternize_tile
 
@@ -54,6 +55,7 @@ class App():
         self._appstates.append(MainMenu(self))
         self._appstates.append(InGame(self))
         self._appstates.append(LevelSelect(self))
+        self._appstates.append(LevelComplete(self))
 
         self.appstate = self._get_appstate("MainMenu")
         # start with ingame state
