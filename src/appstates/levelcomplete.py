@@ -1,14 +1,14 @@
 from appstate import AppState
 import pygame
 
-LC_BG = 'data/sprites/level_complete_bg.png'
+#LC_BG = 'data/sprites/level_complete_bg.png'
 
 class LevelComplete(AppState):
     def __init__(self, app):
         self.app = app
         self.surface = pygame.Surface(self.app.screen.get_size(), pygame.SRCALPHA)
         self.surface.fill((0, 0, 0, 150))
-        self.panel = pygame.image.load(LC_BG)
+        #self.panel = pygame.image.load(LC_BG)
 
     def process(self):
         return super(LevelComplete, self).process()
@@ -30,6 +30,7 @@ class LevelComplete(AppState):
     def draw(self):
         self.app.screen.blit(self.bg, (0, 0))
         self.app.screen.blit(self.surface, (0, 0))
-        x = self.app.screen_w / 2 - self.panel.get_width()/2
-        y = self.app.screen_h / 2 - self.panel.get_height()/2
-        self.app.screen.blit(self.panel, (x, y))
+        panel = self.app.resman.get_surface("level_complete_bg")
+        x = self.app.screen_w / 2 - panel.get_width()/2
+        y = self.app.screen_h / 2 - panel.get_height()/2
+        self.app.screen.blit(panel, (x, y))

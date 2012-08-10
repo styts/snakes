@@ -73,8 +73,10 @@ class App():
         self.clock = pygame.time.Clock()
         #self.input = Input(self)
 
+        self.resman = ResourceManager(self)
+
         background = pygame.Surface(self.screen.get_size())
-        patternize_tile(background, "data/sprites/tile.png")
+        patternize_tile(background, self.resman.get_surface("tile"))
         #patternize_tile(background, "data/assets/128-64.png")
         #background.fill((0, 0, 0))
         #background.convert()
@@ -86,8 +88,6 @@ class App():
         self.font_px = pygame.font.Font(os.path.join('data','fonts','visitor1.ttf'),40)
         self.font_px_s = pygame.font.Font(os.path.join('data','fonts','visitor2.ttf'),25)
         self.sysfont = SysFont("Courier",12)
-
-        self.resman = ResourceManager(self)
 
         self._appstates = []
         self._appstates.append(MainMenu(self))

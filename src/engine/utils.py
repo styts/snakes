@@ -19,13 +19,13 @@ colors = {
           '1' : (50,50,50)
           }
               
-def patternize_tile(finalSurface, fn):
+def patternize_tile(finalSurface, tileSurface):
     """Fills the surface with tiles from filename"""
     """Called once when creating a level backgorund"""
     # adopted from http://www.devshed.com/c/a/Python/PyGame-for-Game-Development-Font-and-Sprites/1/
     
-    tileSurface = pygame.image.load(fn)
-    tileSurface.convert()
+    #tileSurface = pygame.image.load(fn)
+    #tileSurface.convert()
 
     tileRect = tileSurface.get_rect()
 

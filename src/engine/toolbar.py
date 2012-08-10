@@ -83,7 +83,7 @@ class Toolbar:
                 state.load_from_file(fn)
             else:
                 state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',fn))
-            thumb = state.get_thumbnail(a=60)
+            thumb = state.get_thumbnail(a=60,resman=self.ingameState.app.resman)
             #t_w, t_h = thumb.get_size()
             #thumb = pygame.transform.scale(thumb,(t_w/2,t_h/2))
             b = ToolbarButton(self,fn,action='mapload',surface=thumb)

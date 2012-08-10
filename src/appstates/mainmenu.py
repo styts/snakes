@@ -52,9 +52,9 @@ class MenuButton:
         return (x,y)
 
     @staticmethod
-    def init():
-        MenuButton.button = pygame.image.load(B_GLYPH)
-        MenuButton.hover = pygame.image.load(B_HOVER_GLYPH)
+    def init(resman):
+        MenuButton.button = resman.get_surface("b_wide")
+        MenuButton.hover = resman.get_surface("b_wide_hi")
 
         MenuButton.w = MenuButton.button.get_width()
         MenuButton.h = MenuButton.button.get_height()
@@ -80,7 +80,7 @@ class MainMenu(AppState):
         # app
         MainMenu.app = app
 
-        MenuButton.init() # make shadow, set w/h, etc.
+        MenuButton.init(app.resman) # make shadow, set w/h, etc.
 
         # add button in the center
         self._add_button("PLAY",0)

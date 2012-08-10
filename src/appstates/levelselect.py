@@ -6,8 +6,8 @@ from src.appstates.mainmenu import MenuButton
 from math import floor
 from src.appstates.appstate import AppState
 
-B_GLYPH = 'data/sprites/b_sq.png'
-B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'
+# B_GLYPH = 'data/sprites/b_sq.png'
+# B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'
 BUTTONS_PER_ROW = 6
 
 class LevelButton():
@@ -44,9 +44,9 @@ class LevelButton():
         return None
 
     @staticmethod
-    def init():
-        LevelButton.button = pygame.image.load(B_GLYPH)
-        LevelButton.hover = pygame.image.load(B_HOVER_GLYPH)
+    def init(resman):
+        LevelButton.button = resman.get_surface("b_sq")
+        LevelButton.hover = resman.get_surface("b_sq_hi")
 
         LevelButton.a = LevelButton.button.get_width()
 
@@ -107,7 +107,7 @@ class LevelSelect(AppState):
         self.levelbuttons = []
         self.selected_button = None
 
-        LevelButton.init() # make shadow, set w/h, etc.
+        LevelButton.init(app.resman) # make shadow, set w/h, etc.
 
         self.levels_width = 5*(LevelButton.a+10)
         #self.lb_surf = pygame.Surface((self.levels_width,300))
