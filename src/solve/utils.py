@@ -1,6 +1,10 @@
 from src.solve.solver import Solver
 from src.logic.state import State
-import cloud, os
+try: # for dist
+    import cloud
+except:
+    pass
+import os
 from multiprocessing import Process
 
 def _process(json_data,use_cloud,quit_on_first=True, ignore_pickle=False, debug_info=None):
