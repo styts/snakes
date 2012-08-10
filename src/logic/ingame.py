@@ -7,13 +7,13 @@ class InGame(AppState):
         self.state = None
         self.debug_info = DebugInfo(self)
         self.toolbar = Toolbar(self, self.screen, self.screen_w-300, 200) # 300 px off the right edge
-
-        self.n_moves = 0
+        
+        self.n_moves = 0 
         self.time_began = time()
         self.level_name = ""
-
+        
         reset_state(self,"tempstate.json")
-
+        
         # TODO: toggle edit mode from command line
         self.edit_mode = True
         self.state_complete = False
@@ -30,14 +30,14 @@ class InGame(AppState):
         for s in self.state.snakes:
             s.draw()
         self.debug_info.draw()
-
+                
         # number of moves
         moves_str = "Moves: %s" % self.n_moves
         ren_n_moves = self.font.render(moves_str,1,(255,255,0))
         ren_n_moves_shadow = self.font.render(moves_str,1,(155,155,0))
         self.screen.blit(ren_n_moves_shadow, (12,12))
         self.screen.blit(ren_n_moves, (10,10))
-
+        
         #time
         delta = time()-self.time_began
         min = int(delta / 60)#IGNORE:W0622
@@ -48,12 +48,12 @@ class InGame(AppState):
         # don't show time
         ###self.screen.blit(ren_time_shadow, (482,12))
         ###self.screen.blit(ren_time, (480,10))
-
+        
         #completion
         if self.state_complete:
             ren_complete = self.font.render("COMPLETE",1,(155,255,0))
             self.screen.blit(ren_complete, (250,10))
-
+        
         if self.edit_mode:
             self.toolbar.draw()
-
+    

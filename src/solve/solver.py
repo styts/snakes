@@ -2,7 +2,7 @@ import copy
 import os
 import sys
 import pygame
-from guppy import hpy
+#from guppy import hpy
 import hashlib
 import networkx as nx
 import plotter
