@@ -13,7 +13,7 @@ from src.solve.utils import process_json
 from src.engine.misc import edit_map
 from src.engine.misc import save_state
 from src.appstates.appstate import AppState
-from src.appstates.lifemeter import LifeMeter
+from src.logic.lifemeter import LifeMeter
 
 MAX_LIFE = 20
 
@@ -23,15 +23,15 @@ class InGame(AppState):
         self.state = None # current level
         self.debug_info = DebugInfo(self) # debug display
         self.toolbar = Toolbar(self, app.screen, app.screen_w-250, 200) # 250 px off the right edge, 200 from top
-        
-        self.n_moves = 0 
+
+        self.n_moves = 0
         self.time_began = time.time()
         self.level_name = ""
-        
+
         ## input variables
         self.holding = False
         self.current_block = None
-        
+
         self.edit_mode = True # TODO: toggle edit mode from command line
 
         self._reset_background() # once draw the background
@@ -91,7 +91,7 @@ class InGame(AppState):
                                 if self.state and self.state.is_complete():
                                     self.draw()
                                     self.next_state = ("LevelComplete", (self.level_name, self.app.screen.copy()))
-                                
+
                     self.current_block = b
                 else:
                     self.current_block = None
@@ -99,7 +99,7 @@ class InGame(AppState):
 
             # process motion over toolbar
             #if event.pos[0] > self.app.toolbar.x_offset and event.pos[1] > self.app.toolbar.y_offset:
-            
+
             ### INTERNAL (EDITOR, DEBUG)
 
             # ALT-clicking on a block prints debug into to stdout
@@ -141,19 +141,19 @@ class InGame(AppState):
 
     def draw(self):
         self._reset_background()
-        
+
         if self.state:
             self.state.draw()
-            
+
         self.debug_info.draw()
-                
+
         # number of moves
         moves_str = "Moves: %s" % self.n_moves
         ren_n_moves = self.app.font.render(moves_str,1,(255,255,0,100))
         ren_n_moves_shadow = self.app.font.render(moves_str,1,(155,155,0,100))
         self.app.screen.blit(ren_n_moves_shadow, (12,12))
         self.app.screen.blit(ren_n_moves, (10,10))
-        
+
         #time
         delta = time.time()-self.time_began
         min = int(delta / 60)#IGNORE:W0622
@@ -169,12 +169,12 @@ class InGame(AppState):
         life_values = get_life_values(self.n_moves, self.level_minmoves, self.max_life, self.bonus_max)
         if self.lifemeter:
             self.lifemeter.draw(self.app.screen, life_values)
-        
+
         #completion
         # if self.state and self.state.is_complete():
         #     ren_complete = self.app.font.render("COMPLETE",1,(155,255,0))
         #     self.app.screen.blit(ren_complete, (250,10))
-        
+
         if self.edit_mode:
             self.toolbar.draw()
 
@@ -229,7 +229,7 @@ class InGame(AppState):
         self._reset_background()
 
         #### load the level data?
-        
+
         fn = 'data/graphs/%s.pickle'%self.state.__hash__()
         if os.path.exists(fn):
             (tmp_gr, tmp_sols) = pickle.load(open(fn,'rb'))
