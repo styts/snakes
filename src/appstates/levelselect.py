@@ -184,7 +184,7 @@ class LevelSelect(AppState):
             fn = os.path.basename(fn)
             state = State()
             state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',fn))
-            thumb = state.get_thumbnail()
+            thumb = state.get_thumbnail(resman=self.app.resman)
             #t_w, t_h = thumb.get_size()
             #thumb = pygame.transform.scale(thumb,(t_w*4,t_h*4))
             per = BUTTONS_PER_ROW

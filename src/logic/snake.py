@@ -7,25 +7,9 @@ import weakref
 
 import operator # make SE offsetting work
 
-# prevent picloud not finding file error
-circle_glyph_fn = os.path.join('data', 'sprites', 'stone.png')
-arrow_glyph_fn = os.path.join('data', 'sprites', 'arrow.png')
-if os.path.exists(circle_glyph_fn):
-    circle_glyph = pygame.image.load(circle_glyph_fn)
-    arrow_glyph = pygame.image.load(arrow_glyph_fn)
-    
-    #arrow_glyph.set_alpha(1)
-    aa = arrow_glyph.get_width()/2
-else:
-    circle_glyph = None
-    arrow_glyph = None
+aa = 30 #arrow_glyph.get_width()/2
 
-SNAKE_SURFACES = {
-                  "stone" : circle_glyph,
-                  "arrow" : arrow_glyph,
-                  }
-
-OFFSET_PIXELS = (BLOCK_SIZE - circle_glyph.get_width()) / 2
+OFFSET_PIXELS = 5#(BLOCK_SIZE - circle_glyph.get_width()) / 2
 
 class Move():
     def __repr__(self):
@@ -224,20 +208,20 @@ class SnakeElement() :
         return surf
 
 
-    def draw(self, arrows):
+    def draw(self, arrows, resman=None):
         def draw_arrow(arrow,surface,offset,angle):
             ac = tuple(map(operator.add, self.get_center(), offset))
             surface.blit(pygame.transform.rotate(arrow,angle),ac)
 
+        if not resman:
+            return
         # FIXME: such a waste of time to recolor every frame??!
         if self.snake.surface:
-            sprite = SNAKE_SURFACES['stone'].copy()
-            sprite.fill(self.snake.color,None,pygame.BLEND_RGBA_MULT)
+            sprite = resman.get_surface("stone", color=self.snake.color)
 
             if arrows:
-                arrow = SNAKE_SURFACES['arrow'].copy()
-                col = self.snake.color + (120,)
-                arrow.fill(col,None,pygame.BLEND_RGBA_MULT)
+                col = self.snake.color
+                arrow = resman.get_surface("arrow", color=col, alpha=120)
             
             if sprite:
                 offset = (OFFSET_PIXELS, OFFSET_PIXELS)
@@ -354,7 +338,7 @@ class Snake:
             foo['elements'].append(e.export())
         return foo
 
-    def draw(self, arrows=True):
+    def draw(self, arrows=True, resman=None):
         clr = tuple(max(x-100,0) for x in self.color)
         clr = tuple(list(clr)+ [50])
 
@@ -363,5 +347,5 @@ class Snake:
             next = self.elements[i+1] if i < len(self.elements)-1 else None
             if next:
                 pygame.draw.line(self.surface,clr, se.get_center(), next.get_center(),15)
-            se.draw(arrows=arrows)
+            se.draw(arrows=arrows, resman=resman)
 

@@ -143,7 +143,7 @@ class InGame(AppState):
         self._reset_background()
 
         if self.state:
-            self.state.draw()
+            self.state.draw(resman=self.app.resman)
 
         self.debug_info.draw()
 

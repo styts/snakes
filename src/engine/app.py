@@ -11,6 +11,42 @@ from src.appstates.levelselect import LevelSelect
 from src.appstates.levelcomplete import LevelComplete
 #from appstates.appstate import GoodBye
 from src.engine.utils import patternize_tile
+import glob
+
+class ResourceManager():
+    LOCATION = os.path.join("data", "sprites")
+
+    def __init__(self, app):
+        self.app = app
+        self._surfaces = {}
+        self._load_all()
+
+    def _load_all(self):
+        ext = ".png"
+        for fn in glob.glob(ResourceManager.LOCATION+"/*%s" % ext):
+            bn = os.path.basename(fn).replace(ext, "")
+            surf = pygame.image.load(fn)
+            surf = surf.convert_alpha()
+            self._surfaces[bn] = {}
+            self._surfaces[bn]["default"] = surf
+
+    def fill_me(self, surf, color, alpha):
+        s = surf.copy()
+        col = color + (alpha,)
+        s.fill(col, None, pygame.BLEND_RGBA_MULT)
+        return s
+
+    def get_surface(self, name, color=None, alpha=255):
+        color_str = str(color)
+        if name not in self._surfaces.keys():
+            return None
+
+        if color:
+            if color_str not in self._surfaces[name].keys():
+                self._surfaces[name][color_str] = self.fill_me(self._surfaces[name]['default'], color, alpha)
+            return self._surfaces[name][color_str]
+        else:
+            return self._surfaces[name]["default"]
 
 
 class App():
@@ -50,6 +86,8 @@ class App():
         self.font_px = pygame.font.Font(os.path.join('data','fonts','visitor1.ttf'),40)
         self.font_px_s = pygame.font.Font(os.path.join('data','fonts','visitor2.ttf'),25)
         self.sysfont = SysFont("Courier",12)
+
+        self.resman = ResourceManager(self)
 
         self._appstates = []
         self._appstates.append(MainMenu(self))

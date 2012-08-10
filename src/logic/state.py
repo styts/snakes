@@ -74,10 +74,10 @@ class State:
                     #exclude.append(newstate) # hmmm try
         return ns
 
-    def draw(self, arrows=True):
+    def draw(self, arrows=True, resman=None):
         self.map.draw()
         for s in self.snakes:
-            s.draw(arrows)
+            s.draw(arrows, resman)
 
     @staticmethod
     def apply_move(state,m):
@@ -106,13 +106,13 @@ class State:
     #     surf.unlock()
     #     return surf
 
-    def get_thumbnail(self, a=80):
+    def get_thumbnail(self, a=80, resman=None):
         w = 16*BLOCK_SIZE
         surf = pygame.Surface((w,w))
         surf.set_colorkey((0,0,0))
         #surf.lock()
         self.set_surface(surf)
-        self.draw(arrows=False)
+        self.draw(arrows=False, resman=resman)
         surf = pygame.transform.smoothscale(surf,(a,a))
         return surf
 
