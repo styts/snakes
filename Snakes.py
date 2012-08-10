@@ -11,8 +11,8 @@ Options:
     -i, --ignore-pickle        work anyway
 """
 
-import sys
-sys.path.append("src")
+#import sys
+#sys.path.append("src")
 
 from docopt import docopt
 

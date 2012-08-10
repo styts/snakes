@@ -4,13 +4,13 @@ import pygame, sys, os
 from pygame.locals import FULLSCREEN
 from pygame.font import SysFont
 from debug_info import DebugInfo
-import logic.ingame
-from appstates.ingame import InGame
-from appstates.mainmenu import MainMenu
-from appstates.levelselect import LevelSelect
-from appstates.levelcomplete import LevelComplete
+import src.logic.ingame
+from src.appstates.ingame import InGame
+from src.appstates.mainmenu import MainMenu
+from src.appstates.levelselect import LevelSelect
+from src.appstates.levelcomplete import LevelComplete
 #from appstates.appstate import GoodBye
-from engine.utils import patternize_tile
+from src.engine.utils import patternize_tile
 
 
 class App():

@@ -4,16 +4,16 @@ import os
 import pickle
 
 from src.engine.debug_info import DebugInfo
-from engine.toolbar import Toolbar
-from logic.snake import Snake, Move
+from src.engine.toolbar import Toolbar
+from src.logic.snake import Snake, Move
 from src.logic.state import State
 from src.logic.map import Map
-from engine.utils import solve, get_life_values
+from src.engine.utils import solve, get_life_values
 from src.solve.utils import process_json
-from engine.misc import edit_map
-from engine.misc import save_state
-from appstates.appstate import AppState
-from appstates.lifemeter import LifeMeter
+from src.engine.misc import edit_map
+from src.engine.misc import save_state
+from src.appstates.appstate import AppState
+from src.appstates.lifemeter import LifeMeter
 
 MAX_LIFE = 20
 

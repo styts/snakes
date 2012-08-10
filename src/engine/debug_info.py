@@ -1,5 +1,5 @@
 from pygame.font import SysFont
-from logic.tile import BLOCK_SIZE
+from src.logic.tile import BLOCK_SIZE
 
 DBG_STRINGS = {'d1' : "DEBUG INFO:",
                'd2' : "===========",

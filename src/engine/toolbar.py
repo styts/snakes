@@ -1,6 +1,6 @@
 from utils import letter_to_color
 from src.engine.misc import remove_map_file
-from logic.state import State
+from src.logic.state import State
 import os
 import glob
 import weakref

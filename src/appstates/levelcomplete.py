@@ -21,7 +21,6 @@ class LevelComplete(AppState):
         if event.type not in [pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN]:
             return None
 
-
     def resume(self, args):
     	super(LevelComplete, self).resume(args)
 

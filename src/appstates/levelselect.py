@@ -1,10 +1,10 @@
 import glob, os
 from src.utils.sort import sort_nicely
-from logic.state import State
+from src.logic.state import State
 import pygame
-from appstates.mainmenu import MenuButton
+from src.appstates.mainmenu import MenuButton
 from math import floor
-from appstate import AppState
+from src.appstates.appstate import AppState
 
 B_GLYPH = 'data/sprites/b_sq.png'
 B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'
