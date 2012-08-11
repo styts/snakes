@@ -4,7 +4,6 @@ import pygame, sys, os
 from pygame.locals import FULLSCREEN
 from pygame.font import SysFont
 from debug_info import DebugInfo
-import src.logic.ingame
 from src.appstates.ingame import InGame
 from src.appstates.mainmenu import MainMenu
 from src.appstates.levelselect import LevelSelect

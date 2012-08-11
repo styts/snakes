@@ -12,7 +12,7 @@ from src.engine.utils import solve, get_life_values
 from src.solve.utils import process_json
 from src.engine.misc import edit_map
 from src.engine.misc import save_state
-from src.appstates.appstate import AppState
+from src.engine.appstate import AppState
 from src.logic.lifemeter import LifeMeter
 
 MAX_LIFE = 20

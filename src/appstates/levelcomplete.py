@@ -1,14 +1,11 @@
-from appstate import AppState
+from src.engine.appstate import AppState
 import pygame
-
-#LC_BG = 'data/sprites/level_complete_bg.png'
 
 class LevelComplete(AppState):
     def __init__(self, app):
         self.app = app
         self.surface = pygame.Surface(self.app.screen.get_size(), pygame.SRCALPHA)
         self.surface.fill((0, 0, 0, 150))
-        #self.panel = pygame.image.load(LC_BG)
 
     def process(self):
         return super(LevelComplete, self).process()

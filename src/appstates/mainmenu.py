@@ -1,6 +1,4 @@
-from appstate import AppState
-#from pygame import Rect
-#from pygame.image import load
+from src.engine.appstate import AppState
 import pygame
 
 B_GLYPH = 'data/sprites/b_wide.png'

@@ -4,7 +4,7 @@ from src.logic.state import State
 import pygame
 from src.appstates.mainmenu import MenuButton
 from math import floor
-from src.appstates.appstate import AppState
+from src.engine.appstate import AppState
 
 # B_GLYPH = 'data/sprites/b_sq.png'
 # B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'

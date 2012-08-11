@@ -1,4 +1,3 @@
-
 class AppState(object):
     """The App class takes care of the state transitions between the finite state automaton which consists of AppStates
     Those could be: Menu, InGame, LevelComplete, GameOver, HighScores, etc.
@@ -45,24 +44,3 @@ class AppState(object):
 
     def wait(self, cycles):
         self.i_wait = cycles
-
-# class LevelSelect(AppState):
-#     def __init__(self, app):
-#         self.app = app
-
-#     def process():
-#         pass
-
-#     def draw(self, screen):
-#         pass
-
-class GoodBye(AppState):
-    """A "welcome" screen that blits out saying GoodBye or waits for keypress"""
-    pass
-#     i = 1000 # frames
-#     def process():
-#         GoodBye.i = GoodBye.i - 1
-
-#     def draw():
-
-
