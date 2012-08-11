@@ -95,7 +95,12 @@ class LevelSelect(AppState):
         if event.type not in [pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN]:
             return None
 
+        # is there a new hover button? yes: play sound
+        tmp_hover = self.hover_button
         self.hover_button = LevelButton.get_button_at(self._buttons(), event.pos)
+        if self.hover_button and self.hover_button != tmp_hover:
+            # new hover, todo: play sound 
+            self.app.audioman.sfx("mouseover-move")
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:
@@ -109,6 +114,7 @@ class LevelSelect(AppState):
                 ### back to main menu
                 t = self.hover_button.title
                 self.hover_button.selected = True
+                self.app.audioman.sfx("select")
                 self.wait(self.CLICK_DELAY)
 
                 if t == "Back":

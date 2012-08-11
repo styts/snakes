@@ -2,8 +2,8 @@ from src.engine.appstate import AppState
 import pygame
 from src.engine.buttons import MenuButton
 
-B_GLYPH = 'data/sprites/b_wide.png'
-B_HOVER_GLYPH = 'data/sprites/b_wide_hi.png'
+#B_GLYPH = 'data/sprites/b_wide.png'
+#B_HOVER_GLYPH = 'data/sprites/b_wide_hi.png'
 
 class MainMenu(AppState):
     _buttons = []
@@ -58,12 +58,17 @@ class MainMenu(AppState):
         if event.type not in [pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN]:
             return None
 
+        hover_tmp = self.hover_button
         self.hover_button = self._get_button_at(event.pos)
+        if self.hover_button and self.hover_button != hover_tmp:
+            # new hover, todo: play sound 
+            self.app.audioman.sfx("mouseover-move")
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:
                 ## CLICK
                 self.hover_button.selected = True
+                self.app.audioman.sfx("select")
                 self.wait(self.CLICK_DELAY)
                 t = self.hover_button.title
                 if t == "PLAY":

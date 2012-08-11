@@ -45,3 +45,6 @@ class ResourceManager():
             return self._surfaces[name][color_str]
         else:
             return self._surfaces[name]["default"]
+
+    def get_sound(self, name):
+        return self._sounds[name]
