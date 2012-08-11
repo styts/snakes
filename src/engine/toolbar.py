@@ -1,9 +1,8 @@
 from utils import letter_to_color
-from src.engine.misc import remove_map_file
 from src.logic.state import State
 import os
 import glob
-import weakref
+#import weakref
 import pygame
 from src.utils.sort import sort_nicely
 
@@ -128,14 +127,7 @@ class Toolbar:
                 self.hover_button = None
         if event.type == pygame.MOUSEBUTTONDOWN:
             b = self._get_button_at(event.pos)
-            if b:
-                # mods = pygame.key.get_mods()
-                # print "button " , b.value
-                # print mods, pygame.K_RALT, mods % pygame.K_RALT
-
-                # if mods & pygame.K_RALT:
-                #     remove_map_file(b.value)
-                    
+            if b:   
                 if b.action in ['mapsize','mapload']:    
                     b.click()
                 else:

@@ -2,10 +2,6 @@ from src.logic.map import Map
 from src.logic.snake import Snake
 from src.logic.state import State
 from src.engine.utils import SNAKE_VALUES
-import os
-import hashlib
-import time
-import pickle
 
 def save_state(state):
     n_s = len(state.snakes)
@@ -14,14 +10,6 @@ def save_state(state):
     name = "n%s-s%s-%s" % (n_n,n_s,str_md5)
     #state.save_to_image("data/maps/%s.png" % name)
     state.save_to_json("data/maps/%s.json" % name)
-
-def remove_map_file(levelname):
-    """Not used"""
-    # """used by RALT+mouseclick on ToolbarButton"""
-    # pathname = os.path.abspath(os.path.join("data", "maps", levelname))
-    # os.remove(pathname)
-    # print "removed map", pathname
-    pass
 
 def edit_map(state,event,button):
     if not state:

@@ -3,7 +3,7 @@ from src.engine.utils import SNAKE_VALUES
 from src.logic.tile import BLOCK_SIZE
 import os
 import pygame
-import weakref
+#import weakref
 
 import operator # make SE offsetting work
 

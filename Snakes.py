@@ -10,10 +10,6 @@ Options:
     -t, --test-solvability     test level solvability
     -i, --ignore-pickle        work anyway
 """
-
-#import sys
-#sys.path.append("src")
-
 from docopt import docopt
 
 def solve(fn,ig):
@@ -28,17 +24,14 @@ def main():
     fn = arguments["<level>"]
     t = arguments["--test-solvability"]
     ig = arguments["--ignore-pickle"]
-    #print t
 
-    # print arguments
-    # sys.exit(0)
     if "<level>" in arguments and fn:
         solve(fn,ig)
-    # Run the pygame window
+
+   # Run the pygame window
     else:
         from src.engine.app import App
         app = App(arguments)
 
 if __name__ == '__main__':
     main()
-    #solve('data/maps/tempstate.json',True)

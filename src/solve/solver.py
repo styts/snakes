@@ -2,20 +2,12 @@ import copy
 import os
 import sys
 import pygame
-#from guppy import hpy
 import hashlib
 import networkx as nx
 import plotter
 from src.logic.state import State
 import pickle
 
-#### MEM Profiling
-# from IPython import embed
-#from pympler import tracker
-#tr = tracker.SummaryTracker()
-# import objgraph
-# from guppy import hpy
-# h = hpy()
 
 points = [1] # used by solver, every 'N' new nodes added to graph, do something
 N = 200
@@ -82,9 +74,6 @@ class Solver:
         if self.save_tmp and not self.quit_on_first: # only pickle if we're doing a complete computation
             #pickle our object and save it to temp dir
             print "Pickling...",
-            #from src.engine.utils import get_pickling_errors
-            #print get_pickling_errors(self)
-            #del self.state
             pickle.dump( (self.gr, self.sols), open( tmp_pickle, "wb" ))
             print "done"
 
@@ -114,11 +103,6 @@ class Solver:
         """Recursively called"""
         global points
 
-        #print "%s\t%s" % (gr.order(), depth)
-        #print points
-        #tr.print_diff()
-        
-        
         sxp_digest = hashlib.md5(root).hexdigest()
         if sxp_digest in gr.graph['visited']:
             return -3
@@ -129,12 +113,6 @@ class Solver:
         if o >= p0:
             points.remove(p0) # so it's only called once
             print "Order >= %s, Visited: %s, Finals: %s" % (p0, len(gr.graph['visited']), len(gr.graph['finals']))
-            #tr.print_diff()
-            #print h.heap()
-            # break here and see what's in use
-            #pass
-            #objgraph.show_growth(limit=10)
-            #embed()
 
         if max_depth and depth >= max_depth:
             return 3
