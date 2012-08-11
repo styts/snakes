@@ -5,65 +5,10 @@ import pygame
 from src.appstates.mainmenu import MenuButton
 from math import floor
 from src.engine.appstate import AppState
-
+from src.engine.buttons import LevelButton
 # B_GLYPH = 'data/sprites/b_sq.png'
 # B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'
 BUTTONS_PER_ROW = 6
-
-class LevelButton():
-    """A Selectable Level Button (20+ of these on the left)"""
-    button = None
-    shadow = None
-    hover = None
-    a = None # will be set to width of square button
-    def __init__(self, name, thumb, x, y, levelnr=0):
-        self.r = pygame.Rect(x, y, LevelButton.a, LevelButton.a)
-        self.title = name
-        self.thumb = thumb
-        self.selected = False
-        self.levelnr = levelnr
-        self.enabled = True
-    
-    def draw(self, surface, font=None, hover=False):
-        if not self.selected:
-            surface.blit(self.shadow, self.r.move(5,5))
-
-        if not hover and not self.selected:
-            surface.blit(self.button, self.r)
-        else:
-            surface.blit(self.hover, self.r)
-
-        surface.blit(self.thumb, self.r.move(5,5))
-
-    @staticmethod
-    # todo: put me in Button class
-    def get_button_at(buttons,(x,y)):
-        for b in buttons:
-            if b.r.contains(pygame.Rect(x,y,1,1)) and b.enabled:
-                return b
-        return None
-
-    @staticmethod
-    def init(resman):
-        LevelButton.button = resman.get_surface("b_sq")
-        LevelButton.hover = resman.get_surface("b_sq_hi")
-
-        LevelButton.a = LevelButton.button.get_width()
-
-        #LevelButton.w = LevelButton.button.get_width()
-        #LevelButton.h = LevelButton.button.get_height()
-
-        # create shadow surface
-        LevelButton.shadow = pygame.Surface((LevelButton.a, LevelButton.a), pygame.SRCALPHA)
-        # for each pixel in button glyph
-        for a in xrange(LevelButton.a):
-            for b in xrange(LevelButton.a):
-                # set corresponding value in shadow surface to be semi-transparent
-                c = LevelButton.button.get_at((a,b))
-                s = c if all(c) == 0 else (0,0,0,150)
-                LevelButton.shadow.set_at((a,b),s)
-    
-
 
 class LevelStats():
     """The Surface on the right"""
@@ -109,7 +54,7 @@ class LevelSelect(AppState):
 
         LevelButton.init(app.resman) # make shadow, set w/h, etc.
 
-        self.levels_width = 5*(LevelButton.a+10)
+        self.levels_width = 5*(LevelButton.w+10)
         #self.lb_surf = pygame.Surface((self.levels_width,300))
 
         self._refresh_levels()
@@ -190,8 +135,8 @@ class LevelSelect(AppState):
             per = BUTTONS_PER_ROW
             col = i % per
             row = floor(i / per)
-            x = x_o + col*(LevelButton.a + spacing)
-            y = y_o + row*(LevelButton.a + spacing)
+            x = x_o + col*(LevelButton.w + spacing)
+            y = y_o + row*(LevelButton.w + spacing)
             b = LevelButton(fn, thumb, x, y, levelnr=i+1)
             self.levelbuttons.append(b)
             i = i + 1
