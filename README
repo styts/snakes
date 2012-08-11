@@ -26,7 +26,9 @@ S : Solve
 Bugs
 ====
 Currently the Solver crashes on more complicated graphs (larger ones), giving the error:
-    illegal hardware instruction
+    illegal hardware instruction (this only happens with GUI mode, in CLI mode it gives Segmentation Fault ? and the big reason is that we run out of Memory)
+
+Windows-specific bug: level complete screen not shown properly (could it have to do with png transparency?)
 
 TODO:
 ====
