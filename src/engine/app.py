@@ -1,52 +1,18 @@
 from time import time
 from toolbar import Toolbar
-import pygame, sys, os
+import pygame, sys, os, glob
 from pygame.locals import FULLSCREEN
 from pygame.font import SysFont
 from debug_info import DebugInfo
+from src.engine.utils import patternize_tile
+
+from src.engine.audio import AudioManager
+from src.engine.resman import ResourceManager
+
 from src.appstates.ingame import InGame
 from src.appstates.mainmenu import MainMenu
 from src.appstates.levelselect import LevelSelect
 from src.appstates.levelcomplete import LevelComplete
-#from appstates.appstate import GoodBye
-from src.engine.utils import patternize_tile
-import glob
-
-class ResourceManager():
-    LOCATION = os.path.join("data", "sprites")
-
-    def __init__(self, app):
-        self.app = app
-        self._surfaces = {}
-        self._load_all()
-
-    def _load_all(self):
-        ext = ".png"
-        for fn in glob.glob(ResourceManager.LOCATION+"/*%s" % ext):
-            bn = os.path.basename(fn).replace(ext, "")
-            surf = pygame.image.load(fn)
-            surf = surf.convert_alpha()
-            self._surfaces[bn] = {}
-            self._surfaces[bn]["default"] = surf
-
-    def fill_me(self, surf, color, alpha):
-        s = surf.copy()
-        col = color + (alpha,)
-        s.fill(col, None, pygame.BLEND_RGBA_MULT)
-        return s
-
-    def get_surface(self, name, color=None, alpha=255):
-        color_str = str(color)
-        if name not in self._surfaces.keys():
-            return None
-
-        if color:
-            if color_str not in self._surfaces[name].keys():
-                self._surfaces[name][color_str] = self.fill_me(self._surfaces[name]['default'], color, alpha)
-            return self._surfaces[name][color_str]
-        else:
-            return self._surfaces[name]["default"]
-
 
 class App():
     screen_w = 1024
@@ -73,6 +39,7 @@ class App():
         #self.input = Input(self)
 
         self.resman = ResourceManager(self)
+        self.audioman = AudioManager(self)
 
         background = pygame.Surface(self.screen.get_size())
         patternize_tile(background, self.resman.get_surface("tile"))
