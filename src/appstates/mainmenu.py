@@ -2,8 +2,6 @@ from src.engine.appstate import AppState
 import pygame
 from src.engine.buttons import MenuButton
 
-#B_GLYPH = 'data/sprites/b_wide.png'
-#B_HOVER_GLYPH = 'data/sprites/b_wide_hi.png'
 
 class MainMenu(AppState):
     _buttons = []
@@ -15,34 +13,34 @@ class MainMenu(AppState):
         # app
         MainMenu.app = app
 
-        MenuButton.init(app.resman) # make shadow, set w/h, etc.
+        MenuButton.init(app.resman)  # make shadow, set w/h, etc.
 
         # add button in the center
-        self._add_button("PLAY",0)
-        self._add_button("OPTIONS",1)
-        self._add_button("CREDITS",2)
-        self._add_button("EXIT",3)
+        self._add_button("PLAY", 0)
+        self._add_button("OPTIONS", 1)
+        self._add_button("CREDITS", 2)
+        self._add_button("EXIT", 3)
 
     # def resume(self):
     #     self.hover_button = None
 
     def _add_button(self, title, position=None):
-        n = position if position>=0 else len(self._buttons)
+        n = position if position >= 0 else len(self._buttons)
 
         # center coords
-        x = (self.app.screen_w / 2) - MenuButton.w /2
-        y = (self.app.screen_h / 2) - MenuButton.h /2
+        x = (self.app.screen_w / 2) - MenuButton.w / 2
+        y = (self.app.screen_h / 2) - MenuButton.h / 2
 
-        y_offset = MenuButton.h / 2 + MenuButton.h # distance between buttons
-        y = y + n*y_offset
-        y = y + MainMenu.y_offset # buttons begin not at center, but somewhat higher
+        y_offset = MenuButton.h / 2 + MenuButton.h  # distance between buttons
+        y = y + n * y_offset
+        y = y + MainMenu.y_offset  # buttons begin not at center, but somewhat higher
 
         mb = MenuButton(x, y, title)
         self._buttons.append(mb)
 
-    def _get_button_at(self,(x,y)):
+    def _get_button_at(self, (x, y)):
         for b in MainMenu._buttons:
-            if b.r.contains(pygame.Rect(x,y,1,1)):
+            if b.r.contains(pygame.Rect(x, y, 1, 1)):
                 return b
         return None
 
@@ -61,22 +59,21 @@ class MainMenu(AppState):
         hover_tmp = self.hover_button
         self.hover_button = self._get_button_at(event.pos)
         if self.hover_button and self.hover_button != hover_tmp:
-            # new hover, todo: play sound 
+            # new hover, todo: play sound
             self.app.audioman.sfx("mouseover-move")
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:
                 ## CLICK
                 self.hover_button.selected = True
-                self.app.audioman.sfx("select")
                 self.wait(self.CLICK_DELAY)
                 t = self.hover_button.title
                 if t == "PLAY":
+                    self.app.audioman.sfx("select")
                     self.next_state = ("LevelSelect", None)
                 if t == "EXIT":
                     self.next_state = ("GoodBye", None)
 
-        
     def draw(self):
         self._reset_background()
 
