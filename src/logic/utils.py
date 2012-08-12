@@ -3,7 +3,7 @@ import time
 from src.logic.map import Map
 from src.logic.snake import Snake
 from src.logic.state import State
-#from src.engine.utils import SNAKE_VALUES
+from src.logic.misc import SNAKE_VALUES
 
 
 def save_state(state):

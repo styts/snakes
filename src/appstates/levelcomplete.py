@@ -1,6 +1,7 @@
 from src.engine.appstate import AppState
 import pygame
 
+
 class LevelComplete(AppState):
     def __init__(self, app):
         self.app = app
@@ -19,15 +20,15 @@ class LevelComplete(AppState):
             return None
 
     def resume(self, args):
-    	super(LevelComplete, self).resume(args)
+        super(LevelComplete, self).resume(args)
 
-    	self.level_name = args[0]
-    	self.bg = args[1]
+        self.level_name = args[0]
+        self.bg = args[1]
 
     def draw(self):
         self.app.screen.blit(self.bg, (0, 0))
         self.app.screen.blit(self.surface, (0, 0))
         panel = self.app.resman.get_surface("level_complete_bg")
-        x = self.app.screen_w / 2 - panel.get_width()/2
-        y = self.app.screen_h / 2 - panel.get_height()/2
+        x = self.app.screen_w / 2 - panel.get_width() / 2
+        y = self.app.screen_h / 2 - panel.get_height() / 2
         self.app.screen.blit(panel, (x, y))

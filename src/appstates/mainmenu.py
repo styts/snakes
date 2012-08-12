@@ -60,7 +60,7 @@ class MainMenu(AppState):
         self.hover_button = self._get_button_at(event.pos)
         if self.hover_button and self.hover_button != hover_tmp:
             # new hover, todo: play sound
-            self.app.audioman.sfx("mouseover-move")
+            self.app.audioman.sfx("mouseover")
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:

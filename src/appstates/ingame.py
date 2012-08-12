@@ -86,6 +86,7 @@ class InGame(AppState):
                         se = self.current_block.get_snake_el()
                         if se:
                             if se.move(Move(se.x,se.y,b.x,b.y)):
+                                self.app.audioman.sfx("move")
                                 self.n_moves = self.n_moves + 1
                                 self._reset_background()
                                 if self.state and self.state.is_complete():
