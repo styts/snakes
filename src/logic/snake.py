@@ -252,15 +252,19 @@ class SnakeElement():
         xy = self._get_corner()
         xy = tuple(map(operator.add, xy, offset))
 
-        if self.alpha != 255:
-            sprite = sprite.convert_alpha()
-            for a in xrange(sprite.get_width()):
-                for b in xrange(sprite.get_height()):
-                    c = sprite.get_at((a,b))
-                    s = (c.r, c.g, c.b, max(0, c.a - self.alpha) if c.r or c.g or c.b else 0)
-                    sprite.set_at((a,b), s)
+        # if self.alpha != 255:
+        #     sprite = sprite.convert_alpha()
+        #     for a in xrange(sprite.get_width()):
+        #         for b in xrange(sprite.get_height()):
+        #             c = sprite.get_at((a,b))
+        #             s = (c.r, c.g, c.b, max(0, c.a - self.alpha) if c.r or c.g or c.b else 0)
+        #             sprite.set_at((a,b), s)
 
         self.snake.surface.blit(sprite, xy)
+
+        if self.alpha != 255:
+            halo = resman.get_surface("se_halo")#, color=self.snake.color)
+            self.snake.surface.blit(halo, xy, None, pygame.BLEND_RGBA_MULT)      
 
         if arrows:
             ms = self._can_move_to()

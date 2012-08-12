@@ -17,7 +17,7 @@ class ResourceManager():
         for fn in glob.glob(ResourceManager.LOCATION_SPRITES+"/*%s" % ext):
             bn = os.path.basename(fn).replace(ext, "")
             surf = pygame.image.load(fn)
-            surf = surf.convert_alpha()
+            #surf = surf.convert_alpha()
             self._surfaces[bn] = {}
             self._surfaces[bn]["default"] = surf
 
