@@ -6,7 +6,7 @@ class AppState(object):
     i_wait = 0 # gets decremented every frame if > 0 (used for pausing)
     next_state = None # holds None or a string with class name of the place to go
     hover_button = None
-    CLICK_DELAY = 3 # nr of frames
+    CLICK_DELAY = 3 # nr of frames (3 ~ 100ms)
 
     def process(self):
         """Handles the mouse and keyboard"""

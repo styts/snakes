@@ -80,7 +80,6 @@ class LevelButton(Button):
         super(LevelButton, LevelButton).init(LevelButton)
 
 
-
 class MenuButton(Button):    
     def __init__(self,x,y,title):
         super(MenuButton, self).__init__(x, y, title)
