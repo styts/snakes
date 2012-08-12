@@ -28,20 +28,27 @@ class ResourceManager():
             sound = pygame.mixer.Sound(fn)
             self._sounds[bn] = sound
 
-    def fill_me(self, surf, color, alpha):
+    def fill_me(self, surf, color, alpha_decr):
         s = surf.copy()
-        col = color + (alpha,)
-        s.fill(col, None, pygame.BLEND_RGBA_MULT)
-        return s
+        s.fill(color, None, pygame.BLEND_RGBA_MULT)
 
-    def get_surface(self, name, color=None, alpha=255):
-        color_str = str(color)
+        sprite = s
+        for a in xrange(sprite.get_width()):
+            for b in xrange(sprite.get_height()):
+                c = sprite.get_at((a,b))
+                s = (c.r, c.g, c.b, max(0, c.a - alpha_decr) if c.r or c.g or c.b else 0)
+                sprite.set_at((a,b), s)
+
+        return sprite
+
+    def get_surface(self, name, color=None, alpha_decr=0):
+        color_str = "%s-%s" % (color, alpha_decr)
         if name not in self._surfaces.keys():
             return None
 
         if color:
             if color_str not in self._surfaces[name].keys():
-                self._surfaces[name][color_str] = self.fill_me(self._surfaces[name]['default'], color, alpha)
+                self._surfaces[name][color_str] = self.fill_me(self._surfaces[name]['default'], color, alpha_decr)
             return self._surfaces[name][color_str]
         else:
             return self._surfaces[name]["default"]

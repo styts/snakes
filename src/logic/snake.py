@@ -1,48 +1,74 @@
 from src.logic.misc import letter_to_color
 from src.logic.misc import SNAKE_VALUES
-from src.logic.tile import BLOCK_SIZE
-import os
+#from src.logic.tile import BLOCK_SIZE
+#import os
 import pygame
 #import weakref
+from itertools import cycle
 
-import operator # make SE offsetting work
 
-aa = 30 #arrow_glyph.get_width()/2
+import operator  # make SE offsetting work
 
-OFFSET_PIXELS = 5#(BLOCK_SIZE - circle_glyph.get_width()) / 2
+aa = 30  # arrow_glyph.get_width()/2
+
+OFFSET_PIXELS = 5  # (BLOCK_SIZE - circle_glyph.get_width()) / 2
 
 class Move():
     def __repr__(self):
-        return "(%s,%s)->(%s,%s)" % (self.x1,self.y1,self.x2,self.y2)
-    def __eq__(self,other):
+        return "(%s,%s)->(%s,%s)" % (self.x1, self.y1, self.x2, self.y2)
+
+    def __eq__(self, other):
         return self.x1 == other.x1 and self.x2 == other.x2 and self.y1 == other.y1 and self.y2 == other.y2
-    def __init__(self,x1,y1,x2,y2):
+
+    def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
         self.x2 = x2
         self.y1 = y1
         self.y2 = y2
 
-# the body is comprised of these elements
-class SnakeElement() :
+
+def make_flicks():
+    a = range(30,120,10)
+    return a + a[::-1]
+
+class SnakeElement():
+    """ the body is comprised of these elements"""
+
+    alpha_flicks = cycle(make_flicks())
+
     def __repr__(self):
         try:
-            return "(%s,%s,%s,%s,%s)" % (self.snake.v, self.x, self.y,self.is_head(),self.order)
+            return "(%s,%s,%s,%s,%s)" % (self.snake.v, self.x, self.y, self.is_head(), self.order)
         except ReferenceError:
-            return "" # sometimes snake is weak-referenced
+            return ""  # sometimes snake is weak-referenced
 
-    def set_snake(self,snake):
-        # self.snake = weakref.proxy(snake)
+    def set_snake(self, snake):
         self.snake = snake
-    def __init__(self,x,y):
+        self._flick = 0
+
+
+    def process(self, animate=False):
+        #if self._flick: self._flick = self._flick - 1 # decrement flicker
+        if animate:
+            self.alpha = SnakeElement.alpha_flicks.next()
+        else:
+            self.alpha = 255
+
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.snake = None # must be set later!
-        self.order = None # used for initial ordering of snake.elements list
-        
+        self.snake = None  # must be set later!
+        self.order = None  # used for initial ordering of snake.elements list
+        self._flick = 0
+        self.alpha = 255
+
     def release(self):
         self.snake = None
 
-    def is_neighbour_tile(self,next_tile):
+    def flicker(self):
+        self._flick = 30
+
+    def is_neighbour_tile(self, next_tile):
         """ disallow diagonal moves. used from Input. """
         if (next_tile.x == self.x and next_tile.y == self.y + 1 or \
            next_tile.x == self.x and next_tile.y == self.y - 1 or \
@@ -51,7 +77,8 @@ class SnakeElement() :
             return True
         else:
             return False
-    def move(self,m):
+
+    def move(self, m):
         if m in self.get_moves():
             if self.snake.elements.index(self) == 0:
                 # first in array
@@ -214,28 +241,34 @@ class SnakeElement() :
             surface.blit(pygame.transform.rotate(arrow,angle),ac)
 
         if not resman:
-            return
-        # FIXME: such a waste of time to recolor every frame??!
-        if self.snake.surface:
-            sprite = resman.get_surface("stone", color=self.snake.color)
+            return    
+        
+        sprite = resman.get_surface("stone", color=self.snake.color)
 
-            if arrows:
-                col = self.snake.color
-                arrow = resman.get_surface("arrow", color=col, alpha=120)
-            
-            if sprite:
-                offset = (OFFSET_PIXELS, OFFSET_PIXELS)
-                xy = self._get_corner()
-                xy = tuple(map(operator.add, xy, offset))
-                self.snake.surface.blit(sprite,xy)
+        if arrows:
+            arrow = resman.get_surface("arrow", color=self.snake.color, alpha_decr=120 if self.alpha == 255 else 120+self.alpha)
+        
+        offset = (OFFSET_PIXELS, OFFSET_PIXELS)
+        xy = self._get_corner()
+        xy = tuple(map(operator.add, xy, offset))
 
-                if arrows:
-                    ms = self._can_move_to()
-                    if "N" in ms: offset = (-aa,-3*aa); angle = 90; draw_arrow(arrow, self.snake.surface, offset, angle)
-                    if "S" in ms: offset = (-aa,aa); angle = -90; draw_arrow(arrow, self.snake.surface, offset, angle)
-                    if "W" in ms: offset = (-3*aa,-aa); angle = 180; draw_arrow(arrow, self.snake.surface, offset, angle)
-                    if "E" in ms: offset = (aa,-aa); angle = 0; draw_arrow(arrow, self.snake.surface, offset, angle)
-                
+        if self.alpha != 255:
+            sprite = sprite.convert_alpha()
+            for a in xrange(sprite.get_width()):
+                for b in xrange(sprite.get_height()):
+                    c = sprite.get_at((a,b))
+                    s = (c.r, c.g, c.b, max(0, c.a - self.alpha) if c.r or c.g or c.b else 0)
+                    sprite.set_at((a,b), s)
+
+        self.snake.surface.blit(sprite, xy)
+
+        if arrows:
+            ms = self._can_move_to()
+            if "N" in ms: offset = (-aa,-3*aa); angle = 90; draw_arrow(arrow, self.snake.surface, offset, angle)
+            if "S" in ms: offset = (-aa,aa); angle = -90; draw_arrow(arrow, self.snake.surface, offset, angle)
+            if "W" in ms: offset = (-3*aa,-aa); angle = 180; draw_arrow(arrow, self.snake.surface, offset, angle)
+            if "E" in ms: offset = (aa,-aa); angle = 0; draw_arrow(arrow, self.snake.surface, offset, angle)
+
 
 # a snake consists of elements and a color
 # it is either completed or not (on it's ziel block)

@@ -26,7 +26,7 @@ class DebugInfo:
         self.app = self.ingameState.app
         self.color     = 200,200,200
         self.color_map = 0,255,255#255,200,200
-        self.on = True
+        self.on = False
         self.strings = DBG_STRINGS
         self.x_offset = 0 # will be set with map init
         self.y_offset = 30

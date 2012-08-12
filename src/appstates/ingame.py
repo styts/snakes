@@ -33,8 +33,9 @@ class InGame(AppState):
         self.holding = False
         self.current_block = None
         self.curr_se = None  # current snake element, for animation
+        self.curr_se_flicker_alpha = 0
 
-        self.edit_mode = True  # TODO: toggle edit mode from command line
+        self.edit_mode = False  # TODO: toggle edit mode from command line
 
         self._reset_background()  # once draw the background
 
@@ -48,6 +49,18 @@ class InGame(AppState):
     def resume(self, arg):
         super(InGame, self).resume(arg)
         self.reset_state(arg)
+
+    def process(self):
+        if self.current_block:
+            self.curr_se = self.current_block.get_snake_el()
+            # if self.curr_se and self.curr_se.is_head():
+            #     self.curr_se.flicker()
+
+        for s in self.state.snakes:
+            for se in s.elements:
+                se.process(animate=se == self.curr_se and self.curr_se.is_head())
+
+        return super(InGame, self).process()
 
     def process_input(self, event):
             mods = pygame.key.get_mods()
@@ -81,6 +94,7 @@ class InGame(AppState):
                 if event.pos[0] > map.x_offset and event.pos[0] < map.x_offset + map.size_px and event.pos[1] > map.y_offset and event.pos[1] < map.size_px + map.y_offset:
                     # update block over which mouse is
                     b = map.get_tile_at(event.pos[0], event.pos[1])
+
                     if self.holding and b != self.current_block:
                         se = self.current_block.get_snake_el()
                         if se:
@@ -154,26 +168,10 @@ class InGame(AppState):
         self.app.screen.blit(ren_n_moves_shadow, (12, 12))
         self.app.screen.blit(ren_n_moves, (10, 10))
 
-        #time
-        #delta = time.time() - self.time_began
-        #min = int(delta / 60)
-        #sec = int(delta % 60)
-        #str_time = "%02d:%02d" % (min, sec)
-        #ren_time = self.app.font.render(str_time, 1, (255, 255, 0))
-        #ren_time_shadow = self.app.font.render(str_time, 1, (155, 155, 0))
-        # don't show time
-        ###self.screen.blit(ren_time_shadow, (482,12))
-        ###self.screen.blit(ren_time, (480,10))
-
         # Life Meter Bar
         life_values = get_life_values(self.n_moves, self.level_minmoves, self.max_life, self.bonus_max)
         if self.lifemeter:
             self.lifemeter.draw(self.app.screen, life_values)
-
-        #completion
-        # if self.state and self.state.is_complete():
-        #     ren_complete = self.app.font.render("COMPLETE",1,(155,255,0))
-        #     self.app.screen.blit(ren_complete, (250,10))
 
         if self.edit_mode:
             self.toolbar.draw()
