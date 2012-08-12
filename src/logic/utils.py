@@ -1,23 +1,24 @@
 from threading import Thread
 import time
-import pygame
 from src.logic.map import Map
 from src.logic.snake import Snake
 from src.logic.state import State
-from src.engine.utils import SNAKE_VALUES
+#from src.engine.utils import SNAKE_VALUES
+
 
 def save_state(state):
     n_s = len(state.snakes)
     n_n = state.map.n
     str_md5 = state.__hash__()
-    name = "n%s-s%s-%s" % (n_n,n_s,str_md5)
+    name = "n%s-s%s-%s" % (n_n, n_s, str_md5)
     #state.save_to_image("data/maps/%s.png" % name)
     state.save_to_json("data/maps/%s.json" % name)
 
-def edit_map(state,event,button):
+
+def edit_map(state, event, button):
     if not state:
         return False
-    t = state.map.get_tile_at(event.pos[0],event.pos[1])
+    t = state.map.get_tile_at(event.pos[0], event.pos[1])
     if not t:
         return False
     update_snake = button.value in SNAKE_VALUES
@@ -28,28 +29,11 @@ def edit_map(state,event,button):
     coords_snakes = state.map.get_coords(snakes=True)
     if update_snake or button.value == '0':
         coords_snakes[t.x][t.y] = button.value
-    ss = Snake.make_snakes(m,coords_snakes)
-    s = State(m,ss)
+    ss = Snake.make_snakes(m, coords_snakes)
+    s = State(m, ss)
     s.save_to_json("data/maps/tempstate.json")
     return True
 
-TARGETS = ['g','b','y','r'] # Tile.v
-SNAKE_VALUES = ['G','B','Y','R','O','P']
-colors = {
-          "Y" : (255,255,0),
-          "G" : (0,255,0),
-          "B" : (0,0,255),
-          "R" : (255,0,0),
-          "O" : (255,102,51),
-          "P" : (153,51,153),
-          'g' : (0,102,0),
-          'b' : (0,0,102),
-          'y' : (102,102,0),
-          'r' : (102,0,0),
-          '0' : (20,20,20),
-          '1' : (50,50,50)
-          }
-              
 def patternize_tile(finalSurface, tileSurface):
     """Fills the surface with tiles from filename"""
     """Called once when creating a level backgorund"""
@@ -77,13 +61,6 @@ def patternize_tile(finalSurface, tileSurface):
             finalSurface.blit(tileSurface, tileRect)
     finalSurface.convert()
 
-def letter_to_color(letter):
-    global colors
-
-    if letter not in colors:
-        return (0,0,0)
-    else:
-        return colors[letter]
 
 class _SolverThread(Thread):
     def __init__(self,state,draw_graph,quit_on_first,debug_info):

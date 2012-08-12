@@ -1,4 +1,4 @@
-from utils import letter_to_color
+from src.logic.misc import letter_to_color
 from src.logic.state import State
 import os
 import glob

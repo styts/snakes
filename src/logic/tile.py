@@ -1,7 +1,6 @@
-from src.engine.utils import letter_to_color #IGNORE:E0611
-from src.engine.utils import TARGETS
-import pygame #@UnresolvedImport
-#import weakref
+from src.logic.misc import letter_to_color  # IGNORE:E0611
+from src.logic.misc import TARGETS
+import pygame  # @UnresolvedImport
 
 BLOCK_SIZE = 68
 

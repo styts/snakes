@@ -3,15 +3,15 @@ import pygame
 import os
 import pickle
 
-from src.engine.debug_info import DebugInfo
-from src.engine.toolbar import Toolbar
+from src.logic.debug_info import DebugInfo
+from src.logic.toolbar import Toolbar
 from src.logic.snake import Snake, Move
 from src.logic.state import State
 from src.logic.map import Map
-from src.engine.utils import solve, get_life_values
+from src.logic.utils import get_life_values
 from src.solve.utils import process_json
-from src.engine.misc import edit_map
-from src.engine.misc import save_state
+from src.logic.utils import edit_map
+from src.logic.utils import save_state
 from src.engine.appstate import AppState
 from src.logic.lifemeter import LifeMeter
 

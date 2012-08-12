@@ -1,5 +1,5 @@
-from src.engine.utils import letter_to_color
-from src.engine.utils import SNAKE_VALUES
+from src.logic.misc import letter_to_color
+from src.logic.misc import SNAKE_VALUES
 from src.logic.tile import BLOCK_SIZE
 import os
 import pygame
