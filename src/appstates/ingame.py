@@ -17,12 +17,13 @@ from src.logic.lifemeter import LifeMeter
 
 MAX_LIFE = 20
 
+
 class InGame(AppState):
-    def __init__(self,app):
+    def __init__(self, app):
         self.app = app
-        self.state = None # current level
-        self.debug_info = DebugInfo(self) # debug display
-        self.toolbar = Toolbar(self, app.screen, app.screen_w-250, 200) # 250 px off the right edge, 200 from top
+        self.state = None  # current level
+        self.debug_info = DebugInfo(self)  # debug display
+        self.toolbar = Toolbar(self, app.screen, app.screen_w - 250, 200)  # 250 px off the right edge, 200 from top
 
         self.n_moves = 0
         self.time_began = time.time()
@@ -31,14 +32,15 @@ class InGame(AppState):
         ## input variables
         self.holding = False
         self.current_block = None
+        self.curr_se = None  # current snake element, for animation
 
-        self.edit_mode = True # TODO: toggle edit mode from command line
+        self.edit_mode = True  # TODO: toggle edit mode from command line
 
-        self._reset_background() # once draw the background
+        self._reset_background()  # once draw the background
 
-        self.level_minmoves = -1 # TODO: read from state or whatever
-        self.bonus_max = self.level_minmoves # set it to same as minmoves for now
-        self.max_life = MAX_LIFE # used consistently in all levels!
+        self.level_minmoves = -1  # TODO: read from state or whatever
+        self.bonus_max = self.level_minmoves  # set it to same as minmoves for now
+        self.max_life = MAX_LIFE  # used consistently in all levels!
         self.lifemeter = None
 
         #self.reset_state("tempstate.json")
@@ -47,7 +49,7 @@ class InGame(AppState):
         super(InGame, self).resume(arg)
         self.reset_state(arg)
 
-    def process_input(self,event):
+    def process_input(self, event):
             mods = pygame.key.get_mods()
 
             # quit to menu - ESC
@@ -62,30 +64,27 @@ class InGame(AppState):
                 if self.current_block != None:
                     self.holding = True
                 if self.edit_mode and self.toolbar.current_button:
-                    if edit_map(self.state,event,self.toolbar.current_button):
+                    if edit_map(self.state, event, self.toolbar.current_button):
                         self.reset_state("tempstate.json")
-
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.current_block != None:
                     self.holding = False
 
-
-
-            if not self.state: # what if we have no state/map loaded?
+            if not self.state:  # what if we have no state/map loaded?
                 return
 
             map = self.state.map
 
             if event.type == pygame.MOUSEMOTION:
                 # event within map
-                if event.pos[0] > map.x_offset and event.pos[0] < map.x_offset+map.size_px and event.pos[1] > map.y_offset and event.pos[1] < map.size_px+map.y_offset:
+                if event.pos[0] > map.x_offset and event.pos[0] < map.x_offset + map.size_px and event.pos[1] > map.y_offset and event.pos[1] < map.size_px + map.y_offset:
                     # update block over which mouse is
                     b = map.get_tile_at(event.pos[0], event.pos[1])
                     if self.holding and b != self.current_block:
                         se = self.current_block.get_snake_el()
                         if se:
-                            if se.move(Move(se.x,se.y,b.x,b.y)):
+                            if se.move(Move(se.x, se.y, b.x, b.y)):
                                 self.app.audioman.sfx("move")
                                 self.n_moves = self.n_moves + 1
                                 self._reset_background()
@@ -121,7 +120,7 @@ class InGame(AppState):
             # solver solve
             if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
                 quit_on_first = not (mods & pygame.KMOD_LALT)
-                draw_graph = True # TRUE, cuz its quite fast with sdpf? program.... (mods & pygame.KMOD_CTRL) > 0
+                #draw_graph = True  # TRUE, cuz its quite fast with sdpf? program.... (mods & pygame.KMOD_CTRL) > 0
                 ignore_pickle = (mods & pygame.KMOD_CTRL) > 0
                 print "quit1: %s. ignore_pickle: %s" % (quit_on_first, ignore_pickle)
                 process_json(self.state.to_json(), use_cloud=False, quit_on_first=quit_on_first, ignore_pickle=ignore_pickle, debug_info=self.debug_info)
@@ -150,18 +149,18 @@ class InGame(AppState):
 
         # number of moves
         moves_str = "Moves: %s" % self.n_moves
-        ren_n_moves = self.app.font.render(moves_str,1,(255,255,0,100))
-        ren_n_moves_shadow = self.app.font.render(moves_str,1,(155,155,0,100))
-        self.app.screen.blit(ren_n_moves_shadow, (12,12))
-        self.app.screen.blit(ren_n_moves, (10,10))
+        ren_n_moves = self.app.font.render(moves_str, 1, (255, 255, 0, 100))
+        ren_n_moves_shadow = self.app.font.render(moves_str, 1, (155, 155, 0, 100))
+        self.app.screen.blit(ren_n_moves_shadow, (12, 12))
+        self.app.screen.blit(ren_n_moves, (10, 10))
 
         #time
-        delta = time.time()-self.time_began
-        min = int(delta / 60)#IGNORE:W0622
-        sec = int(delta % 60)
-        str_time = "%02d:%02d" % (min,sec)
-        ren_time = self.app.font.render(str_time,1,(255,255,0))
-        ren_time_shadow = self.app.font.render(str_time,1,(155,155,0))
+        #delta = time.time() - self.time_began
+        #min = int(delta / 60)
+        #sec = int(delta % 60)
+        #str_time = "%02d:%02d" % (min, sec)
+        #ren_time = self.app.font.render(str_time, 1, (255, 255, 0))
+        #ren_time_shadow = self.app.font.render(str_time, 1, (155, 155, 0))
         # don't show time
         ###self.screen.blit(ren_time_shadow, (482,12))
         ###self.screen.blit(ren_time, (480,10))
@@ -179,9 +178,9 @@ class InGame(AppState):
         if self.edit_mode:
             self.toolbar.draw()
 
-    def clean_map(self,n):
+    def clean_map(self, n):
         """used by editor in the toolbar, it sets map to a clean square of size n x n"""
-        coords = {"tiles" : [], "snakes": []}
+        coords = {"tiles": [], "snakes": []}
         for i in xrange(n):
             coords['tiles'].append([])
             coords['snakes'].append([])
@@ -191,7 +190,7 @@ class InGame(AppState):
                 coords['snakes'][i].append(v)
         self.reset_state(coords=coords)
 
-    def reset_state(self,level_name=None,coords=None):
+    def reset_state(self, level_name=None, coords=None):
         if self.app.screen != None:
             screen = self.app.screen
         else:
@@ -203,17 +202,16 @@ class InGame(AppState):
 
         if level_name:
             self.state = State()
-            self.state.load_from_json_file(os.path.join(os.getcwd(),'data','maps',level_name))
+            self.state.load_from_json_file(os.path.join(os.getcwd(), 'data', 'maps', level_name))
             self.state.set_surface(screen)
             map = self.state.map
         else:
             if not coords:
-                coords = Map.load_coords(level_name,just_one=False) #just_one=True
+                coords = Map.load_coords(level_name, just_one=False)  # just_one=True
             #print "oof", self.debug_info
-            map = Map(coordinates=coords['tiles'],debug_info=self.debug_info,surface=screen)#IGNORE:W0622
-            snakes = Snake.make_snakes(map,coords['snakes'],surface=screen)
-            self.state = State(map,snakes)
-
+            map = Map(coordinates=coords['tiles'], debug_info=self.debug_info, surface=screen)
+            snakes = Snake.make_snakes(map, coords['snakes'], surface=screen)
+            self.state = State(map, snakes)
 
         if "debug_info" in dir(self):
             self.debug_info.x_offset = self.app.screen_h
@@ -231,11 +229,11 @@ class InGame(AppState):
 
         #### load the level data?
 
-        fn = 'data/graphs/%s.pickle'%self.state.__hash__()
+        fn = 'data/graphs/%s.pickle' % self.state.__hash__()
         if os.path.exists(fn):
-            (tmp_gr, tmp_sols) = pickle.load(open(fn,'rb'))
-            self.level_minmoves = tmp_sols[0].__len__()-1
+            (tmp_gr, tmp_sols) = pickle.load(open(fn, 'rb'))
+            self.level_minmoves = tmp_sols[0].__len__() - 1
         else:
-            self.level_minmoves = -1 # yeah, default bitch
-        self.bonus_max = self.level_minmoves # same for now
-        self.lifemeter = LifeMeter(self.level_minmoves, self.level_minmoves, self.max_life) # the bar on the side
+            self.level_minmoves = -1  # yeah, default bitch
+        self.bonus_max = self.level_minmoves  # same for now
+        self.lifemeter = LifeMeter(self.level_minmoves, self.level_minmoves, self.max_life)  # the bar on the side
