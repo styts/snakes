@@ -48,7 +48,7 @@ class App():
         self.font = pygame.font.Font(os.path.join('data', 'fonts', 'WOBBLES_.ttf'), 32)
         self.font_px = pygame.font.Font(os.path.join('data', 'fonts', 'visitor1.ttf'), 40)
         self.font_px_s = pygame.font.Font(os.path.join('data', 'fonts', 'visitor2.ttf'), 25)
-        self.sysfont = SysFont("Courier", 12)
+        self.sysfont = self.font_px_s # SysFont("Courier", 12)
 
         self._appstates = []
         self._appstates.append(MainMenu(self))
