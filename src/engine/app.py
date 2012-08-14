@@ -4,7 +4,7 @@ from pygame.font import SysFont
 from src.logic.utils import patternize_tile
 
 from src.engine.audio import AudioManager
-from src.engine.resman import ResourceManager
+from src.engine.resman import ResourceManager, resource_path
 
 from src.appstates.ingame import InGame
 from src.appstates.mainmenu import MainMenu
@@ -45,10 +45,10 @@ class App():
 
         #TODO: allow setting resolution form command line
 
-        self.font = pygame.font.Font(os.path.join('data', 'fonts', 'WOBBLES_.ttf'), 32)
-        self.font_px = pygame.font.Font(os.path.join('data', 'fonts', 'visitor1.ttf'), 40)
-        self.font_px_s = pygame.font.Font(os.path.join('data', 'fonts', 'visitor2.ttf'), 25)
-        self.sysfont = self.font_px_s # SysFont("Courier", 12)
+        self.font = pygame.font.Font(resource_path(os.path.join('data', 'fonts', 'WOBBLES_.ttf')), 32)
+        self.font_px = pygame.font.Font(resource_path(os.path.join('data', 'fonts', 'visitor1.ttf')), 40)
+        self.font_px_s = pygame.font.Font(resource_path(os.path.join('data', 'fonts', 'visitor2.ttf')), 25)
+        self.sysfont = self.font_px_s  # SysFont("Courier", 12)
 
         self._appstates = []
         self._appstates.append(MainMenu(self))

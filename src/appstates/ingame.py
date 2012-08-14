@@ -9,7 +9,7 @@ from src.logic.snake import Snake, Move
 from src.logic.state import State
 from src.logic.map import Map
 from src.logic.utils import get_life_values
-from src.solve.utils import process_json
+#from src.solve.utils import process_json
 from src.logic.utils import edit_map
 from src.logic.utils import save_state
 from src.engine.appstate import AppState
@@ -137,6 +137,8 @@ class InGame(AppState):
                 #draw_graph = True  # TRUE, cuz its quite fast with sdpf? program.... (mods & pygame.KMOD_CTRL) > 0
                 ignore_pickle = (mods & pygame.KMOD_CTRL) > 0
                 print "quit1: %s. ignore_pickle: %s" % (quit_on_first, ignore_pickle)
+
+                from src.solve.utils import process_json
                 process_json(self.state.to_json(), use_cloud=False, quit_on_first=quit_on_first, ignore_pickle=ignore_pickle, debug_info=self.debug_info)
 
                 #solve(self.state,debug_info=self.debug_info,quit_on_first=quit_on_first,draw_graph=draw_graph)

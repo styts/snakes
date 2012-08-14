@@ -12,26 +12,27 @@ Options:
 """
 from docopt import docopt
 
-def solve(fn,ig):
+
+def solve(fn, ig):
     from src.solve.utils import process_json
-    j = "".join(open(fn,'r').readlines())
+    j = "".join(open(fn, 'r').readlines())
     process_json(j, False, quit_on_first=True, ignore_pickle=ig, debug_info=None)
+
 
 def main():
     arguments = docopt(__doc__, version='Snakes 0.2.0')
 
     # if a level is supplied, solve it in windowless mode
     fn = arguments["<level>"]
-    t = arguments["--test-solvability"]
     ig = arguments["--ignore-pickle"]
 
     if "<level>" in arguments and fn:
-        solve(fn,ig)
+        solve(fn, ig)
 
    # Run the pygame window
     else:
         from src.engine.app import App
-        app = App(arguments)
+        App(arguments)
 
 if __name__ == '__main__':
     main()

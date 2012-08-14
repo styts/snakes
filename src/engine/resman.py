@@ -1,9 +1,28 @@
 
-import os, glob, pygame
+import os
+import glob
+import pygame
+import sys
+
+
+def resource_path(relative):
+    """Used by pyInstaller"""
+
+    if getattr(sys, 'frozen', None):
+        basedir = sys._MEIPASS
+    else:
+        basedir = os.path.dirname(__file__)
+
+    #print prefix
+    return os.path.join(
+        basedir, "..", "..",
+        relative
+    )
+
 
 class ResourceManager():
-    LOCATION_SPRITES = os.path.join("data", "sprites")
-    LOCATION_SOUNDS = os.path.join("data", "sounds")
+    LOCATION_SPRITES = resource_path("data/sprites")
+    LOCATION_SOUNDS = resource_path("data/sounds")
 
     def __init__(self, app):
         self.app = app
@@ -14,7 +33,8 @@ class ResourceManager():
     def _load_all(self):
         ## load sprites
         ext = ".png"
-        for fn in glob.glob(ResourceManager.LOCATION_SPRITES+"/*%s" % ext):
+
+        for fn in glob.glob(ResourceManager.LOCATION_SPRITES + "/*%s" % ext):
             bn = os.path.basename(fn).replace(ext, "")
             surf = pygame.image.load(fn)
             #surf = surf.convert_alpha()
@@ -23,7 +43,7 @@ class ResourceManager():
 
         ## load sfx
         ext = ".wav"
-        for fn in glob.glob(ResourceManager.LOCATION_SOUNDS+"/*%s" % ext):
+        for fn in glob.glob(ResourceManager.LOCATION_SOUNDS + "/*%s" % ext):
             bn = os.path.basename(fn).replace(ext, "")
             sound = pygame.mixer.Sound(fn)
             self._sounds[bn] = sound
@@ -35,9 +55,9 @@ class ResourceManager():
         sprite = s
         for a in xrange(sprite.get_width()):
             for b in xrange(sprite.get_height()):
-                c = sprite.get_at((a,b))
+                c = sprite.get_at((a, b))
                 s = (c.r, c.g, c.b, max(0, c.a - alpha_decr) if c.r or c.g or c.b else 0)
-                sprite.set_at((a,b), s)
+                sprite.set_at((a, b), s)
 
         return sprite
 

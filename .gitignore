@@ -3,3 +3,4 @@ dist
 build
 data/graphs
 data/maps/tempstate.json
+*.pyo
