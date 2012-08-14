@@ -3,19 +3,21 @@ import os
 import glob
 import pygame
 import sys
+from src.utils.sort import sort_nicely
 
 
 def resource_path(relative):
-    """Used by pyInstaller"""
+    """Used by pyInstaller. Correct path prefix when running as frozen app/exe"""
 
     if getattr(sys, 'frozen', None):
-        basedir = sys._MEIPASS
+        basedir = sys._MEIPASS  # production
     else:
-        basedir = os.path.dirname(__file__)
+        basedir = os.path.join(os.path.dirname(__file__), "..", "..")  # dev
 
-    #print prefix
+    #print basedir
+
     return os.path.join(
-        basedir, "..", "..",
+        basedir,
         relative
     )
 
@@ -23,17 +25,23 @@ def resource_path(relative):
 class ResourceManager():
     LOCATION_SPRITES = resource_path("data/sprites")
     LOCATION_SOUNDS = resource_path("data/sounds")
+    LOCATION_LEVELS = resource_path("data/maps")
 
     def __init__(self, app):
         self.app = app
         self._surfaces = {}
         self._sounds = {}
+        self._levels = []
         self._load_all()
 
     def _load_all(self):
+        ## load levels/maps
+        maps = glob.glob(ResourceManager.LOCATION_LEVELS + "/*.json")
+        sort_nicely(maps)
+        self._levels = maps
+
         ## load sprites
         ext = ".png"
-
         for fn in glob.glob(ResourceManager.LOCATION_SPRITES + "/*%s" % ext):
             bn = os.path.basename(fn).replace(ext, "")
             surf = pygame.image.load(fn)
@@ -75,3 +83,6 @@ class ResourceManager():
 
     def get_sound(self, name):
         return self._sounds[name]
+
+    def get_levels(self):
+        return self._levels

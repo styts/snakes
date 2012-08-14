@@ -1,5 +1,4 @@
-import glob, os
-from src.utils.sort import sort_nicely
+import os
 from src.logic.state import State
 import pygame
 from src.appstates.mainmenu import MenuButton
@@ -9,6 +8,8 @@ from src.engine.buttons import LevelButton
 # B_GLYPH = 'data/sprites/b_sq.png'
 # B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'
 BUTTONS_PER_ROW = 6
+from src.engine.resman import resource_path
+
 
 class LevelStats():
     """The Surface on the right"""
@@ -125,8 +126,7 @@ class LevelSelect(AppState):
 
 
     def _refresh_levels(self):
-        maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")
-        sort_nicely(maps)
+        maps = self.app.resman.get_levels()
         i = 0
         spacing = 20
         x_o = 50

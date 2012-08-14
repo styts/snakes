@@ -1,7 +1,7 @@
 from src.logic.misc import letter_to_color
 from src.logic.state import State
 import os
-import glob
+#import glob
 #import weakref
 import pygame
 from src.utils.sort import sort_nicely
@@ -71,9 +71,10 @@ class Toolbar:
 
         # add buttons for loading map with screenshots
         self.buttons.append([])
-        maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.png")
-        maps += glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")
-        sort_nicely(maps) # sort (natural order) by first integer - state graph size
+        # maps = glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.png")
+        # maps += glob.glob(os.path.join(os.getcwd(),'data','maps')+"/*.json")
+        # sort_nicely(maps) # sort (natural order) by first integer - state graph size
+        maps = self.ingameState.app.resman.get_levels()
         row = 3 
         for fn in maps:
             fn = os.path.basename(fn)
