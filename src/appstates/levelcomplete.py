@@ -26,7 +26,8 @@ class LevelComplete(AppState):
         self.bg = args[1]
 
     def draw(self):
-        self.app.screen.blit(self.bg, (0, 0))
+        r = self.app.screen.blit(self.bg, (0, 0))
+        self.app.dirty(r)
         self.app.screen.blit(self.surface, (0, 0))
         panel = self.app.resman.get_surface("level_complete_bg")
         x = self.app.screen_w / 2 - panel.get_width() / 2
