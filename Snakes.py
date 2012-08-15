@@ -10,10 +10,9 @@ Options:
     -t, --test-solvability     test level solvability
     -i, --ignore-pickle        work anyway
     -l, --level                level to solve
+    -p <arg>                   get rid of -psn argument on Mac.apps
 """
 from docopt import docopt
-
-import sys
 
 
 def solve(fn, ig):
@@ -24,12 +23,6 @@ def solve(fn, ig):
 
 def main():
     from src.engine.app import App
-
-    for o in sys.argv:
-        if o.startswith("-psn"):
-            # Mac.app Hack!!! docopt will complain that a -psn_0_2740893 parameter is being passed, so avoid it
-            App(None)
-            sys.exit(0)
 
     arguments = docopt(__doc__, version='Snakes 0.2.0')
 
