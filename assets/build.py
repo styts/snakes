@@ -4,7 +4,8 @@ import os
 import sys
 
 pfm = sys.platform
-os.chdir(os.path.dirname(__file__))
+cwd = os.path.dirname(os.path.abspath(__file__))
+os.chdir(cwd)
 
 # build
 path2build = {}
@@ -15,14 +16,18 @@ command = "python %sBuild.py --noconfirm %s.spec" % (path2build[pfm], pfm)
 
 os.system(command)
 
+# prepare
+d = os.path.join("..", 'dist')
+if not os.path.exists(d):
+    os.makedirs(d)
+
 # distribute
-os.system("mkdir -p %s" % os.path.join("..", 'dist'))
 if pfm == 'darwin':
     os.system("rm -rf ../dist/Snakes.app")
-    os.system("mv dist/Snakes.app ../dist")
+    os.system("mv dist/Snakes.app ../dist/")
 else:
-    os.system("rm -rf ..\\dist\\Snakes")
-    os.system("mv dist\\Snakes ..\\dist")
+    os.system("rm -rf ../dist/Snakes")
+    os.system("mv dist/Snakes ../dist/")
 
 # cleanup
-os.system("rm -rf build dist logdict*.log")
+os.system("rm -rf build dist logdict*.log ../logdict*.log")

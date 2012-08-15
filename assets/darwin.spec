@@ -36,14 +36,14 @@ exe = EXE(pyz,
           exclude_binaries=1,
           name=os.path.join('build/pyi.darwin/Snakes', 'Snakes'),
           debug=False,
-          strip=None,
+          strip=True,
           upx=True,
-          console=False )
+          console=False)
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
-               strip=None,
+               strip=True,
                upx=True,
                name=os.path.join('dist', 'Snakes'))
 app = BUNDLE(coll,
