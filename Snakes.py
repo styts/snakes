@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Usage: ./Snakes.py [<level>] [-t] [-i]
+Usage: Snakes [options]
 
 <level> is path to .json file
 
@@ -9,8 +9,11 @@ Options:
     -h, --help                 show this
     -t, --test-solvability     test level solvability
     -i, --ignore-pickle        work anyway
+    -l, --level                level to solve
 """
 from docopt import docopt
+
+import sys
 
 
 def solve(fn, ig):
@@ -20,18 +23,25 @@ def solve(fn, ig):
 
 
 def main():
+    from src.engine.app import App
+
+    for o in sys.argv:
+        if o.startswith("-psn"):
+            # Mac.app Hack!!! docopt will complain that a -psn_0_2740893 parameter is being passed, so avoid it
+            App(None)
+            sys.exit(0)
+
     arguments = docopt(__doc__, version='Snakes 0.2.0')
 
     # if a level is supplied, solve it in windowless mode
-    fn = arguments["<level>"]
+    fn = arguments["--level"]
     ig = arguments["--ignore-pickle"]
 
-    if "<level>" in arguments and fn:
+    if "--level" in arguments and fn:
         solve(fn, ig)
 
    # Run the pygame window
     else:
-        from src.engine.app import App
         App(arguments)
 
 if __name__ == '__main__':

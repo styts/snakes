@@ -37,7 +37,8 @@ def extra_datas(mydir):
     return extra_datas
 ###########################################
 
-
+import os
+os.chdir("..")
 a = Analysis(['Snakes.py'],
              pathex=pathex[platform],
              hiddenimports=[],
