@@ -37,14 +37,15 @@ class Solver:
     def solve(self):
         points = [1] # used by solver, every 'N' new nodes added to graph, do something
         N = 200
-        for o in range(1,500):
+        for o in range(1,2500): # till 500k
             o = N*o
             points.append(o)
 
         # load plckled object if possible, otherwise compute(populate and solve) graph
         tmp_pickle = os.path.join(self.tempdir,"%s.pickle" % self.state.__hash__())
+        print self.state.__hash__()
 
-
+        unpickled = False
         if os.path.exists(tmp_pickle) and self.use_temp and not self.ignore_pickle:
             # unpickle existing solution graph
             (tmp_gr, tmp_sols) = pickle.load(open(tmp_pickle,'rb'))
@@ -52,6 +53,7 @@ class Solver:
             self.sols = tmp_sols
             del tmp_gr, tmp_sols
             print "Unpickled ", tmp_pickle
+            unpickled = True
         else:
             # solve graph form inital state
             print "Populating..."
@@ -72,7 +74,7 @@ class Solver:
         print "order: %s" % self.gr.order()
         Solver._attach_debugs(self.debug_info,self.gr,shortest=self.l_shortest) # continuous visual display of solving progress
 
-        if self.save_tmp and not self.quit_on_first: # only pickle if we're doing a complete computation
+        if self.save_tmp and not self.quit_on_first and not unpickled: # only pickle if we're doing a complete computation
             #pickle our object and save it to temp dir
             print "Pickling...",
             pickle.dump( (self.gr, self.sols), open( tmp_pickle, "wb" ))
@@ -81,8 +83,8 @@ class Solver:
 
     def draw_graph(self,filename=None,**kwargs):
         g = plotter.save_graph(self.gr, self.state.__hash__(), all_solutions=self.sols, filename=filename, use_cloud=self.use_cloud, **kwargs)
-        if filename and not self.use_cloud:
-            os.system("open %s" % filename)
+        # if filename and not self.use_cloud:
+        #     os.system("open %s" % filename)
         
     @staticmethod
     def _attach_debugs(debug_info=None,gr=None,depth=None,shortest=None):

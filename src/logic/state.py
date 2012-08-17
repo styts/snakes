@@ -16,10 +16,17 @@ class State:
         self.move = None
         self.map = map
         self.snakes = snakes
+        self.min_moves = -1
 
     def load_from_json(self,string):
         """FIXME: this happens for all maps on startup"""
         struct = json.loads(string)
+
+        ## load min_moves
+        if "min_moves" in struct.keys():
+            self.min_moves = struct["min_moves"]
+        else:
+            self.min_moves = -1
 
         self.map = Map(coordinates=struct['map'])
         self.snakes = []
@@ -122,6 +129,7 @@ class State:
         foo['snakes'] = []
         for s in self.snakes:
             foo['snakes'].append(s.export())
+        foo['min_moves'] = self.min_moves
         return foo
 
     def to_json(self):
