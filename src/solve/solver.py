@@ -9,13 +9,6 @@ from src.logic.state import State
 import pickle
 
 
-points = [1] # used by solver, every 'N' new nodes added to graph, do something
-N = 200
-for o in range(1,500):
-    o = N*o
-    points.append(o)
-
-
 class Solver:
     def __init__(self,debug_info=None,quit_on_first=False,save_tmp=True,use_temp=True,use_cloud=False,ignore_pickle=True):
         self.debug_info = debug_info
@@ -30,7 +23,7 @@ class Solver:
         self.MAX_RECURSION_DEPTH = 1000000
 
         # create tmp pickle dir if not exist
-        td = os.path.join("data","graphs")
+        td = os.path.join("var","graphs")
         if not os.path.exists(td):
             os.makedirs(td)
         self.tempdir = td
@@ -42,6 +35,12 @@ class Solver:
 
     #@profile
     def solve(self):
+        points = [1] # used by solver, every 'N' new nodes added to graph, do something
+        N = 200
+        for o in range(1,500):
+            o = N*o
+            points.append(o)
+
         # load plckled object if possible, otherwise compute(populate and solve) graph
         tmp_pickle = os.path.join(self.tempdir,"%s.pickle" % self.state.__hash__())
 
@@ -61,7 +60,9 @@ class Solver:
             sys.setrecursionlimit(self.MAX_RECURSION_DEPTH)
             self.gr.graph['finals'] = []
             self.gr.graph['visited'] = []
-            Solver._populate_graph(gr=self.gr,root=self.state.to_json(),debug_info=self.debug_info,quit_on_first=self.quit_on_first)
+
+            Solver._populate_graph_bfs(gr=self.gr,root=self.state.to_json(),points=points,quit_on_first=self.quit_on_first)
+            #Solver._populate_graph(gr=self.gr,root=self.state.to_json(),debug_info=self.debug_info,quit_on_first=self.quit_on_first)
 
             print "Solving..."
             self.sols = self._solve_graph()
@@ -98,7 +99,47 @@ class Solver:
             debug_info.attach_var("solver_","")
 
     @staticmethod
-    #@profile
+    def _populate_graph_bfs(gr,root,points,quit_on_first=False):
+        # BFS algo from http://en.wikipedia.org/wiki/Breadth-first_search
+        from Queue import Queue
+        q = Queue()
+
+        s = State()
+        s.load_from_json(root)
+
+        q.put(s)
+
+        h = hashlib.md5(root).hexdigest()
+        gr.graph['visited'].append(h)
+
+        while not q.empty():
+            # debug output
+            o = gr.order(); p0 = points[0]
+            if o >= p0:
+                points.remove(p0) # so it's only called once
+                print "Order >= %s, Visited: %s, Finals: %s" % (p0, len(gr.graph['visited']), len(gr.graph['finals']))
+
+            s = q.get()
+            hs = hashlib.md5(s.to_json()).hexdigest()
+            gr.add_nodes_from([hs])
+
+            if s.is_complete():
+                gr.graph['finals'].append(hs)
+
+            for ns in s.get_neighbour_states():
+                hns = hashlib.md5(ns.to_json()).hexdigest()
+                if not gr.has_node(hns):
+                    gr.add_nodes_from([hns])
+                gr.add_edge(hs,hns)
+                if hns not in gr.graph['visited']:
+                    gr.graph['visited'].append(hns)
+                    q.put(ns)
+
+            if len(gr.graph['finals']) and quit_on_first:
+                break # found first
+        #print gr.edges()
+
+    @staticmethod
     def _populate_graph(gr,root,depth=0,max_depth=0,found_new=0,has_one=False,debug_info=None,quit_on_first=None):
         """Recursively called"""
         global points

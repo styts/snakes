@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-
+"""
+Options:
+    -d, --delete      rm -rf build dist
+"""
 import os
 import sys
 
@@ -29,5 +32,8 @@ else:
     os.system("rm -rf ../dist/Snakes")
     os.system("mv dist/Snakes ../dist/")
 
-# cleanup
-os.system("rm -rf build dist logdict*.log ../logdict*.log")
+import docopt
+args = docopt.docopt()
+if args["--delete"]:
+    # cleanup
+    os.system("rm -rf build dist logdict*.log ../logdict*.log")

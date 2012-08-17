@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import os
 
-def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(14,9),use_cloud=False):
+def save_graph(gr,start_node=None,all_solutions=[],filename=None,size=(45,25),use_cloud=False):
     print "Drawing...",
     plt.figure(1,figsize=size)
 
