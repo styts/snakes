@@ -229,11 +229,14 @@ class InGame(AppState):
 
         #### load the level data?
 
-        fn = 'data/graphs/%s.pickle' % self.state.__hash__()
-        if os.path.exists(fn):
-            (tmp_gr, tmp_sols) = pickle.load(open(fn, 'rb'))
-            self.level_minmoves = tmp_sols[0].__len__() - 1
-        else:
-            self.level_minmoves = -1  # yeah, default bitch
+        # fn = 'data/graphs/%s.pickle' % self.state.__hash__()
+        # if os.path.exists(fn):
+        #     (tmp_gr, tmp_sols) = pickle.load(open(fn, 'rb'))
+        #     self.level_minmoves = tmp_sols[0].__len__() - 1
+        # else:
+        #     self.level_minmoves = -1  # yeah, default bitch
+
+        self.level_minmoves = self.state.min_moves
+        
         self.bonus_max = self.level_minmoves  # same for now
         self.lifemeter = LifeMeter(self.level_minmoves, self.level_minmoves, self.max_life)  # the bar on the side
