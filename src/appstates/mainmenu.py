@@ -1,4 +1,4 @@
-from src.engine.appstate import AppState
+from dvizshok.appstate import AppState
 import pygame
 from ..utils.buttons import MenuButton
 

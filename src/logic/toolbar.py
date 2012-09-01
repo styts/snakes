@@ -41,7 +41,7 @@ class Toolbar:
         self.current_button = None
         self.hover_button = None
 
-        self.font = ingameState.app.font_px_s #pygame.font.SysFont("Courier New",18)
+        self.font = ingameState.app.font #pygame.font.SysFont("Courier New",18)
 
     def reload_buttons(self):
         self.buttons = []

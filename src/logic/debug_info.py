@@ -21,7 +21,7 @@ class DebugInfo:
         self.strings[key] = val
         
     def __init__(self,ingameState):
-        self.font = ingameState.app.font_px_s # SysFont("Courier",16)
+        self.font = ingameState.app.font # SysFont("Courier",16)
         self.ingameState = ingameState
         self.app = self.ingameState.app
         self.color     = 200,200,200

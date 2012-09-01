@@ -21,10 +21,35 @@ def solve(fn, ig, ts):
     process_json(j, False, quit_on_first=ts, ignore_pickle=ig, debug_info=None)
 
 
-def main():
-    from src.engine.app import App
+from dvizshok.app import App
+import pygame
+from src.logic.utils import patternize_tile
 
-    arguments = docopt(__doc__, version='Snakes 0.2.0')
+
+class MyApp(App):
+    def init(self):
+        background = pygame.Surface(self.screen.get_size())
+        patternize_tile(background, self.resman.get_surface("tile"))
+        self.background = background
+
+        self.resman.load_font("default", 20)
+        self.resman.load_font("visitor1", 40)
+        self.resman.load_font("visitor2", 25)
+
+        self.font = self.resman.get_font("default_20")
+        self.font_px = self.resman.get_font("visitor1_40")  # 40
+        self.font_px_s = self.resman.get_font("visitor2_25")  # 25
+
+
+def main():
+    from src.appstates.ingame import InGame
+    from src.appstates.levelcomplete import LevelComplete
+    from src.appstates.levelselect import LevelSelect
+    from src.appstates.mainmenu import MainMenu
+
+    title = 'Snakes 0.2.0'
+
+    arguments = docopt(__doc__, version=title)
 
     # if a level is supplied, solve it in windowless mode
     fn = arguments["--level"]
@@ -36,7 +61,10 @@ def main():
 
    # Run the pygame window
     else:
-        App(arguments)
+        #App(arguments)
+        app = MyApp(title, resolution=(1024, 768), appstates=[MainMenu, InGame, LevelSelect, LevelComplete])
+        app.run()
+
 
 if __name__ == '__main__':
     main()

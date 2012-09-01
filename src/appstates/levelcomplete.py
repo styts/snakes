@@ -1,4 +1,5 @@
-from src.engine.appstate import AppState
+from dvizshok.appstate import AppState
+
 import pygame
 
 

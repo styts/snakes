@@ -1,7 +1,8 @@
 import time
 import pygame
 import os
-import pickle
+
+from dvizshok.appstate import AppState
 
 from src.logic.debug_info import DebugInfo
 from src.logic.toolbar import Toolbar
@@ -9,10 +10,8 @@ from src.logic.snake import Snake, Move
 from src.logic.state import State
 from src.logic.map import Map
 from src.logic.utils import get_life_values
-#from src.solve.utils import process_json
 from src.logic.utils import edit_map
 from src.logic.utils import save_state
-from src.engine.appstate import AppState
 from src.logic.lifemeter import LifeMeter
 
 MAX_LIFE = 20
@@ -44,7 +43,10 @@ class InGame(AppState):
         self.max_life = MAX_LIFE  # used consistently in all levels!
         self.lifemeter = None
 
-        #self.reset_state("tempstate.json")
+    def _reset_background(self):
+        """ draw the background"""
+        self.app.screen.blit(self.app.background, (0, 0))
+        self.app.dirty(self.app.background.get_rect())
 
     def resume(self, arg):
         super(InGame, self).resume(arg)

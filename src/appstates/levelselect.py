@@ -3,12 +3,12 @@ from src.logic.state import State
 import pygame
 from src.appstates.mainmenu import MenuButton
 from math import floor
-from src.engine.appstate import AppState
+from dvizshok.appstate import AppState
 from ..utils.buttons import LevelButton
 # B_GLYPH = 'data/sprites/b_sq.png'
 # B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'
 BUTTONS_PER_ROW = 6
-from src.engine.resman import resource_path
+from dvizshok.resman import resource_path
 
 
 class LevelStats():
@@ -48,6 +48,7 @@ class LevelStats():
 
 class LevelSelect(AppState):
     """The AppState"""
+    hover_button = None
     def __init__(self, app):
         self.app = app
         self.levelbuttons = []
