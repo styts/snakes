@@ -12,7 +12,10 @@ Options:
     -l, --level <level>        level to solve
     -p <arg>                   get rid of -psn argument on Mac.apps
 """
-from docopt import docopt
+try:
+    from docopt import docopt
+except:
+    pass
 
 
 def solve(fn, ig, ts):
@@ -60,20 +63,26 @@ def main():
 
     title = 'Snakes 0.2.0'
 
-    arguments = docopt(__doc__, version=title)
+    arguments = None
+    try:
+        arguments = docopt(__doc__, version=title)
 
-    # if a level is supplied, solve it in windowless mode
-    fn = arguments["--level"]
-    ig = arguments["--ignore-pickle"]
-    ts = arguments["--test-solvability"]
+        # if a level is supplied, solve it in windowless mode
+        fn = arguments["--level"]
+        ig = arguments["--ignore-pickle"]
+        ts = arguments["--test-solvability"]
 
-    if "--level" in arguments and fn:
+    except:
+        pass
+
+    if arguments and "--level" in arguments and fn:
         solve(fn, ig, ts)
 
    # Run the pygame window
     else:
-        #App(arguments)
-        app = MyApp(title, resolution=(1024, 768), appstates=[MainMenu, InGame, LevelSelect, LevelComplete])
+        res = (1024, 768)
+        #res = (800, 480)
+        app = MyApp(title, resolution=res, appstates=[MainMenu, InGame, LevelSelect, LevelComplete])
         app.run()
 
 

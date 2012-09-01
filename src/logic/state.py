@@ -120,7 +120,7 @@ class State:
         #surf.lock()
         self.set_surface(surf)
         self.draw(arrows=False, resman=resman)
-        surf = pygame.transform.smoothscale(surf,(a,a))
+        surf = pygame.transform.scale(surf, (a, a))
         return surf
 
     def export(self):
