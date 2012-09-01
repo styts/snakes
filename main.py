@@ -27,6 +27,15 @@ from src.logic.utils import patternize_tile
 
 
 class MyApp(App):
+    def _load_levels(self):
+        ## load levels/maps
+        from src.utils.sort import sort_nicely
+        from dvizshok.resman import resource_path
+        from glob import glob
+        maps = glob(resource_path("data/maps") + "/*.json")
+        sort_nicely(maps)
+        self.levels = maps
+
     def init(self):
         background = pygame.Surface(self.screen.get_size())
         patternize_tile(background, self.resman.get_surface("tile"))
@@ -39,6 +48,8 @@ class MyApp(App):
         self.font = self.resman.get_font("default_20")
         self.font_px = self.resman.get_font("visitor1_40")  # 40
         self.font_px_s = self.resman.get_font("visitor2_25")  # 25
+
+        self._load_levels()
 
 
 def main():

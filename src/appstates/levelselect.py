@@ -127,7 +127,7 @@ class LevelSelect(AppState):
 
 
     def _refresh_levels(self):
-        maps = self.app.resman.get_levels()
+        maps = self.app.levels
         i = 0
         spacing = 20
         x_o = 50
