@@ -115,12 +115,12 @@ class State:
 
     def get_thumbnail(self, a=80, resman=None):
         w = 16*BLOCK_SIZE
-        surf = pygame.Surface((w,w))
+        surf = pygame.Surface((w,w),0,32)
         surf.set_colorkey((0,0,0))
         #surf.lock()
         self.set_surface(surf)
         self.draw(arrows=False, resman=resman)
-        surf = pygame.transform.scale(surf, (a, a))
+        surf = pygame.transform.smoothscale(surf, (a, a))
         return surf
 
     def export(self):

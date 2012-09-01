@@ -16,15 +16,15 @@ class MainMenu(AppState):
         MenuButton.init(app.resman)  # make shadow, set w/h, etc.
 
         # add button in the center
-        self._add_button("PLAY", 0)
-        #self._add_button("OPTIONS", 1)
-        #self._add_button("CREDITS", 2)
-        self._add_button("EXIT", 1)
+        self._add_button("PLAY", 0, 0)
+        self._add_button("OPTIONS", 0, 1)
+        self._add_button("CREDITS", 1, 1)
+        self._add_button("EXIT", 1, 0)
 
     # def resume(self):
     #     self.hover_button = None
 
-    def _add_button(self, title, position=None):
+    def _add_button(self, title, position=None, column=0):
         n = position if position >= 0 else len(self._buttons)
 
         # center coords
@@ -34,6 +34,8 @@ class MainMenu(AppState):
         y_offset = MenuButton.h / 2 + MenuButton.h  # distance between buttons
         y = y + n * y_offset
         y = y + MainMenu.y_offset  # buttons begin not at center, but somewhat higher
+
+        x = x + column * (MenuButton.w + MenuButton.h) - ((MenuButton.w + MenuButton.h) / 2)
 
         mb = MenuButton(x, y, title)
         self._buttons.append(mb)

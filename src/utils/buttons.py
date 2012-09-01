@@ -1,5 +1,7 @@
 import pygame
 import operator # make offsetting work
+from dvizshok.utils import make_shadow
+
 
 class Button(object):
     shadow = None
@@ -39,18 +41,32 @@ class Button(object):
     def init(childclass):
         childclass.w = childclass.button.get_width()
         childclass.h = childclass.button.get_height()
+        childclass.shadow = make_shadow(childclass.button)
 
-        # create shadow surface
-        childclass.shadow = pygame.Surface((childclass.w, childclass.h), pygame.SRCALPHA)
-        # for each pixel in button glyph
-        #print childclass.w, childclass.h
-        for a in xrange(childclass.w):
-            for b in xrange(childclass.h):
-                # set corresponding value in shadow surface to be semi-transparent
-                c = childclass.button.get_at((a,b))
-                s = c if all(c) == 0 else (0,0,0,150)
-                childclass.shadow.set_at((a,b),s)
 
+class ArrowButton(Button):
+    """Up or Down"""
+    def __init__(self, title, thumb, x, y):
+        super(ArrowButton, self).__init__(x, y, title)
+
+        self.thumb = thumb
+
+    def draw(self, surface, font=None, hover=False):
+        super(ArrowButton, self).draw(surface, hover)
+        
+        o = (0, 0)
+        if self.selected:
+            o = tuple(map(operator.add, o, (5,5)))
+
+        surface.blit(self.thumb, self.r.move(o))
+
+
+    @staticmethod
+    def init(resman):
+        ArrowButton.button = resman.get_surface("b_sq")
+        ArrowButton.hover = resman.get_surface("b_sq_hi")
+
+        super(ArrowButton, ArrowButton).init(ArrowButton)
 
 
 class LevelButton(Button):
