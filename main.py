@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Usage: Snakes [options]
+Usage: main [options]
 
 <level> is path to .json file
 
