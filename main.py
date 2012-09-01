@@ -80,9 +80,9 @@ def main():
 
    # Run the pygame window
     else:
-        res = (1024, 768)
+        #res = (1024, 768)
         #res = (800, 480)
-        app = MyApp(title, resolution=res, appstates=[MainMenu, InGame, LevelSelect, LevelComplete])
+        app = MyApp(title, appstates=[MainMenu, InGame, LevelSelect, LevelComplete])
         app.run()
 
 

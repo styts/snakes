@@ -17,9 +17,9 @@ class MainMenu(AppState):
 
         # add button in the center
         self._add_button("PLAY", 0)
-        self._add_button("OPTIONS", 1)
-        self._add_button("CREDITS", 2)
-        self._add_button("EXIT", 3)
+        #self._add_button("OPTIONS", 1)
+        #self._add_button("CREDITS", 2)
+        self._add_button("EXIT", 1)
 
     # def resume(self):
     #     self.hover_button = None
