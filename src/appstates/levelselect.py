@@ -4,7 +4,7 @@ import pygame
 from src.appstates.mainmenu import MenuButton
 from math import floor
 from src.engine.appstate import AppState
-from src.engine.buttons import LevelButton
+from ..utils.buttons import LevelButton
 # B_GLYPH = 'data/sprites/b_sq.png'
 # B_HOVER_GLYPH = 'data/sprites/b_sq_hi.png'
 BUTTONS_PER_ROW = 6

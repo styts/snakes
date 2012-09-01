@@ -1,6 +1,6 @@
 from src.engine.appstate import AppState
 import pygame
-from src.engine.buttons import MenuButton
+from ..utils.buttons import MenuButton
 
 
 class MainMenu(AppState):
