@@ -94,7 +94,6 @@ class LevelSelect(AppState):
         self.selected_button = button
         self.levelstats.pick(button)
         self.select_button.enabled = True
-        print self.selected_button.title
 
     def process(self):
         return super(LevelSelect, self).process()

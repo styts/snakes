@@ -1,13 +1,15 @@
 from src.logic.misc import letter_to_color  # IGNORE:E0611
 from src.logic.misc import TARGETS
-import pygame  # @UnresolvedImport
 
 BLOCK_SIZE = 68
 
-#pygame.display.get_init()
-# FIXME does this work on server?
-shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
-shadow_surface.set_alpha(170)
+try:
+    import pygame
+    shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+    shadow_surface.set_alpha(170)
+except:
+    pass
+
 
 # terrain. walkable/unwalkable, ziele, etc.
 class Tile():

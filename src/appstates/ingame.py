@@ -13,6 +13,7 @@ from src.logic.utils import get_life_values
 from src.logic.utils import edit_map
 from src.logic.utils import save_state
 from src.logic.lifemeter import LifeMeter
+from src.utils.buttons import MenuButton
 
 MAX_LIFE = 20
 
@@ -43,14 +44,34 @@ class InGame(AppState):
         self.max_life = MAX_LIFE  # used consistently in all levels!
         self.lifemeter = None
 
+        x = self.app.screen_w - 280
+        self.but_takeback = MenuButton(x, 100, "TAKE BACK")
+        self.but_restart = MenuButton(x, 250, "RESTART")
+        self.but_exit = MenuButton(x, 400, "EXIT")
+        self._buttons = []
+        self._buttons.append(self.but_restart)
+        #self._buttons.append(self.but_takeback)
+        self._buttons.append(self.but_exit)
+        self.hover_button = None
+
     def _reset_background(self):
         """ draw the background"""
         self.app.screen.blit(self.app.background, (0, 0))
         self.app.dirty(self.app.background.get_rect())
 
+    def _get_button_at(self, (x, y)):
+        for b in self._buttons:
+            if b.r.contains(pygame.Rect(x, y, 1, 1)):
+                if b.enabled:
+                    return b
+        return None
+
     def resume(self, arg):
         super(InGame, self).resume(arg)
         self.reset_state(arg)
+        for b in self._buttons:
+            b.selected = False
+        self.hover_button = None
 
     def process(self):
         if self.current_block:
@@ -157,6 +178,34 @@ class InGame(AppState):
                 save_state(self.state)
                 self.toolbar.reload_buttons()
 
+            ### BUTTONS
+            if event.type not in [pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN]:
+                return None
+
+            hover_tmp = self.hover_button
+            self.hover_button = self._get_button_at(event.pos)
+            if self.hover_button and self.hover_button != hover_tmp:
+                # new hover: play sound
+                if self.hover_button.enabled:
+                    self.app.audioman.sfx("mouseover")
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if self.hover_button:
+                    ## CLICK
+                    self.hover_button.selected = True
+                    self.wait(self.CLICK_DELAY)
+                    t = self.hover_button.title
+                    if t == "EXIT":
+                        self.app.audioman.sfx("select")
+                        self.next_state = ("LevelSelect", None)
+                    if t == "TAKE BACK":
+                        #todo
+                        pass
+                    if t == "RESTART":
+                        self.app.audioman.sfx("select")
+                        self.next_state = ("InGame", self.level_name)
+
+
     def draw(self):
         self._reset_background()
 
@@ -169,13 +218,18 @@ class InGame(AppState):
         moves_str = "Moves: %s" % self.n_moves
         ren_n_moves = self.app.font.render(moves_str, 1, (255, 255, 0, 100))
         ren_n_moves_shadow = self.app.font.render(moves_str, 1, (155, 155, 0, 100))
-        self.app.screen.blit(ren_n_moves_shadow, (12, 12))
-        self.app.screen.blit(ren_n_moves, (10, 10))
 
         # Life Meter Bar
         life_values = get_life_values(self.n_moves, self.level_minmoves, self.max_life, self.bonus_max)
         if self.lifemeter:
             self.lifemeter.draw(self.app.screen, life_values)
+            self.app.screen.blit(ren_n_moves_shadow, (self.lifemeter.x_offset, self.lifemeter.y_offset - 20))
+            self.app.screen.blit(ren_n_moves, (self.lifemeter.x_offset - 2, self.lifemeter.y_offset - 22))
+
+        # blit buttons
+        for b in self._buttons:
+            hover = (b == self.hover_button)
+            b.draw(self.app.screen, self.app.font_px, hover)
 
         if self.edit_mode:
             self.toolbar.draw()

@@ -36,9 +36,9 @@ class LifeMeter(object):
 		self._draw_column(color=(255,102,51), offset=15, value=bonus , max_value=self.bonus_moves) # Yellow = Bonus
 		self._draw_column(color=(150,0,0),    offset=30, value=life  , max_value=self.max_life   ) # Red = Life
 
-		x_offset = target_surface.get_width() - 350
-		y_offset = target_surface.get_height() / 2 - self._surface.get_height() / 2
+		self.x_offset = target_surface.get_width() - 350
+		self.y_offset = target_surface.get_height() / 2 - self._surface.get_height() / 2
 
-		target_surface.blit(self._shadow_surface, pygame.Rect(x_offset+5,y_offset+5,0,0))
-		target_surface.blit(self._surface, pygame.Rect(x_offset,y_offset,0,0))
+		target_surface.blit(self._shadow_surface, pygame.Rect(self.x_offset+5,self.y_offset+5,0,0))
+		target_surface.blit(self._surface, pygame.Rect(self.x_offset,self.y_offset,0,0))
 		pass

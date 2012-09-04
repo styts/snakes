@@ -1,7 +1,10 @@
 import copy
 from map import Map
 from snake import Snake
-import pygame #@UnresolvedImport
+try:
+    import pygame
+except:
+    pass
 import json
 import hashlib
 from src.logic.tile import BLOCK_SIZE

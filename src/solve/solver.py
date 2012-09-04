@@ -1,7 +1,10 @@
 import copy
 import os
 import sys
-import pygame
+try:
+    import pygame
+except:
+    pass
 import hashlib
 import networkx as nx
 import plotter

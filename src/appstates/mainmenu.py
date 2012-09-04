@@ -86,3 +86,9 @@ class MainMenu(AppState):
         for b in MainMenu._buttons:
             hover = (b == self.hover_button)
             b.draw(self.app.screen, self.app.font_px, hover)
+
+        # write version
+        if "font" in self.app.__dict__:
+            v_surf = self.app.font.render("v%s" % self.app.version,
+                False, (255, 255, 255), (0, 0, 0))
+            self.app.dirty(self.app.screen.blit(v_surf, (0, self.app.screen_h - v_surf.get_height())))

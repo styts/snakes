@@ -2,8 +2,10 @@ from tile import Tile
 from math import floor
 from tile import BLOCK_SIZE
 
-import os
-import pygame #@UnresolvedImport
+try:
+    import pygame
+except:
+    pass
 
 colors = {(255,255,0,255) : 'Y',
           (255,0,0,255)   : 'R',
