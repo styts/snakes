@@ -30,7 +30,7 @@ class LevelComplete(AppState):
         r = self.app.screen.blit(self.bg, (0, 0))
         self.app.dirty(r)
         self.app.screen.blit(self.surface, (0, 0))
-        panel = self.app.resman.get_surface("level_complete_bg")
+        panel = self.app.resman.get_surface("level_complete")
         x = self.app.screen_w / 2 - panel.get_width() / 2
         y = self.app.screen_h / 2 - panel.get_height() / 2
         self.app.screen.blit(panel, (x, y))

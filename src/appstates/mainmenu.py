@@ -17,14 +17,14 @@ class MainMenu(AppState):
 
         # add button in the center
         self._add_button("PLAY", 0, 0)
-        self._add_button("OPTIONS", 0, 1)
-        self._add_button("CREDITS", 1, 1)
+        self._add_button("OPTIONS", 0, 1, disabled=True)
+        self._add_button("CREDITS", 1, 1, disabled=True)
         self._add_button("EXIT", 1, 0)
 
     # def resume(self):
     #     self.hover_button = None
 
-    def _add_button(self, title, position=None, column=0):
+    def _add_button(self, title, position=None, column=0, disabled=False):
         n = position if position >= 0 else len(self._buttons)
 
         # center coords
@@ -38,12 +38,14 @@ class MainMenu(AppState):
         x = x + column * (MenuButton.w + MenuButton.h) - ((MenuButton.w + MenuButton.h) / 2)
 
         mb = MenuButton(x, y, title)
+        mb.enabled = not disabled
         self._buttons.append(mb)
 
     def _get_button_at(self, (x, y)):
         for b in MainMenu._buttons:
             if b.r.contains(pygame.Rect(x, y, 1, 1)):
-                return b
+                if b.enabled:
+                    return b
         return None
 
     def resume(self, arg):
@@ -61,8 +63,9 @@ class MainMenu(AppState):
         hover_tmp = self.hover_button
         self.hover_button = self._get_button_at(event.pos)
         if self.hover_button and self.hover_button != hover_tmp:
-            # new hover, todo: play sound
-            self.app.audioman.sfx("mouseover")
+            # new hover: play sound
+            if self.hover_button.enabled:
+                self.app.audioman.sfx("mouseover")
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.hover_button:

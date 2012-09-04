@@ -60,6 +60,8 @@ class ArrowButton(Button):
 
         surface.blit(self.thumb, self.r.move(o))
 
+        if not self.enabled:
+            surface.blit(self.shadow, self.r)
 
     @staticmethod
     def init(resman):

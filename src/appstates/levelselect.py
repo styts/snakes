@@ -65,9 +65,12 @@ class LevelSelect(AppState):
 
         self.back_button = MenuButton(50, self.app.screen_h - MenuButton.h / 2 - MenuButton.h, "Back")
         self.select_button = MenuButton(self.app.screen_w - MenuButton.w - 50, self.app.screen_h - MenuButton.h / 2 - MenuButton.h, "Select")
+
         self.up_b = ArrowButton("up", app.resman.get_surface("up"), 50 + (BUTTONS_PER_ROW + 1) * (LevelButton.w + 10), 50)
         self.down_b = ArrowButton("down", app.resman.get_surface("down"), 50 + (BUTTONS_PER_ROW + 1) * (LevelButton.w + 10),
             app.screen_h - 2 * MenuButton.h - LevelButton.h)
+        self.up_b.enabled = False
+        self.down_b.enabled = False
 
         h = self.app.screen_h - 2 * 50 - MenuButton.h * 1.5
         self.levelstats = LevelStats(self.app.font_px, x_offset=self.app.screen_w - 380 - 50, width=380, height=h)
@@ -91,6 +94,7 @@ class LevelSelect(AppState):
         self.selected_button = button
         self.levelstats.pick(button)
         self.select_button.enabled = True
+        print self.selected_button.title
 
     def process(self):
         return super(LevelSelect, self).process()
